@@ -1,0 +1,8 @@
+MEMORY
+{
+  FLASH : ORIGIN = 0x00000000, LENGTH = 0x10000
+  RAM : ORIGIN = 0x20000000, LENGTH = 8K
+}
+
+_heap_size = 1K;
+_stack_start = ORIGIN(RAM) + LENGTH(RAM);
