@@ -1,0 +1,10 @@
+# License
+
+See [efm32hg-hal](https://github.com/fudanchii/efm32hg-hal) for the original code.
+
+Portions are are licensed under the [Apache License] or the [MIT License] at the your
+option. By contributing to this project, you license your contribution under
+the same dual-licensed terms unless the contribution itself says otherwise.
+
+[Apache License]: http://www.apache.org/licenses/LICENSE-2.0
+[MIT License]: http://opensource.org/licenses/MIT

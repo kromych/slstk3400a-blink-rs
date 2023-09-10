@@ -1,6 +1,6 @@
 [package]
 name = "efm32hg322-hal"
-authors = ["kromych <kromych@users.noreply.github.con"]
+authors = ["chrysn <chrysn@fsfe.org>", "Nurahmadie <nurahmadie@gmail.com>", "kromych <kromych@users.noreply.github.con"]
 keywords = ["no-std", "arm", "cortex-m", "efm32hg322", "hal"]
 description = "EFM32HG322 HAL"
 license = "MIT"
