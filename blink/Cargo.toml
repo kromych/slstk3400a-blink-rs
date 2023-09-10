@@ -1,0 +1,20 @@
+[package]
+authors = ["kromych <kromych@users.noreply.github.con"]
+categories = ["embedded", "no-std", "efm32"]
+description = "SLSTK3400A blink"
+keywords = ["arm", "cortex-m"]
+license = "MIT"
+name = "slstk3400a-blink-rs"
+version = "0.0.1"
+edition = "2021"
+
+[dependencies]
+embedded-hal.workspace = true
+panic-halt.workspace = true
+cortex-m.workspace = true
+cortex-m-rt.workspace = true
+critical-section.workspace = true
+defmt.workspace = true
+defmt-rtt.workspace = true
+
+slstk3400a.workspace = true

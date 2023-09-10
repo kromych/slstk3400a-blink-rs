@@ -1,0 +1,22 @@
+[package]
+name = "efm32hg322-pac"
+version = "0.1.0"
+authors = ["kromych <kromych@users.noreply.github.con"]
+edition = "2021"
+keywords = ["no-std", "arm", "cortex-m", "efm32hg322", "pac"]
+readme = "readme.md"
+description = "Peripheral Access Crate for EFM32HG322 series MCU from Silicon Labs"
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+bare-metal.workspace = true
+critical-section.workspace = true
+cortex-m.workspace = true
+cortex-m-rt.workspace = true
+vcell.workspace = true
+portable-atomic.workspace = true
+
+[features]
+critical-section = []
+rt = []
+default = ["critical-section", "rt"]
