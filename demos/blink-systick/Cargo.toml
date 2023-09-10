@@ -1,10 +1,10 @@
 [package]
 authors = ["kromych <kromych@users.noreply.github.con"]
 categories = ["embedded", "no-std", "efm32"]
-description = "SLSTK3400A blink"
+description = "SLSTK3400A blink on SysTick"
+name = "blink-systick"
 keywords = ["arm", "cortex-m"]
 license = "MIT"
-name = "slstk3400a-blink-rs"
 version = "0.0.1"
 edition = "2021"
 

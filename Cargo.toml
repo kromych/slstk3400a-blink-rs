@@ -2,7 +2,8 @@
 resolver = "2"
 
 members = [
-    "blink",
+    "demos/blink",
+    "demos/blink-systick",
     "support/efm32hg322_hal",
     "support/efm32hg322_pac",
     "support/slstk3400a"
