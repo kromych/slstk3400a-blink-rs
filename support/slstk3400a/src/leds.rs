@@ -3,7 +3,7 @@ use efm32hg322_hal as hal;
 use embedded_hal::digital::v2::OutputPin;
 use hal::gpio::{
     pins::{PF4, PF5},
-    Normal, OpenDrain, Output, PullUp,
+    Normal, Output, PushPull,
 };
 
 pub struct LED<T>(T)
@@ -18,16 +18,16 @@ pub trait LedTrait {
     fn off(&mut self);
 }
 
+pub type LED0 = LED<PF4<Output<PushPull<Normal>>>>;
+pub type LED1 = LED<PF5<Output<PushPull<Normal>>>>;
+
 pub struct LEDs {
-    pub led0: LED<PF4<Output<OpenDrain<Normal, PullUp>>>>,
-    pub led1: LED<PF5<Output<OpenDrain<Normal, PullUp>>>>,
+    pub led0: LED0,
+    pub led1: LED1,
 }
 
 impl LEDs {
-    pub fn new(
-        led0: PF4<Output<OpenDrain<Normal, PullUp>>>,
-        led1: PF5<Output<OpenDrain<Normal, PullUp>>>,
-    ) -> Self {
+    pub fn new(led0: PF4<Output<PushPull<Normal>>>, led1: PF5<Output<PushPull<Normal>>>) -> Self {
         LEDs {
             led0: LED(led0),
             led1: LED(led1),
