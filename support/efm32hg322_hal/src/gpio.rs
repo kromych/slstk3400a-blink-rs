@@ -7,7 +7,6 @@
 //! whole model if at all desired.
 
 use super::registers;
-use crate::cmu;
 use core::marker::PhantomData;
 use registers::gpio::pa_ctrl::DRIVEMODE_A as DriveMode;
 
@@ -590,20 +589,12 @@ macro_rules! gpio {
         }
 
         pub trait GPIOExt {
-            fn split(self, clk: cmu::clocks::GPIO) -> Parts;
-            fn constrain(self, clk: cmu::clocks::GPIO) -> Parts;
+            fn constrain(self) -> Parts;
         }
 
         impl GPIOExt for registers::GPIO {
-            fn split(self, gpioclk: cmu::clocks::GPIO) -> Parts {
-                self.constrain(gpioclk)
-            }
-
-            fn constrain(self, gpioclk: cmu::clocks::GPIO) -> Parts {
+            fn constrain(self) -> Parts {
                 let _consumed = self;
-                let clock = gpioclk;
-
-                clock.enable();
 
                 Parts {
                     ports: Ports,

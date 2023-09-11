@@ -6,19 +6,18 @@ use cortex_m_rt as rt;
 use defmt_rtt as _;
 use panic_halt as _;
 
-use embedded_hal::watchdog::WatchdogDisable;
+use efm32hg322_hal as hal;
+use hal::oscillator::Clocks;
 use rt::entry;
 use rt::exception;
-use slstk3400a::SlStk3400a;
 
 #[entry]
 fn main() -> ! {
-    let mut board = SlStk3400a::new().unwrap();
-
-    // If the Watchdog is not reset/disabled, the board will reboot.
-    board.watchdog.disable();
-
-    loop {}
+    let clocks = Clocks::init();
+    clocks.enable_gpio();
+    loop {
+        cortex_m::asm::wfe();
+    }
 }
 
 #[exception]

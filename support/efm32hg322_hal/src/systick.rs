@@ -11,8 +11,7 @@
 //! FIXME: factor out the common parts (which should be everything except the actual numbers for
 //! the clock frequency depending on the SystClkSource) into ... core-m-hal?
 
-use crate::cmu::FrozenClocks;
-use crate::time_util as time;
+use crate::time_util::{self as time, Hertz};
 use cortex_m;
 use embedded_hal::blocking::delay::{DelayMs, DelayUs};
 
@@ -38,19 +37,16 @@ pub struct Systick {
 // have individual new methods that set CLKSOURCE.
 pub struct SystickDelay {
     systick: Systick,
-    freq: time::MegaHertz,
+    freq: time::Hertz,
 }
 
 impl SystickDelay {
-    pub fn new(mut systick: Systick, clock: &FrozenClocks) -> Self {
+    pub fn new(mut systick: Systick, freq: Hertz) -> Self {
         systick
             .registerblock
             .set_clock_source(cortex_m::peripheral::syst::SystClkSource::Core);
 
-        SystickDelay {
-            systick,
-            freq: clock.freq(),
-        }
+        SystickDelay { systick, freq }
     }
 }
 

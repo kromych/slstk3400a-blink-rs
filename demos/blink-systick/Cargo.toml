@@ -17,4 +17,6 @@ critical-section.workspace = true
 defmt.workspace = true
 defmt-rtt.workspace = true
 
+efm32hg322-hal.workspace = true
+efm32hg322-pac.workspace = true
 slstk3400a.workspace = true
