@@ -4,6 +4,8 @@ use crate::registers;
 use crate::time_util::Hertz;
 use crate::OscillatorFreqSet;
 
+pub const USHFRCO_FREQUENCY: Hertz = Hertz(48_000_000);
+
 pub struct USHFRCO {
     _private: (),
 }
@@ -16,7 +18,7 @@ impl USHFRCO {
 
 impl Oscillator for USHFRCO {
     fn freq(&self) -> Hertz {
-        Hertz(48_000_000)
+        USHFRCO_FREQUENCY
     }
 
     fn enable(&self) {

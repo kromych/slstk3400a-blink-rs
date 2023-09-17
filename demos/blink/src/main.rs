@@ -6,15 +6,13 @@ use cortex_m_rt as _;
 use defmt_rtt as _;
 use panic_halt as _;
 
+use cortex_m::peripheral::syst::SystClkSource;
 use efm32hg322_hal as hal;
 use efm32hg322_pac as pac;
 use embedded_hal::prelude::*;
 use embedded_hal::watchdog::WatchdogDisable;
-use hal::delay::CountProvider;
-use hal::delay::Delay;
 use hal::gpio::GPIOExt;
 use hal::oscillator::hfrco::DEFAULT_HFRCO_FREQUENCY;
-use hal::systick::SystickDelay;
 use hal::systick::SystickExt;
 use hal::watchdog::WatchdogExt;
 use slstk3400a::leds::LedTrait;
@@ -38,19 +36,19 @@ fn main() -> ! {
     // The HFRCO oscillator is a low energy oscillator with extremely short wake-up time. Therefore,
     // this oscillator is always chosen by hardware as the clock source for HFCLK when the device starts up (e.g.
     // after reset and after waking up from EM2 and EM3). After reset, the HFRCO frequency is 14 MHz.
-    let systick = cp.SYST.constrain();
-    let systick_delay = SystickDelay::new(systick, DEFAULT_HFRCO_FREQUENCY);
-    let mut delay = Delay::new(CountProvider::SysTick(systick_delay));
+    let mut systick = cp.SYST;
+    systick.set_clock_source(SystClkSource::Core);
+    let mut systick = systick.constrain(DEFAULT_HFRCO_FREQUENCY);
 
     let mut count = 0usize;
     loop {
         leds[count & 1].on();
-        delay.delay_ms(1000u16);
+        systick.delay_ms(1000u16);
 
         defmt::info!("Hello, world #{}!", count);
 
         leds[count & 1].off();
-        delay.delay_ms(1000u16);
+        systick.delay_ms(1000u16);
 
         count = count.wrapping_add(1);
     }

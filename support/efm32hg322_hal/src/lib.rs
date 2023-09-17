@@ -1,6 +1,5 @@
 #![no_std]
 
-pub mod delay;
 pub mod gpio;
 pub mod oscillator;
 pub mod rtc;

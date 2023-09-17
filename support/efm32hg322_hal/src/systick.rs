@@ -16,13 +16,14 @@ use cortex_m;
 use embedded_hal::blocking::delay::{DelayMs, DelayUs};
 
 pub trait SystickExt {
-    fn constrain(self) -> Systick;
+    fn constrain(self, freq: Hertz) -> Systick;
 }
 
 impl SystickExt for cortex_m::peripheral::SYST {
-    fn constrain(self) -> Systick {
+    fn constrain(self, freq: Hertz) -> Systick {
         Systick {
             registerblock: self,
+            freq,
         }
     }
 }
@@ -31,26 +32,10 @@ pub struct Systick {
     // We could use a zero-sized abstraction here like we do for GPIO pins, but it's internal
     // anyway and I don't care about those 4 byte right now; feel free to bend it.
     registerblock: cortex_m::peripheral::SYST,
-}
-
-// We might need to introduce a type parameter later to say whether clock is HFCoreClk or RTC, and
-// have individual new methods that set CLKSOURCE.
-pub struct SystickDelay {
-    systick: Systick,
     freq: time::Hertz,
 }
 
-impl SystickDelay {
-    pub fn new(mut systick: Systick, freq: Hertz) -> Self {
-        systick
-            .registerblock
-            .set_clock_source(cortex_m::peripheral::syst::SystClkSource::Core);
-
-        SystickDelay { systick, freq }
-    }
-}
-
-impl<UXX> DelayUs<UXX> for SystickDelay
+impl<UXX> DelayUs<UXX> for Systick
 where
     UXX: Into<u32>,
 {
@@ -67,19 +52,19 @@ where
         // wrap (which is about 2s on typical 14MHz devices).
         assert!(ticks < (1 << 24));
 
-        self.systick.registerblock.set_reload(ticks);
-        self.systick.registerblock.clear_current();
-        self.systick.registerblock.enable_counter();
+        self.registerblock.set_reload(ticks);
+        self.registerblock.clear_current();
+        self.registerblock.enable_counter();
 
-        while !self.systick.registerblock.has_wrapped() {}
-        self.systick.registerblock.disable_counter();
+        while !self.registerblock.has_wrapped() {}
+        self.registerblock.disable_counter();
     }
 }
 
 // Limited to u16 because waiting for 2**16 or more ms already exceeds what the DelayUs
 // implementation can do even on a 1MHz clock, and lower clock frequencies can't be expressed
 // anyway in that implementation.
-impl<UXX> DelayMs<UXX> for SystickDelay
+impl<UXX> DelayMs<UXX> for Systick
 where
     UXX: Into<u16>,
 {

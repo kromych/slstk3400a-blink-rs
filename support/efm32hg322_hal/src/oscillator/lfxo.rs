@@ -2,6 +2,8 @@ use super::Oscillator;
 use crate::registers;
 use crate::time_util::Hertz;
 
+pub const LFXO_FREQUENCY: Hertz = Hertz(32_768);
+
 pub struct LFXO {
     _private: (),
 }
@@ -14,7 +16,7 @@ impl LFXO {
 
 impl Oscillator for LFXO {
     fn freq(&self) -> Hertz {
-        Hertz(32768)
+        LFXO_FREQUENCY
     }
 
     fn enable(&self) {
