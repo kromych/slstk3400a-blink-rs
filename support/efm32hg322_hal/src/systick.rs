@@ -55,10 +55,12 @@ where
     UXX: Into<u32>,
 {
     fn delay_us(&mut self, us: UXX) {
-        // FIXME this assumes clock rate is in whole MHz, which usually holds.
-        let factor = self.freq.0;
+        // FIXME this assumes clock rate is in Hz, which usually holds.
+        // Instead of dividing by 1_000_000, divide by 1000 two times
+        // to avoid getting 0 if `freq` is less than a MHz.
+        let factor = self.freq.0 / 1000;
         // Just trigger the assertion...
-        let ticks = factor.checked_mul(us.into()).unwrap_or(1 << 24);
+        let ticks = factor.checked_mul(us.into() / 1000).unwrap_or(1 << 24);
 
         // FIXME: If we can show that all the above calculation can be done in LTO, then I'd be
         // much more comfortable adding logic that goes into loops for sleeps exceeding one systick

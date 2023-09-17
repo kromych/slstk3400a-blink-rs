@@ -15,7 +15,7 @@
 ///! 7. ULFRCO, Internal, 1kHz: Ultra LFRCO for Watchdog.
 ///!
 ///! Accuracy, stability, start time, need for calibration and its time, energy consumptions differ for
-///! these types. The HFRCO oscillator is a low energy oscillator with extremely short wake-up time.Therefore,
+///! these types. The HFRCO oscillator is a low energy oscillator with extremely short wake-up time. Therefore,
 ///! this oscillator is always chosen by hardware as the clock source for HFCLK when the device starts up (e.g.
 ///! after reset and after waking up from EM2 and EM3). After reset, the HFRCO frequency is 14 MHz.
 ///!

@@ -4,6 +4,8 @@ use super::OscillatorFreqSet;
 use crate::registers;
 use crate::time_util::Hertz;
 
+pub const DEFAULT_HFRCO_FREQUENCY: Hertz = Hertz(14_000_000);
+
 pub struct HFRCO {
     _private: (),
 }
