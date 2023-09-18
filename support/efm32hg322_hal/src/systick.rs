@@ -20,10 +20,10 @@ pub trait SystickExt {
 }
 
 impl SystickExt for cortex_m::peripheral::SYST {
-    fn constrain(self, freq: Hertz) -> Systick {
+    fn constrain(self, osc_freq: Hertz) -> Systick {
         Systick {
             registerblock: self,
-            freq,
+            osc_freq,
         }
     }
 }
@@ -32,9 +32,20 @@ pub struct Systick {
     // We could use a zero-sized abstraction here like we do for GPIO pins, but it's internal
     // anyway and I don't care about those 4 byte right now; feel free to bend it.
     registerblock: cortex_m::peripheral::SYST,
-    freq: time::Hertz,
+    osc_freq: time::Hertz,
 }
 
+impl Systick {
+    pub fn enable_interrupt(&mut self, int_freq: Hertz) {
+        self.registerblock.disable_counter();
+        self.registerblock.disable_interrupt();
+        self.registerblock
+            .set_reload(self.osc_freq.0 / int_freq.0 - 1);
+        self.registerblock.clear_current();
+        self.registerblock.enable_interrupt();
+        self.registerblock.enable_counter();
+    }
+}
 impl<UXX> DelayUs<UXX> for Systick
 where
     UXX: Into<u32>,
@@ -43,7 +54,7 @@ where
         // FIXME this assumes clock rate is in Hz, which usually holds.
         // Instead of dividing by 1_000_000, divide by 1000 two times
         // to avoid getting 0 if `freq` is less than a MHz.
-        let factor = self.freq.0 / 1000;
+        let factor = self.osc_freq.0 / 1000;
         // Just trigger the assertion...
         let ticks = factor.checked_mul(us.into() / 1000).unwrap_or(1 << 24);
 

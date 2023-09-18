@@ -15,7 +15,6 @@ use hal::gpio::GPIOExt;
 use hal::oscillator::hfrco::DEFAULT_HFRCO_FREQUENCY;
 use hal::systick::SystickExt;
 use hal::watchdog::WatchdogExt;
-use slstk3400a::leds::LedTrait;
 use slstk3400a::SlStk3400a;
 
 #[cortex_m_rt::entry]
@@ -31,7 +30,7 @@ fn main() -> ! {
 
     let gpio = p.GPIO.constrain().split();
     let mut board = SlStk3400a::new(gpio).unwrap();
-    let leds: [&mut dyn LedTrait; 2] = [&mut board.leds.led0, &mut board.leds.led1];
+    let leds = board.leds_mut();
 
     // The HFRCO oscillator is a low energy oscillator with extremely short wake-up time. Therefore,
     // this oscillator is always chosen by hardware as the clock source for HFCLK when the device starts up (e.g.
