@@ -13,10 +13,13 @@ use efm32hg322_hal as hal;
 use efm32hg322_pac as pac;
 use embedded_hal::watchdog::WatchdogDisable;
 use hal::gpio::GPIOExt;
+use hal::oscillator::Clocks;
+use hal::rtc::RTCExt;
 use hal::watchdog::WatchdogExt;
 use slstk3400a::SlStk3400a;
 
 static BOARD: Mutex<RefCell<Option<SlStk3400a>>> = Mutex::new(RefCell::new(None));
+static RTC: Mutex<RefCell<Option<hal::rtc::RTC>>> = Mutex::new(RefCell::new(None));
 
 #[cortex_m_rt::entry]
 fn main() -> ! {
@@ -37,26 +40,30 @@ fn main() -> ! {
     p.CMU.lfaclken0.write(|w| w.rtc().set_bit());
 
     // Reset RTC
-    p.RTC.freeze.reset();
-    p.RTC.ctrl.reset();
-    p.RTC.ien.reset();
-    p.RTC
-        .ifc
-        .write(|w| w.comp0().set_bit().comp1().set_bit().of().set_bit());
-    p.RTC.comp0.reset();
-    p.RTC.comp1.reset();
+    let mut rtc = p.RTC.constrain();
+    rtc.reset();
 
     // Interrupt when matching custom compare value:
-    // 65536 / 32768 Hz = 2 secs. Can request an interrupt on overflow.
-    p.RTC.comp0.write(|w| unsafe { w.comp0().bits(65_536) });
-    p.RTC.ien.modify(|_, w| w.comp0().set_bit());
-
-    // Cap counter at `comp0` value.
-    p.RTC.ctrl.modify(|_, w| w.comp0top().set_bit());
+    // 65536 / 32768 Hz = 2 secs. Request an interrupt.
+    rtc.cap_counter(65_536, true);
 
     // Enable RTC interrupts.
     pac::NVIC::unpend(pac::Interrupt::RTC);
     unsafe { pac::NVIC::unmask(pac::Interrupt::RTC) };
+
+    // Start RTC.
+    critical_section::with(|lock| {
+        RTC.borrow(lock).replace(Some(rtc));
+    });
+    critical_section::with(|lock| {
+        if let Some(rtc) = RTC.borrow(lock).borrow_mut().deref_mut() {
+            rtc.start();
+        }
+    });
+
+    // Enable GPIO clock to enable GPIO as outputs.
+    let clks = Clocks::init();
+    clks.enable_gpio_clock();
 
     // Board and GPIO.
     let gpio = p.GPIO.constrain().split();
@@ -64,9 +71,6 @@ fn main() -> ! {
     critical_section::with(|lock| {
         BOARD.borrow(lock).replace(Some(board));
     });
-
-    // Start RTC.
-    p.RTC.ctrl.modify(|_, w| w.en().set_bit());
 
     loop {
         cortex_m::asm::wfe();
@@ -76,15 +80,23 @@ fn main() -> ! {
 /// Interrupt handler for RTC events (comp0 match).
 #[interrupt]
 fn RTC() {
-    let rtc = unsafe { &*pac::RTC::ptr() };
+    static mut COUNT: usize = 0;
+
     critical_section::with(|lock| {
-        // Clear interrupt.
-        rtc.ifc.write(|w| w.comp0().set_bit());
+        *COUNT = COUNT.wrapping_add(1);
 
-        if let Some(board) = BOARD.borrow(lock).borrow_mut().deref_mut() {
-            let _leds = board.leds_mut();
+        if let Some(rtc) = RTC.borrow(lock).borrow_mut().deref_mut() {
+            // Clear interrupt.
+            rtc.clear_all_interrupts();
+            if let Some(board) = BOARD.borrow(lock).borrow_mut().deref_mut() {
+                let seconds = *COUNT;
+                let leds = board.leds_mut();
 
-            defmt::info!("Hello, world!");
-        };
+                defmt::info!("Hello, world {}!", seconds);
+
+                leds[seconds & 1].on();
+                leds[(seconds - 1) & 1].off();
+            };
+        }
     });
 }

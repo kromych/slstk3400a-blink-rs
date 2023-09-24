@@ -59,16 +59,16 @@ fn main() -> ! {
 
 #[exception]
 fn SysTick() {
-    static mut COUNT: u32 = 0;
-
-    *COUNT = COUNT.wrapping_add(1);
-    if *COUNT % 1000 != 0 {
-        return;
-    }
+    static mut COUNT: usize = 0;
 
     critical_section::with(|lock| {
+        *COUNT = COUNT.wrapping_add(1);
+        if *COUNT % 1000 != 0 {
+            return;
+        }
+
         if let Some(board) = BOARD.borrow(lock).borrow_mut().deref_mut() {
-            let seconds = (*COUNT / 1000) as usize;
+            let seconds = *COUNT / 1000;
             let leds = board.leds_mut();
 
             defmt::info!("Hello, world {}!", seconds);
