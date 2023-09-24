@@ -46,6 +46,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "blink-pb"
+version = "0.0.1"
+dependencies = [
+ "cortex-m",
+ "cortex-m-rt",
+ "critical-section",
+ "defmt",
+ "defmt-rtt",
+ "efm32hg322-hal",
+ "efm32hg322-pac",
+ "embedded-hal",
+ "panic-halt",
+ "slstk3400a",
+]
+
+[[package]]
 name = "blink-rtc"
 version = "0.0.1"
 dependencies = [

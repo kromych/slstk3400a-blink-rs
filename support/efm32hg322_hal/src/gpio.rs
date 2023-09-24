@@ -402,6 +402,12 @@ macro_rules! gpio {
                             },
                         }
                     }
+
+                    pub fn clear_interrupt(&mut self, ack: u16) {
+                        let gpio = sneak_into_gpio();
+                        gpio.$lhsel.modify(|_, w| w.$pinsel().$portsel());
+                        gpio.ifc.write(|w| unsafe{ w.ext().bits(ack)});
+                    }
                 }
 
                 gpio_impl_from_trait! {
