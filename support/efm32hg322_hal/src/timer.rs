@@ -91,5 +91,4 @@ impl InterruptFlag {
 
 timer!(TIMER0, TIMER0Enabled, Timer0, timer0);
 timer!(TIMER1, TIMER1Enabled, Timer1, timer1);
-#[cfg(feature = "_has_timer2")]
 timer!(TIMER2, TIMER2Enabled, Timer2, timer2);

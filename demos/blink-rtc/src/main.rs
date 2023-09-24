@@ -44,8 +44,8 @@ fn main() -> ! {
     rtc.reset();
 
     // Interrupt when matching custom compare value:
-    // 65536 / 32768 Hz = 2 secs. Request an interrupt.
-    rtc.cap_counter(65_536, true);
+    // 32768 / 32768 Hz = 1 secs. Request an interrupt.
+    rtc.cap_counter(32_768, true);
 
     // Enable RTC interrupts.
     pac::NVIC::unpend(pac::Interrupt::RTC);
