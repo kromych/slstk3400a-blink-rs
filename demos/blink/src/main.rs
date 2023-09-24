@@ -13,6 +13,7 @@ use embedded_hal::prelude::*;
 use embedded_hal::watchdog::WatchdogDisable;
 use hal::gpio::GPIOExt;
 use hal::oscillator::hfrco::DEFAULT_HFRCO_FREQUENCY;
+use hal::oscillator::Clocks;
 use hal::systick::SystickExt;
 use hal::watchdog::WatchdogExt;
 use slstk3400a::SlStk3400a;
@@ -26,7 +27,8 @@ fn main() -> ! {
     p.WDOG.constrain().disable();
 
     // Enable GPIO clock to enable GPIO as outputs.
-    p.CMU.hfperclken0.write(|w| w.gpio().set_bit());
+    let clks = Clocks::init();
+    clks.enable_gpio_clock();
 
     let gpio = p.GPIO.constrain().split();
     let mut board = SlStk3400a::new(gpio).unwrap();

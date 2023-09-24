@@ -15,6 +15,7 @@ use efm32hg322_pac as pac;
 use embedded_hal::watchdog::WatchdogDisable;
 use hal::gpio::GPIOExt;
 use hal::oscillator::ushfrco::USHFRCO_FREQUENCY;
+use hal::oscillator::Clocks;
 use hal::systick::SystickExt;
 use hal::time_util::Hertz;
 use hal::watchdog::WatchdogExt;
@@ -37,7 +38,8 @@ fn main() -> ! {
     osc.select_hfclk();
 
     // Enable GPIO clock to enable GPIO as outputs.
-    p.CMU.hfperclken0.write(|w| w.gpio().set_bit());
+    let clks = Clocks::init();
+    clks.enable_gpio_clock();
 
     let gpio = p.GPIO.constrain().split();
     let board = SlStk3400a::new(gpio).unwrap();

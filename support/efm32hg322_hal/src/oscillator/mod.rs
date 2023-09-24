@@ -71,6 +71,21 @@ pub trait OscillatorFreqSet {
     fn set_freq(&mut self, band: FreqBand);
 }
 
+#[derive(Clone, Copy)]
+#[repr(u8)]
+pub enum ClockDivider {
+    Div1,
+    Div2,
+    Div4,
+    Div8,
+    Div16,
+    Div32,
+    Div64,
+    Div128,
+    Div256,
+    Div512,
+}
+
 pub struct Clocks {
     _private: (),
 }
@@ -80,16 +95,51 @@ impl Clocks {
         Self { _private: () }
     }
 
-    pub fn set_dividers(&self) {
+    pub fn set_core_clock_divider(&self, div: ClockDivider) {
         let cmu = unsafe { &*crate::registers::CMU::ptr() };
-        cmu.hfcoreclkdiv.write(|w| w.hfcoreclkdiv().hfclk16());
-
-        cmu.hfperclkdiv
-            .write(|w| w.hfperclken().set_bit().hfperclkdiv().hfclk512());
+        cmu.hfcoreclkdiv.write(|w| {
+            let w = w.hfcoreclkdiv();
+            match div {
+                ClockDivider::Div1 => w.hfclk(),
+                ClockDivider::Div2 => w.hfclk2(),
+                ClockDivider::Div4 => w.hfclk4(),
+                ClockDivider::Div8 => w.hfclk8(),
+                ClockDivider::Div16 => w.hfclk16(),
+                ClockDivider::Div32 => w.hfclk32(),
+                ClockDivider::Div64 => w.hfclk64(),
+                ClockDivider::Div128 => w.hfclk128(),
+                ClockDivider::Div256 => w.hfclk256(),
+                ClockDivider::Div512 => w.hfclk512(),
+            }
+        });
     }
 
-    pub fn enable_gpio(&self) {
+    pub fn set_perf_clock_divider(&self, div: ClockDivider) {
+        let cmu = unsafe { &*crate::registers::CMU::ptr() };
+        cmu.hfperclkdiv.write(|w| {
+            let w = w.hfperclken().set_bit().hfperclkdiv();
+            match div {
+                ClockDivider::Div1 => w.hfclk(),
+                ClockDivider::Div2 => w.hfclk2(),
+                ClockDivider::Div4 => w.hfclk4(),
+                ClockDivider::Div8 => w.hfclk8(),
+                ClockDivider::Div16 => w.hfclk16(),
+                ClockDivider::Div32 => w.hfclk32(),
+                ClockDivider::Div64 => w.hfclk64(),
+                ClockDivider::Div128 => w.hfclk128(),
+                ClockDivider::Div256 => w.hfclk256(),
+                ClockDivider::Div512 => w.hfclk512(),
+            }
+        });
+    }
+
+    pub fn enable_gpio_clock(&self) {
         let cmu = unsafe { &*crate::registers::CMU::ptr() };
         cmu.hfperclken0.write(|w| w.gpio().set_bit());
+    }
+
+    pub fn disable_gpio_clock(&self) {
+        let cmu = unsafe { &*crate::registers::CMU::ptr() };
+        cmu.hfperclken0.write(|w| w.gpio().clear_bit());
     }
 }
