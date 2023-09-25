@@ -1,39 +1,33 @@
 #![no_std]
 
 use efm32hg322_hal as hal;
-use efm32hg322_pac as pac;
-use hal::cmu::CMUExt;
-use hal::delay::CountProvider;
-use hal::delay::Delay;
-use hal::gpio::GPIOExt;
-use hal::systick::SystickDelay;
-use hal::systick::SystickExt;
-use hal::watchdog::Watchdog;
-use hal::watchdog::WatchdogExt;
+use hal::gpio::Pins;
 use leds::LEDs;
-use pac::CorePeripherals;
-use pac::Peripherals;
+use leds::LedTrait;
+use push_buttons::PushButtonTrait;
+use push_buttons::PushButtons;
 
 pub mod leds;
+pub mod push_buttons;
 
 pub struct SlStk3400a {
     pub leds: LEDs,
-    pub delay: Delay,
-    pub watchdog: Watchdog,
+    pub btns: PushButtons,
 }
 
 impl SlStk3400a {
-    pub fn new() -> Option<Self> {
-        let p = Peripherals::take()?;
-        let cp = CorePeripherals::take()?;
-
-        let clocks = p.CMU.constrain().freeze();
-        let systick_delay = SystickDelay::new(cp.SYST.constrain(), &clocks);
-        let gpio = p.GPIO.constrain(clocks.gpio).split();
+    pub fn new(gpio: Pins) -> Option<Self> {
         Some(Self {
-            watchdog: p.WDOG.constrain(),
             leds: LEDs::new(gpio.pf4.into(), gpio.pf5.into()),
-            delay: Delay::new(CountProvider::SysTick(systick_delay)),
+            btns: PushButtons::new(gpio.pc9.into(), gpio.pc10.into()),
         })
+    }
+
+    pub fn leds_mut(&mut self) -> [&mut dyn LedTrait; 2] {
+        [&mut self.leds.led0, &mut self.leds.led1]
+    }
+
+    pub fn btns_mut(&mut self) -> [&mut dyn PushButtonTrait; 2] {
+        [&mut self.btns.btn0, &mut self.btns.btn1]
     }
 }

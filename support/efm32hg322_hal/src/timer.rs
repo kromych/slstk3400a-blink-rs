@@ -4,28 +4,22 @@
 //! allows easy configuration of PWM pins.
 #![allow(dead_code)]
 
-use crate::cmu;
 use crate::registers;
 
-pub trait TimerExt<Clk, Timer> {
-    fn with_clock(self, clock: Clk) -> Timer;
+pub trait TimerExt<Timer> {
+    fn with_clock(self) -> Timer;
 }
 
 macro_rules! timer {
     ($TIMERn: ident, $TIMERnClk: ident, $TimerN: ident, $timerN: ident) => {
-        impl TimerExt<cmu::clocks::$TIMERn, $TimerN> for registers::$TIMERn {
-            fn with_clock(self, clock: cmu::clocks::$TIMERn) -> $TimerN {
-                let clock = clock.enable();
-                $TimerN {
-                    register: self,
-                    clock,
-                }
+        impl TimerExt<$TimerN> for registers::$TIMERn {
+            fn with_clock(self) -> $TimerN {
+                $TimerN { register: self }
             }
         }
 
         pub struct $TimerN {
             register: registers::$TIMERn,
-            clock: cmu::clocks::$TIMERnClk,
         }
 
         impl $TimerN {
@@ -97,5 +91,4 @@ impl InterruptFlag {
 
 timer!(TIMER0, TIMER0Enabled, Timer0, timer0);
 timer!(TIMER1, TIMER1Enabled, Timer1, timer1);
-#[cfg(feature = "_has_timer2")]
 timer!(TIMER2, TIMER2Enabled, Timer2, timer2);

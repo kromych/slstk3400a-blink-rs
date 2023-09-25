@@ -7,7 +7,6 @@
 //! whole model if at all desired.
 
 use super::registers;
-use crate::cmu;
 use core::marker::PhantomData;
 use registers::gpio::pa_ctrl::DRIVEMODE_A as DriveMode;
 
@@ -94,6 +93,12 @@ pub enum ExtInterruptEdge {
     Fall,
     Rise,
     Both,
+}
+
+pub trait GpioInterruptExt {
+    fn enable_interrupt(&mut self, edge: ExtInterruptEdge);
+    fn disable_interrupt(&mut self, edge: ExtInterruptEdge);
+    fn clear_interrupt(&mut self);
 }
 
 fn sneak_into_gpio() -> &'static registers::gpio::RegisterBlock {
@@ -353,55 +358,89 @@ macro_rules! gpio {
 
                         $PXi { _mode: PhantomData }
                     }
+                }
 
-                    pub fn enable_interrupt(&mut self, edge: ExtInterruptEdge) {
+                impl<MODE> GpioInterruptExt for $PXi<MODE> {
+                    fn enable_interrupt(&mut self, edge: ExtInterruptEdge) {
                         let gpio = sneak_into_gpio();
                         gpio.$lhsel.modify(|_, w| w.$pinsel().$portsel());
+
+                        let mask = (1 << $i) as u16;
                         match edge {
                             ExtInterruptEdge::Fall => {
-                                gpio.extifall.modify(|_, w| unsafe { w.extifall().bits(1 << $i as u16) });
+                                gpio.extifall.modify(|r, w| unsafe {
+                                    let current = r.bits() as u16;
+                                    w.extifall().bits(current | mask)
+                                });
                             },
                             ExtInterruptEdge::Rise => {
-                                gpio.extirise.modify(|_, w| unsafe { w.extirise().bits(1 << $i as u16) });
+                                gpio.extirise.modify(|r, w| unsafe {
+                                    let current = r.bits() as u16;
+                                    w.extirise().bits(current | mask)
+                                });
                             },
                             ExtInterruptEdge::Both => {
-                                gpio.extifall.modify(|_, w| unsafe { w.extifall().bits(1 << $i as u16) });
-                                gpio.extirise.modify(|_, w| unsafe { w.extirise().bits(1 << $i as u16) });
+                                gpio.extifall.modify(|r, w| unsafe {
+                                    let current = r.bits() as u16;
+                                    w.extifall().bits(current | mask)
+                                });
+                                gpio.extirise.modify(|r, w| unsafe {
+                                    let current = r.bits() as u16;
+                                    w.extirise().bits(current | mask)
+                                });
                             }
                         }
-                        gpio.ien.modify(|_, w| unsafe { w.ext().bits(1 << $i as u16) });
-                    }
-
-                    pub fn disable_interrupt(&mut self, edge: ExtInterruptEdge) {
-                        let gpio = sneak_into_gpio();
                         gpio.ien.modify(|r, w| unsafe {
                             let current = r.bits() as u16;
-                            w.ext().bits(current & (!(1 << $i) & 0xffffu16))
+                            w.ext().bits(current | mask)
+                        });
+                    }
+
+                    fn disable_interrupt(&mut self, edge: ExtInterruptEdge) {
+                        let gpio = sneak_into_gpio();
+                        let mask = !(1 << $i) as u16;
+
+                        gpio.ien.modify(|r, w| unsafe {
+                            let current = r.bits() as u16;
+                            w.ext().bits(current & mask)
                         });
                         match edge {
                             ExtInterruptEdge::Fall => {
                                 gpio.extifall.modify(|r, w| unsafe {
                                     let current = r.bits() as u16;
-                                    w.extifall().bits(current & (!(1 << $i) & 0xffffu16))
+                                    w.extifall().bits(current & mask)
                                 });
                             },
                             ExtInterruptEdge::Rise => {
                                 gpio.extirise.modify(|r, w| unsafe {
                                     let current = r.bits() as u16;
-                                    w.extirise().bits(current & (!(1 << $i) & 0xffffu16))
+                                    w.extirise().bits(current & mask)
                                 });
                             },
                             ExtInterruptEdge::Both => {
                                 gpio.extifall.modify(|r, w| unsafe {
                                     let current = r.bits() as u16;
-                                    w.extifall().bits(current & (!(1 << $i) & 0xffffu16))
+                                    w.extifall().bits(current & mask)
                                 });
                                 gpio.extirise.modify(|r, w| unsafe {
                                     let current = r.bits() as u16;
-                                    w.extirise().bits(current & (!(1 << $i) & 0xffffu16))
+                                    w.extirise().bits(current & mask)
                                 });
                             },
                         }
+                    }
+
+                    fn clear_interrupt(&mut self) {
+                        let gpio = sneak_into_gpio();
+                        gpio.$lhsel.modify(|_, w| w.$pinsel().$portsel());
+
+                        // Clears interrupts for the entire port if needed:
+                        // let pending = gpio.if_.read().ext().bits();
+
+                        let pending = 1 << $i;
+                        gpio.ifc.write(|w| unsafe {
+                            w.ext().bits(pending)
+                        });
                     }
                 }
 
@@ -590,20 +629,12 @@ macro_rules! gpio {
         }
 
         pub trait GPIOExt {
-            fn split(self, clk: cmu::clocks::GPIO) -> Parts;
-            fn constrain(self, clk: cmu::clocks::GPIO) -> Parts;
+            fn constrain(self) -> Parts;
         }
 
         impl GPIOExt for registers::GPIO {
-            fn split(self, gpioclk: cmu::clocks::GPIO) -> Parts {
-                self.constrain(gpioclk)
-            }
-
-            fn constrain(self, gpioclk: cmu::clocks::GPIO) -> Parts {
+            fn constrain(self) -> Parts {
                 let _consumed = self;
-                let clock = gpioclk;
-
-                clock.enable();
 
                 Parts {
                     ports: Ports,

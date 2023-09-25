@@ -11,19 +11,19 @@
 //! FIXME: factor out the common parts (which should be everything except the actual numbers for
 //! the clock frequency depending on the SystClkSource) into ... core-m-hal?
 
-use crate::cmu::FrozenClocks;
-use crate::time_util as time;
+use crate::time_util::{self as time, Hertz};
 use cortex_m;
 use embedded_hal::blocking::delay::{DelayMs, DelayUs};
 
 pub trait SystickExt {
-    fn constrain(self) -> Systick;
+    fn constrain(self, freq: Hertz) -> Systick;
 }
 
 impl SystickExt for cortex_m::peripheral::SYST {
-    fn constrain(self) -> Systick {
+    fn constrain(self, osc_freq: Hertz) -> Systick {
         Systick {
             registerblock: self,
+            osc_freq,
         }
     }
 }
@@ -32,56 +32,50 @@ pub struct Systick {
     // We could use a zero-sized abstraction here like we do for GPIO pins, but it's internal
     // anyway and I don't care about those 4 byte right now; feel free to bend it.
     registerblock: cortex_m::peripheral::SYST,
+    osc_freq: time::Hertz,
 }
 
-// We might need to introduce a type parameter later to say whether clock is HFCoreClk or RTC, and
-// have individual new methods that set CLKSOURCE.
-pub struct SystickDelay {
-    systick: Systick,
-    freq: time::MegaHertz,
-}
-
-impl SystickDelay {
-    pub fn new(mut systick: Systick, clock: &FrozenClocks) -> Self {
-        systick
-            .registerblock
-            .set_clock_source(cortex_m::peripheral::syst::SystClkSource::Core);
-
-        SystickDelay {
-            systick,
-            freq: clock.freq(),
-        }
+impl Systick {
+    pub fn enable_interrupt(&mut self, int_freq: Hertz) {
+        self.registerblock.disable_counter();
+        self.registerblock.disable_interrupt();
+        self.registerblock
+            .set_reload(self.osc_freq.0 / int_freq.0 - 1);
+        self.registerblock.clear_current();
+        self.registerblock.enable_interrupt();
+        self.registerblock.enable_counter();
     }
 }
-
-impl<UXX> DelayUs<UXX> for SystickDelay
+impl<UXX> DelayUs<UXX> for Systick
 where
     UXX: Into<u32>,
 {
     fn delay_us(&mut self, us: UXX) {
-        // FIXME this assumes clock rate is in whole MHz, which usually holds.
-        let factor = self.freq.0;
+        // FIXME this assumes clock rate is in Hz, which usually holds.
+        // Instead of dividing by 1_000_000, divide by 1000 two times
+        // to avoid getting 0 if `freq` is less than a MHz.
+        let factor = self.osc_freq.0 / 1000;
         // Just trigger the assertion...
-        let ticks = factor.checked_mul(us.into()).unwrap_or(1 << 24);
+        let ticks = factor.checked_mul(us.into() / 1000).unwrap_or(1 << 24);
 
         // FIXME: If we can show that all the above calculation can be done in LTO, then I'd be
         // much more comfortable adding logic that goes into loops for sleeps exceeding one systick
         // wrap (which is about 2s on typical 14MHz devices).
         assert!(ticks < (1 << 24));
 
-        self.systick.registerblock.set_reload(ticks);
-        self.systick.registerblock.clear_current();
-        self.systick.registerblock.enable_counter();
+        self.registerblock.set_reload(ticks);
+        self.registerblock.clear_current();
+        self.registerblock.enable_counter();
 
-        while !self.systick.registerblock.has_wrapped() {}
-        self.systick.registerblock.disable_counter();
+        while !self.registerblock.has_wrapped() {}
+        self.registerblock.disable_counter();
     }
 }
 
 // Limited to u16 because waiting for 2**16 or more ms already exceeds what the DelayUs
 // implementation can do even on a 1MHz clock, and lower clock frequencies can't be expressed
 // anyway in that implementation.
-impl<UXX> DelayMs<UXX> for SystickDelay
+impl<UXX> DelayMs<UXX> for Systick
 where
     UXX: Into<u16>,
 {
