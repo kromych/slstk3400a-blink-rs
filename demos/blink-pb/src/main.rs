@@ -1,3 +1,6 @@
+//! This demo shows how to process interrupts from GPIO pins
+//! and blink an LED in the interrupt handler.
+
 #![no_main]
 #![no_std]
 
@@ -15,7 +18,6 @@ use embedded_hal::watchdog::WatchdogDisable;
 use hal::gpio::ExtInterruptEdge;
 use hal::gpio::GPIOExt;
 use hal::oscillator::Clocks;
-use hal::rtc::RTCExt;
 use hal::watchdog::WatchdogExt;
 use slstk3400a::SlStk3400a;
 
@@ -41,8 +43,9 @@ fn main() -> ! {
     // Board and GPIO.
     let gpio = p.GPIO.constrain().split();
     let mut board = SlStk3400a::new(gpio).unwrap();
-    board.btns.btn0.0.enable_interrupt(ExtInterruptEdge::Fall);
-    board.btns.btn1.0.enable_interrupt(ExtInterruptEdge::Fall);
+    for btn in board.btns_mut() {
+        btn.enable_interrupt(ExtInterruptEdge::Fall);
+    }
 
     critical_section::with(|lock| {
         BOARD.borrow(lock).replace(Some(board));
@@ -53,14 +56,19 @@ fn main() -> ! {
     }
 }
 
-/// Interrupt handler for RTC events (comp0 match).
+/// Interrupt handler for the even-numbered GPIO pins (PC10 with the BTN1 in particular).
 #[interrupt]
 fn GPIO_EVEN() {
+    // One has to make sure which GPIO pin changed state.
+    // Here, the interruts are enabled for the two push buttons
+    // one of which is on the odd GPIO pin, and the other one is
+    // one the even GPIO pin so the check is skipped.
+
+    defmt::debug!("even");
+
     critical_section::with(|lock| {
         if let Some(board) = BOARD.borrow(lock).borrow_mut().deref_mut() {
-            board.btns.btn0.0.clear_interrupt(0x5555);
-
-            defmt::info!("even");
+            board.btns_mut()[1].clear_interrupt();
 
             let leds = board.leds_mut();
             leds[0].on();
@@ -69,13 +77,19 @@ fn GPIO_EVEN() {
     });
 }
 
+/// Interrupt handler for the odd-numbered GPIO pins (PC9 with the BTN1 in particular).
 #[interrupt]
 fn GPIO_ODD() {
+    // One has to make sure which GPIO pin changed state.
+    // Here, the interruts are enabled for the two push buttons
+    // one of which is on the odd GPIO pin, and the other one is
+    // one the even GPIO pin so the check is skipped.
+
+    defmt::debug!("odd");
+
     critical_section::with(|lock| {
         if let Some(board) = BOARD.borrow(lock).borrow_mut().deref_mut() {
-            board.btns.btn1.0.clear_interrupt(0xAAAA);
-
-            defmt::info!("odd");
+            board.btns_mut()[0].clear_interrupt();
 
             let leds = board.leds_mut();
             leds[1].on();

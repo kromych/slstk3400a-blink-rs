@@ -1,3 +1,5 @@
+//! This demo shows how to blink an LED on RTC interrupt.
+
 #![no_main]
 #![no_std]
 

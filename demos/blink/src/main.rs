@@ -1,3 +1,5 @@
+//! This demo shows how to blink an LED and use the SysTick delay.
+
 #![no_main]
 #![no_std]
 

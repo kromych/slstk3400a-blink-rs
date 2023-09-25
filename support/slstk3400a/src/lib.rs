@@ -4,6 +4,7 @@ use efm32hg322_hal as hal;
 use hal::gpio::Pins;
 use leds::LEDs;
 use leds::LedTrait;
+use push_buttons::PushButtonTrait;
 use push_buttons::PushButtons;
 
 pub mod leds;
@@ -24,5 +25,9 @@ impl SlStk3400a {
 
     pub fn leds_mut(&mut self) -> [&mut dyn LedTrait; 2] {
         [&mut self.leds.led0, &mut self.leds.led1]
+    }
+
+    pub fn btns_mut(&mut self) -> [&mut dyn PushButtonTrait; 2] {
+        [&mut self.btns.btn0, &mut self.btns.btn1]
     }
 }
