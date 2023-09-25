@@ -46,12 +46,10 @@ fn main() -> ! {
     let mut count = 0usize;
     loop {
         leds[count & 1].on();
+        leds[(count + 1) & 1].off();
         systick.delay_ms(1000u16);
 
         defmt::info!("Hello, world #{}!", count);
-
-        leds[count & 1].off();
-        systick.delay_ms(1000u16);
 
         count = count.wrapping_add(1);
     }

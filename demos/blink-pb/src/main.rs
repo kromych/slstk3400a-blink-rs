@@ -30,12 +30,6 @@ fn main() -> ! {
     // If the Watchdog is not reset/disabled, the board will reboot.
     p.WDOG.constrain().disable();
 
-    // Enable GPIO interrupts.
-    pac::NVIC::unpend(pac::Interrupt::GPIO_EVEN);
-    unsafe { pac::NVIC::unmask(pac::Interrupt::GPIO_EVEN) };
-    pac::NVIC::unpend(pac::Interrupt::GPIO_ODD);
-    unsafe { pac::NVIC::unmask(pac::Interrupt::GPIO_ODD) };
-
     // Enable GPIO clock to enable GPIO as outputs.
     let clks = Clocks::init();
     clks.enable_gpio_clock();
@@ -43,6 +37,9 @@ fn main() -> ! {
     // Board and GPIO.
     let gpio = p.GPIO.constrain().split();
     let mut board = SlStk3400a::new(gpio).unwrap();
+    for led in board.leds_mut() {
+        led.off();
+    }
     for btn in board.btns_mut() {
         btn.enable_interrupt(ExtInterruptEdge::Fall);
     }
@@ -51,8 +48,14 @@ fn main() -> ! {
         BOARD.borrow(lock).replace(Some(board));
     });
 
+    // Enable GPIO interrupts.
+    pac::NVIC::unpend(pac::Interrupt::GPIO_EVEN);
+    unsafe { pac::NVIC::unmask(pac::Interrupt::GPIO_EVEN) };
+    pac::NVIC::unpend(pac::Interrupt::GPIO_ODD);
+    unsafe { pac::NVIC::unmask(pac::Interrupt::GPIO_ODD) };
+
     loop {
-        cortex_m::asm::wfe();
+        cortex_m::asm::wfi();
     }
 }
 
@@ -71,8 +74,8 @@ fn GPIO_EVEN() {
             board.btns_mut()[1].clear_interrupt();
 
             let leds = board.leds_mut();
-            leds[0].on();
-            leds[1].off();
+            leds[1].on();
+            leds[0].off();
         };
     });
 }
@@ -92,8 +95,8 @@ fn GPIO_ODD() {
             board.btns_mut()[0].clear_interrupt();
 
             let leds = board.leds_mut();
-            leds[1].on();
-            leds[0].off();
+            leds[0].on();
+            leds[1].off();
         };
     });
 }

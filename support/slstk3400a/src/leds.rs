@@ -37,10 +37,10 @@ impl LEDs {
 
 impl<T: OutputPin> LedTrait for LED<T> {
     fn on(&mut self) {
-        let _ = self.0.set_low();
+        let _ = self.0.set_high();
     }
 
     fn off(&mut self) {
-        let _ = self.0.set_high();
+        let _ = self.0.set_low();
     }
 }
