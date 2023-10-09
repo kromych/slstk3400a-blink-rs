@@ -1,5 +1,5 @@
 [target.'cfg(all(target_arch = "arm", target_os = "none"))']
-runner = "probe-run --chip EFM32HG322F64"
+runner = "probe-rs run --chip EFM32HG322F64"
 
 rustflags = [
   "-C",

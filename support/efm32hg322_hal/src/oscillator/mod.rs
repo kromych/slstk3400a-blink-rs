@@ -19,6 +19,8 @@
 //! this oscillator is always chosen by hardware as the clock source for HFCLK when the device starts up (e.g.
 //! after reset and after waking up from EM2 and EM3). After reset, the HFRCO frequency is 14 MHz.
 //!
+//! RC-based oscillators are inherently not precise. They have a thermal drift, which must be compensated
+//! by calibration.
 use crate::time_util as time;
 
 pub mod hfrco;
