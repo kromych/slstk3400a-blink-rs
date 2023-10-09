@@ -3,20 +3,22 @@
 //! These are copied from stm32f30x-hal's time helpers (from
 //! <https://github.com/japaric/stm32f30x-hal/blob/master/src/time.rs>) on demand.
 
+use defmt::Format;
+
 /// Bits per second
 #[derive(Clone, Copy)]
 pub struct Bps(pub u32);
 
 /// Hertz
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Format)]
 pub struct Hertz(pub u32);
 
 /// KiloHertz
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Format)]
 pub struct KiloHertz(pub u32);
 
 /// MegaHertz
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Format)]
 pub struct MegaHertz(pub u32);
 
 #[derive(Clone, Copy)]

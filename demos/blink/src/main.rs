@@ -36,6 +36,9 @@ fn main() -> ! {
     let mut board = SlStk3400a::new(gpio).unwrap();
     let leds = board.leds_mut();
 
+    let cf = hal::clocks::get_clock_config();
+    defmt::info!("Clock configuration: {}", cf);
+
     // The HFRCO oscillator is a low energy oscillator with extremely short wake-up time. Therefore,
     // this oscillator is always chosen by hardware as the clock source for HFCLK when the device starts up (e.g.
     // after reset and after waking up from EM2 and EM3). After reset, the HFRCO frequency is 14 MHz.
