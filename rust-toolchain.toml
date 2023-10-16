@@ -1,4 +1,4 @@
 [toolchain]
 channel = "stable"
-components = ["rust-src", "rustc"]
+components = ["rust-src", "rustc", "llvm-tools"]
 targets = ["thumbv6m-none-eabi"]

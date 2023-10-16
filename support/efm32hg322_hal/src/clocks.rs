@@ -1,7 +1,7 @@
 use crate::time_util::Hertz;
+use crate::HfrcoBand;
 use defmt::Format;
 use efm32hg322_pac as pac;
-use pac::cmu::hfrcoctrl;
 use pac::devinfo::RegisterBlock;
 use pac::msc::readctrl::MODE_A;
 
@@ -18,21 +18,39 @@ pub const DEFAULT_LFRCO_FREQUENCY: Hertz = Hertz(32_768);
 const WAIT_STATE_1_THRESHOLD: u32 = 16_000_000;
 
 /// Clock Source
-#[derive(Clone, Copy, Format)]
+#[derive(Clone, Copy)]
 pub enum ClockSource {
-    None,
     /// Low Frequency Crystal Oscillator
-    LFXO(Hertz),
+    LFXO,
     /// Low Frequency Internal RC Oscillator
-    LFRCO(Hertz),
+    LFRCO,
     /// High Frequency Internal RC Oscillator
-    HFRCO(Hertz),
+    HFRCO(HfrcoBand),
     /// High Frequency Crystall Oscillator
-    HFXO(Hertz),
+    HFXO,
     /// Ultra Low Frequency
-    ULFRCO(Hertz),
+    ULFRCO,
     /// HF Core Clock divided by 2
-    HFCoreClock2(Hertz),
+    HFCoreClock2,
+}
+
+impl Format for ClockSource {
+    fn format(&self, fmt: defmt::Formatter) {
+        match self {
+            ClockSource::LFXO => defmt::write!(fmt, "LFXO"),
+            ClockSource::LFRCO => defmt::write!(fmt, "LFRCO"),
+            ClockSource::HFRCO(band) => match band {
+                HfrcoBand::_1MHZ => defmt::write!(fmt, "HFRCO 1MHz"),
+                HfrcoBand::_7MHZ => defmt::write!(fmt, "HFRCO 7MHz"),
+                HfrcoBand::_11MHZ => defmt::write!(fmt, "HFRCO 11MHz"),
+                HfrcoBand::_14MHZ => defmt::write!(fmt, "HFRCO 14MHz"),
+                HfrcoBand::_21MHZ => defmt::write!(fmt, "HFRCO 21MHz"),
+            },
+            ClockSource::HFXO => defmt::write!(fmt, "HFXO"),
+            ClockSource::ULFRCO => defmt::write!(fmt, "ULFRCO"),
+            ClockSource::HFCoreClock2 => defmt::write!(fmt, "HFCoreClock2"),
+        }
+    }
 }
 
 /// Clock Configuration
@@ -62,6 +80,24 @@ pub struct ClockConfiguration {
     pub hfperclkfreq: u32,
 }
 
+impl Default for ClockConfiguration {
+    fn default() -> Self {
+        ClockConfiguration {
+            source: ClockSource::HFRCO(HfrcoBand::_14MHZ),
+            basefreq: DEFAULT_HFRCO_FREQUENCY.0,
+            hclkdiv: 1,
+            hfcoreclkdiv: 1,
+            hfperclkdiv: 1,
+            hfperclkdivcode: 0,
+            hfcoreclkdivcode: 0,
+            hfcoreclklediv: 2,
+            hclkfreq: DEFAULT_HFRCO_FREQUENCY.0,
+            hfcoreclkfreq: DEFAULT_HFRCO_FREQUENCY.0,
+            hfperclkfreq: DEFAULT_HFRCO_FREQUENCY.0,
+        }
+    }
+}
+
 /// Get the device information data.
 fn dev_info() -> &'static RegisterBlock {
     unsafe { &*pac::DEVINFO::ptr() }
@@ -77,52 +113,54 @@ fn get_prod_rev() -> u8 {
 /// the HCLK frequency, the core frequency, the divisor for the core
 /// frequency, the Peripheral Clock Frequency and the divisor used for
 /// peripheral frequency.
-pub fn get_clock_config() -> ClockConfiguration {
-    let mut basefreq: u32 = DEFAULT_HFRCO_FREQUENCY.0;
-    let mut source = ClockSource::None;
+pub fn get_clock_config() -> Result<ClockConfiguration, ()> {
+    let source;
+    let basefreq;
     let cmu = unsafe { &*pac::CMU::ptr() };
     let status = cmu.status.read();
 
     if status.hfrcosel().bit() {
         if let Some(band) = cmu.hfrcoctrl.read().band().variant() {
             match band {
-                hfrcoctrl::BAND_A::_1MHZ => {
+                HfrcoBand::_1MHZ => {
                     if get_prod_rev() >= 19 {
                         basefreq = 1200000;
                     } else {
                         basefreq = 1000000;
                     }
                 }
-                hfrcoctrl::BAND_A::_7MHZ => {
+                HfrcoBand::_7MHZ => {
                     if get_prod_rev() >= 19 {
                         basefreq = 6600000;
                     } else {
                         basefreq = 7000000;
                     }
                 }
-                hfrcoctrl::BAND_A::_11MHZ => {
+                HfrcoBand::_11MHZ => {
                     basefreq = 11000000;
                 }
-                hfrcoctrl::BAND_A::_14MHZ => {
+                HfrcoBand::_14MHZ => {
                     basefreq = 14000000;
                 }
-                hfrcoctrl::BAND_A::_21MHZ => {
+                HfrcoBand::_21MHZ => {
                     basefreq = 21000000;
                 }
             }
-            source = ClockSource::HFRCO(Hertz(basefreq));
+            source = ClockSource::HFRCO(band);
+        } else {
+            return Err(());
         }
     } else if status.lfrcosel().bit() {
         basefreq = DEFAULT_LFRCO_FREQUENCY.0;
-        source = ClockSource::LFRCO(Hertz(basefreq));
+        source = ClockSource::LFRCO;
     } else if status.lfxosel().bit() {
         basefreq = LFXO_FREQUENCY.0;
-        source = ClockSource::LFXO(Hertz(basefreq));
+        source = ClockSource::LFXO;
     } else if status.hfxosel().bit() {
         basefreq = HFXO_FREQUENCY.0;
-        source = ClockSource::HFXO(Hertz(basefreq));
+        source = ClockSource::HFXO;
     } else {
-        source = ClockSource::None;
+        return Err(());
     }
 
     let hclkdiv = cmu.ctrl.read().hfclkdiv().bits();
@@ -133,7 +171,7 @@ pub fn get_clock_config() -> ClockConfiguration {
     let corefreq = hclkfreq / (1 << corediv);
     let perfreq = hclkfreq / (1 << perdiv);
 
-    ClockConfiguration {
+    Ok(ClockConfiguration {
         source,
         basefreq,
         hclkdiv: hclkdiv + 1,
@@ -145,14 +183,13 @@ pub fn get_clock_config() -> ClockConfiguration {
         hfperclkdiv: 1 << perdiv,
         hfperclkdivcode: perdiv,
         hfcoreclklediv,
-    }
+    })
 }
 
-/// Configures wait states for the system while the clock frequency is being changed.
-fn prepare_clock_change<T: FnOnce() -> ()>(freq: u32, wait_clock_ready: T) {
+pub fn set_clock_config(clock_config: ClockConfiguration) -> Result<ClockConfiguration, ()> {
+    // Set wait states for the worst case for the flash access time.
     let msc = unsafe { &*pac::MSC::ptr() };
     let msc_read_ctrl = &msc.readctrl;
-
     // MSC_READCTL:
     //
     // If software wants to set a core clock frequency above 16 MHz, this register
@@ -169,10 +206,100 @@ fn prepare_clock_change<T: FnOnce() -> ()>(freq: u32, wait_clock_ready: T) {
     // 0     | WS0  | Zero wait-states inserted in fetch or read transfers.
     // 1     | WS1  | One wait-state inserted for each fetch or read transfer. This mode
     //       |      | is required for a core frequency above 16 MHz
-
     msc_read_ctrl.write(|w| w.mode().variant(MODE_A::WS1));
-    wait_clock_ready();
-    if freq <= WAIT_STATE_1_THRESHOLD {
+
+    let change_freq_and_wait = || {
+        let cmu = unsafe { &*pac::CMU::ptr() };
+
+        match clock_config.source {
+            ClockSource::HFRCO(band) => {
+                // Configure band and tuning.
+                let di = dev_info();
+                let tuning = match band {
+                    HfrcoBand::_1MHZ => di.hfrcocal0.read().band1().bits(),
+                    HfrcoBand::_7MHZ => di.hfrcocal0.read().band7().bits(),
+                    HfrcoBand::_11MHZ => di.hfrcocal0.read().band11().bits(),
+                    HfrcoBand::_14MHZ => di.hfrcocal0.read().band14().bits(),
+                    HfrcoBand::_21MHZ => di.hfrcocal1.read().band21().bits(),
+                };
+                cmu.hfrcoctrl.write(|w| {
+                    w.band().variant(band);
+                    w.tuning().variant(tuning)
+                });
+
+                // Check if HFRCO is already enabled.
+                if !cmu.status.read().hfrcordy().bit() {
+                    // Enable HFRCO and wait until it is stable.
+                    cmu.oscencmd.write(|w| w.hfrcoen().set_bit());
+                    // Wait until ready.
+                    while !cmu.status.read().hfrcoens().bit() {}
+                    while !cmu.status.read().hfrcordy().bit() {}
+                }
+
+                // Select HFRCO as source for HFCLK.
+                cmu.cmd.write(|w| w.hfclksel().hfrco());
+                while !cmu.status.read().hfrcosel().bit() {}
+            }
+            ClockSource::HFXO => {
+                // Check if HFXO is already enabled.
+                if !cmu.status.read().hfxordy().bit() {
+                    // Enable HFXO and wait until it is stable.
+                    cmu.oscencmd.write(|w| w.hfxoen().set_bit());
+                    while !cmu.status.read().hfxoens().bit() {}
+                    while !cmu.status.read().hfxordy().bit() {}
+                }
+
+                // Select HFXO as source for HFCLK.
+                cmu.cmd.write(|w| w.hfclksel().hfxo());
+                while !cmu.status.read().hfxosel().bit() {}
+            }
+            ClockSource::LFRCO => {
+                // Check if LFRCO is already enabled.
+                if !cmu.status.read().lfrcordy().bit() {
+                    // Enable LFRCO and wait until it is stable.
+                    cmu.oscencmd.write(|w| w.lfrcoen().set_bit());
+                    while !cmu.status.read().lfrcoens().bit() {}
+                    while !cmu.status.read().lfrcordy().bit() {}
+                }
+
+                // Select LFRCO as source for HFCLK.
+                cmu.cmd.write(|w| w.hfclksel().lfrco());
+                while !cmu.status.read().lfrcosel().bit() {}
+            }
+            ClockSource::LFXO => {
+                // Check if LFXO is already enabled.
+                if !cmu.status.read().lfxordy().bit() {
+                    // Enable LFXO and wait until it is stable.
+                    cmu.oscencmd.write(|w| w.lfxoen().set_bit());
+                    while !cmu.status.read().lfxoens().bit() {}
+                    while !cmu.status.read().lfxordy().bit() {}
+                }
+
+                // Select LFXO as source for HFCLK.
+                cmu.cmd.write(|w| w.hfclksel().lfxo());
+                while !cmu.status.read().lfxosel().bit() {}
+            }
+            ClockSource::ULFRCO => Err(())?,
+            ClockSource::HFCoreClock2 => Err(())?,
+        }
+
+        Ok(())
+    };
+
+    // TODO: restore wait states?
+    change_freq_and_wait()?;
+
+    // TODO: assert on the configuration matching what was intended to have been set.
+    let clock_config = get_clock_config()?;
+
+    // If the new frequency is below the threshold, no wait state is rwquired when reading the flash.
+    if clock_config.basefreq <= WAIT_STATE_1_THRESHOLD {
         msc_read_ctrl.write(|w| w.mode().variant(MODE_A::WS0));
     }
+
+    Ok(clock_config)
+}
+
+pub fn lock_clock_config() {
+    todo!("lock_clock_config");
 }

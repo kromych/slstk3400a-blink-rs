@@ -1,5 +1,8 @@
 #![no_std]
 
+pub use hfrcoctrl::BAND_A as HfrcoBand;
+use registers::cmu::hfrcoctrl;
+
 pub mod clocks;
 pub mod gpio;
 pub mod oscillator;

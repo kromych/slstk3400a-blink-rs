@@ -12,12 +12,33 @@ cargo install flip-link
 cargo install probe-rs --features="cli"
 ```
 
+It is possible to process the compiled binary with `objcopy` and copy it over to the `STK3400A` disk
+that the board presensts when connected through the mini-USB port (the debug one). For that, can do
+
+```sh
+# One-time `objdump` and other tools installation
+cargo install cargo-binutils
+# Cross-platform copy; could use the platform-specific copy utility.
+cargo install coreutils
+
+# Every time to deploy
+cargo objcopy --release -p blink -- -O binary blink.bin
+# Adjust the path to the STK34400 for your system
+coreutils cp ./blink.bin /Volumes/STK3400
+```
+
 ## Enjoy
 
 Run with
 
 ```sh
 cargo run --release
+```
+
+or (for multi-channel RTT logging)
+
+```sh
+cargo embed --release
 ```
 
 In the terminal, there should be something resembling this:
@@ -29,6 +50,12 @@ In the terminal, there should be something resembling this:
 ────────────────────────────────────────────────────────────────────────────────
 INFO  Hello, world!
 └─ slstk3400a_blink_rs::__cortex_m_rt_main @ src/main.rs:21
+```
+
+To atach to the RTT logging after detaching:
+
+```sh
+probe-rs attach --chip EFM32HG322F64 target/thumbv6m-none-eabi/release/slstk3400a-blink-rs
 ```
 
 ## SVD packs
