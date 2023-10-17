@@ -11,7 +11,6 @@ use panic_halt as _;
 use cortex_m::peripheral::syst::SystClkSource;
 use efm32hg322_hal as hal;
 use efm32hg322_pac as pac;
-use embedded_hal::prelude::*;
 use embedded_hal::watchdog::WatchdogDisable;
 use hal::clocks::ClockConfiguration;
 use hal::clocks::ClockSource;
@@ -55,12 +54,16 @@ fn main() -> ! {
     systick.set_clock_source(SystClkSource::Core);
     let mut systick = systick.constrain(hal::time_util::Hertz(cf.basefreq));
 
+    let max_delay_us = systick.max_delay_us();
+    defmt::info!("Max delay: {} us", max_delay_us);
+
     defmt::info!("Starting blinking");
+    let delay_us = core::cmp::min(1_000_000u32, max_delay_us);
     let mut count = 0usize;
     loop {
         leds[count & 1].on();
         leds[(count + 1) & 1].off();
-        systick.delay_ms(1000u16);
+        systick.delay_us(delay_us).expect("Delay must succeed");
 
         defmt::info!("Hello, world #{}!", count);
 

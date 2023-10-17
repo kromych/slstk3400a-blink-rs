@@ -28,10 +28,6 @@ pub enum ClockSource {
     HFRCO(HfrcoBand),
     /// High Frequency Crystall Oscillator
     HFXO,
-    /// Ultra Low Frequency
-    ULFRCO,
-    /// HF Core Clock divided by 2
-    HFCoreClock2,
 }
 
 impl Format for ClockSource {
@@ -47,8 +43,6 @@ impl Format for ClockSource {
                 HfrcoBand::_21MHZ => defmt::write!(fmt, "HFRCO 21MHz"),
             },
             ClockSource::HFXO => defmt::write!(fmt, "HFXO"),
-            ClockSource::ULFRCO => defmt::write!(fmt, "ULFRCO"),
-            ClockSource::HFCoreClock2 => defmt::write!(fmt, "HFCoreClock2"),
         }
     }
 }
@@ -279,8 +273,6 @@ pub fn set_clock_config(clock_config: ClockConfiguration) -> Result<ClockConfigu
                 cmu.cmd.write(|w| w.hfclksel().lfxo());
                 while !cmu.status.read().lfxosel().bit() {}
             }
-            ClockSource::ULFRCO => Err(())?,
-            ClockSource::HFCoreClock2 => Err(())?,
         }
 
         Ok(())
