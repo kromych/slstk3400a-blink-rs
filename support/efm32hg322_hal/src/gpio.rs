@@ -6,9 +6,9 @@
 //! additional mechanisms, and some (eg. clearing the configuration lock) might need changes to the
 //! whole model if at all desired.
 
-use super::registers;
+use super::pac;
 use core::marker::PhantomData;
-use registers::gpio::pa_ctrl::DRIVEMODE_A as DriveMode;
+use pac::gpio::pa_ctrl::DRIVEMODE_A as DriveMode;
 
 /// State type for pin with disabled input.
 /// In disabled state output pin can be in either
@@ -101,8 +101,8 @@ pub trait GpioInterruptExt {
     fn clear_interrupt(&mut self);
 }
 
-fn sneak_into_gpio() -> &'static registers::gpio::RegisterBlock {
-    unsafe { &*registers::GPIO::ptr() }
+fn sneak_into_gpio() -> &'static pac::gpio::RegisterBlock {
+    unsafe { &*pac::GPIO::ptr() }
 }
 
 #[macro_export]
@@ -632,7 +632,7 @@ macro_rules! gpio {
             fn constrain(self) -> Parts;
         }
 
-        impl GPIOExt for registers::GPIO {
+        impl GPIOExt for pac::GPIO {
             fn constrain(self) -> Parts {
                 let _consumed = self;
 

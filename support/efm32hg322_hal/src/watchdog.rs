@@ -1,4 +1,4 @@
-use crate::registers::WDOG;
+use crate::pac::WDOG;
 use embedded_hal::watchdog;
 
 /// Our HAL struct for efm32's watchdog.

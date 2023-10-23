@@ -4,7 +4,7 @@
 //! allows easy configuration of PWM pins.
 #![allow(dead_code)]
 
-use crate::registers;
+use crate::pac;
 
 pub trait TimerExt<Timer> {
     fn with_clock(self) -> Timer;
@@ -12,14 +12,14 @@ pub trait TimerExt<Timer> {
 
 macro_rules! timer {
     ($TIMERn: ident, $TIMERnClk: ident, $TimerN: ident, $timerN: ident) => {
-        impl TimerExt<$TimerN> for registers::$TIMERn {
+        impl TimerExt<$TimerN> for pac::$TIMERn {
             fn with_clock(self) -> $TimerN {
                 $TimerN { register: self }
             }
         }
 
         pub struct $TimerN {
-            register: registers::$TIMERn,
+            register: pac::$TIMERn,
         }
 
         impl $TimerN {
@@ -36,13 +36,13 @@ macro_rules! timer {
             }
 
             pub fn interrupt_is_pending(interrupt: InterruptFlag) -> bool {
-                let reg = unsafe { &*registers::$TIMERn::ptr() };
+                let reg = unsafe { &*pac::$TIMERn::ptr() };
                 reg.if_.read().bits() & interrupt.bits() != 0
             }
 
             pub fn interrupt_unpend(interrupt: InterruptFlag) {
                 unsafe {
-                    let reg = &*registers::$TIMERn::ptr();
+                    let reg = &*pac::$TIMERn::ptr();
                     reg.ifc.write(|w| w.bits(interrupt.bits()));
                 }
             }
@@ -61,7 +61,7 @@ macro_rules! timer {
 ///
 /// These are implemented explicitly rather than re-using the register block's individual types, as
 /// not only those are duplicate across the timers (a common occurrence in svd2rust crates), but
-/// even over all interrupt registers of a timer. Implementing them as one bakes in the assumption
+/// even over all interrupt pac of a timer. Implementing them as one bakes in the assumption
 /// that the same flags that can be enabled can also be set or cleared.
 #[derive(Copy, Clone)]
 pub enum InterruptFlag {

@@ -1,15 +1,15 @@
-use crate::registers;
+use crate::pac;
 
 /// HAL wrapper for EFM32 Real Time Clock.
 pub struct RTC {
-    rtc: registers::RTC,
+    rtc: pac::RTC,
 }
 
 pub trait RTCExt {
     fn constrain(self) -> RTC;
 }
 
-impl RTCExt for registers::RTC {
+impl RTCExt for pac::RTC {
     /// Expose higher level access to peripheral.
     fn constrain(self) -> RTC {
         RTC { rtc: self }
