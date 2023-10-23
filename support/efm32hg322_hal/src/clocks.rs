@@ -1,4 +1,32 @@
+//! Oscillator types:
+//!
+//! 1. LFXO, External, 32.768kHz: Low-Frequency Crystal Oscillator, which operates at lower frequencies, often in the kHz
+//!    range. These are typically used for real-time clocks (RTCs) and other low-power operations.
+//! 2. HFXO, External, 4..25Mhz: High-Frequency Crystal Oscillator. These can operate in the MHz range and
+//!    are often used for the main clock source of a microcontroller or processor.
+//! 3. LFRCO, Internal, 32.768kHz: Low-Frequency RC Oscillator, which doesn't use a crystal but rather resistor-capacitor
+//!    combinations to generate a clock signal. They are generally less precise than crystal oscillators.
+//! 4. HFRCO, Internal, 1..28Mhz: High-Frequency RC Oscillator, the high-frequency counterpart to LFRCO.
+//! 5. USHFRCO, Internal, 48/24MHz: Universal Serial HFRCO for USB.
+//!
+//! There are also:
+//!
+//! 6. AUXHFRCO, Internal, 1-21Mhz: Auxialiary HRFCO for flash programming.
+//! 7. ULFRCO, Internal, 1kHz: Ultra LFRCO for Watchdog.
+//!
+//! Accuracy, stability, start time, need for calibration and its time, energy consumptions differ for
+//! these types. The HFRCO oscillator is a low energy oscillator with extremely short wake-up time. Therefore,
+//! this oscillator is always chosen by hardware as the clock source for HFCLK when the device starts up (e.g.
+//! after reset and after waking up from EM2 and EM3). After reset, the HFRCO frequency is 14 MHz.
+//!
+//! RC-based oscillators are inherently not precise. They have a thermal drift, which must be compensated
+//! by calibration.
+
 use crate::time_util::Hertz;
+use crate::HfClkDiv;
+use crate::HfCoreClkDiv;
+use crate::HfCoreClkLeDiv;
+use crate::HfPerClkDiv;
 use crate::HfrcoBand;
 use defmt::Format;
 use efm32hg322_pac as pac;
@@ -14,8 +42,14 @@ pub const DEFAULT_HFRCO_FREQUENCY: Hertz = Hertz(14_000_000);
 /// The low frequency RC oscillator.
 pub const DEFAULT_LFRCO_FREQUENCY: Hertz = Hertz(32_768);
 
+#[derive(Debug)]
+pub enum ClockError {
+    UnknownClockSource,
+    UnknownHfrcoClockSource,
+}
+
 /// Threshold for inserting 1 wait state
-const WAIT_STATE_1_THRESHOLD: u32 = 16_000_000;
+const WAIT_STATE_1_THRESHOLD: Hertz = Hertz(16_000_000);
 
 /// Clock Source
 #[derive(Clone, Copy)]
@@ -47,49 +81,56 @@ impl Format for ClockSource {
     }
 }
 
+/// Clock and prescalers setup:
+/// * hclkdiv: prescaler for HCLK clock,
+/// * hfcorediv: prescaler for HFCORECLOCK from HCLK,
+/// * hfperdiv:  prescaler for HFPERCLOCK from HCLK, and
+/// * hfcoreclklediv: prescaler for HFCLKLE from HFCORECLOCK.
+#[derive(Clone, Copy)]
+pub struct ClockSetup {
+    /// Clock source
+    pub source: ClockSource,
+    /// Divisor of base frequency to generate HFCLK
+    pub hfclkdiv: HfClkDiv,
+    /// Divisor of HFCLK to generate Core Clock
+    pub hfcoreclkdiv: HfCoreClkDiv,
+    /// Divisor of HFCLK to generate Peripheral Clock
+    pub hfperclkdiv: HfPerClkDiv,
+    /// Divisor of HFCLK to generate Low Energy Peripheral Clock
+    pub hfcoreclklediv: HfCoreClkLeDiv,
+}
+
+impl Default for ClockSetup {
+    fn default() -> Self {
+        ClockSetup {
+            source: ClockSource::HFRCO(HfrcoBand::_14MHZ),
+            hfclkdiv: HfClkDiv::Div1,
+            hfcoreclkdiv: HfCoreClkDiv::HFCLK,
+            hfperclkdiv: HfPerClkDiv::HFCLK,
+            hfcoreclklediv: HfCoreClkLeDiv::Div2,
+        }
+    }
+}
+
 /// Clock Configuration
 #[derive(Clone, Copy, Format)]
 pub struct ClockConfiguration {
     /// Clock source
     pub source: ClockSource,
-    /// Base frequency of core clock source
-    pub basefreq: u32,
     /// Divisor of base frequency to generate HFCLK
     pub hclkdiv: u8,
     /// Divisor of HFCLK to generate Core Clock
     pub hfcoreclkdiv: u8,
     /// Divisor of HFCLK to generate Peripheral Clock
     pub hfperclkdiv: u8,
-    /// Encoding of Peripheral Clock divisor
-    pub hfperclkdivcode: u8,
-    /// Encoding of Core Clock divisor
-    pub hfcoreclkdivcode: u8,
     /// 2 or 4
     pub hfcoreclklediv: u8,
     /// HFCLK/hclkdiv
-    pub hclkfreq: u32,
+    pub hclkfreq: Hertz,
     /// HFCLK/hclkdiv/corediv
-    pub hfcoreclkfreq: u32,
+    pub hfcoreclkfreq: Hertz,
     /// HFCLK/hclkdiv/perdiv
-    pub hfperclkfreq: u32,
-}
-
-impl Default for ClockConfiguration {
-    fn default() -> Self {
-        ClockConfiguration {
-            source: ClockSource::HFRCO(HfrcoBand::_14MHZ),
-            basefreq: DEFAULT_HFRCO_FREQUENCY.0,
-            hclkdiv: 1,
-            hfcoreclkdiv: 1,
-            hfperclkdiv: 1,
-            hfperclkdivcode: 0,
-            hfcoreclkdivcode: 0,
-            hfcoreclklediv: 2,
-            hclkfreq: DEFAULT_HFRCO_FREQUENCY.0,
-            hfcoreclkfreq: DEFAULT_HFRCO_FREQUENCY.0,
-            hfperclkfreq: DEFAULT_HFRCO_FREQUENCY.0,
-        }
-    }
+    pub hfperclkfreq: Hertz,
 }
 
 /// Get the device information data.
@@ -103,11 +144,8 @@ fn get_prod_rev() -> u8 {
     di.part.read().prod_rev().bits()
 }
 
-/// Returns the clock source, the basefreq, the divisor for HCLK,
-/// the HCLK frequency, the core frequency, the divisor for the core
-/// frequency, the Peripheral Clock Frequency and the divisor used for
-/// peripheral frequency.
-pub fn get_clock_config() -> Result<ClockConfiguration, ()> {
+/// Returns clock configuration.
+pub fn get_clock_config() -> Result<ClockConfiguration, ClockError> {
     let source;
     let basefreq;
     let cmu = unsafe { &*pac::CMU::ptr() };
@@ -142,7 +180,7 @@ pub fn get_clock_config() -> Result<ClockConfiguration, ()> {
             }
             source = ClockSource::HFRCO(band);
         } else {
-            return Err(());
+            return Err(ClockError::UnknownHfrcoClockSource);
         }
     } else if status.lfrcosel().bit() {
         basefreq = DEFAULT_LFRCO_FREQUENCY.0;
@@ -154,7 +192,7 @@ pub fn get_clock_config() -> Result<ClockConfiguration, ()> {
         basefreq = HFXO_FREQUENCY.0;
         source = ClockSource::HFXO;
     } else {
-        return Err(());
+        return Err(ClockError::UnknownClockSource);
     }
 
     let hclkdiv = cmu.ctrl.read().hfclkdiv().bits();
@@ -167,20 +205,19 @@ pub fn get_clock_config() -> Result<ClockConfiguration, ()> {
 
     Ok(ClockConfiguration {
         source,
-        basefreq,
         hclkdiv: hclkdiv + 1,
-        hclkfreq,
-        hfcoreclkfreq: corefreq,
+        hclkfreq: Hertz(hclkfreq),
+        hfcoreclkfreq: Hertz(corefreq),
         hfcoreclkdiv: 1 << corediv,
-        hfcoreclkdivcode: corediv,
-        hfperclkfreq: perfreq,
+        hfperclkfreq: Hertz(perfreq),
         hfperclkdiv: 1 << perdiv,
-        hfperclkdivcode: perdiv,
         hfcoreclklediv,
     })
 }
 
-pub fn set_clock_config(clock_config: ClockConfiguration) -> Result<ClockConfiguration, ()> {
+pub fn set_clock_config(clock_config: &ClockSetup) -> Result<ClockConfiguration, ClockError> {
+    let cmu = unsafe { &*pac::CMU::ptr() };
+
     // Set wait states for the worst case for the flash access time.
     let msc = unsafe { &*pac::MSC::ptr() };
     let msc_read_ctrl = &msc.readctrl;
@@ -202,9 +239,15 @@ pub fn set_clock_config(clock_config: ClockConfiguration) -> Result<ClockConfigu
     //       |      | is required for a core frequency above 16 MHz
     msc_read_ctrl.write(|w| w.mode().variant(MODE_A::WS1));
 
-    let change_freq_and_wait = || {
-        let cmu = unsafe { &*pac::CMU::ptr() };
+    // Set the clock divisors to 1.
+    cmu.ctrl
+        .write(|w| w.hfclkdiv().variant(HfClkDiv::Div1 as u8));
+    cmu.hfcoreclkdiv
+        .write(|w| w.hfcoreclkdiv().variant(HfCoreClkDiv::HFCLK));
+    cmu.hfperclkdiv
+        .write(|w| w.hfperclkdiv().variant(HfPerClkDiv::HFCLK));
 
+    let change_freq_and_wait = || {
         match clock_config.source {
             ClockSource::HFRCO(band) => {
                 // Configure band and tuning.
@@ -278,20 +321,47 @@ pub fn set_clock_config(clock_config: ClockConfiguration) -> Result<ClockConfigu
         Ok(())
     };
 
-    // TODO: restore wait states?
+    // TODO: restore wait states on error?
     change_freq_and_wait()?;
 
+    // Set the clock div, core clock and and the peripheral clock divisors
+    cmu.ctrl
+        .write(|w| w.hfclkdiv().variant(clock_config.hfclkdiv as u8));
+    cmu.hfcoreclkdiv
+        .write(|w| w.hfcoreclkdiv().variant(clock_config.hfcoreclkdiv));
+    cmu.hfperclkdiv
+        .write(|w| w.hfperclkdiv().variant(clock_config.hfperclkdiv));
+
+    // Set the low-energy clock prescaler.
+    cmu.hfcoreclkdiv.write(|w| {
+        w.hfcoreclklediv()
+            .bit(clock_config.hfcoreclklediv == HfCoreClkLeDiv::Div4)
+    });
+
     // TODO: assert on the configuration matching what was intended to have been set.
-    let clock_config = get_clock_config()?;
+    let clock_config_ready = get_clock_config()?;
 
     // If the new frequency is below the threshold, no wait state is rwquired when reading the flash.
-    if clock_config.basefreq <= WAIT_STATE_1_THRESHOLD {
+    if clock_config_ready.hclkfreq <= WAIT_STATE_1_THRESHOLD {
         msc_read_ctrl.write(|w| w.mode().variant(MODE_A::WS0));
     }
 
-    Ok(clock_config)
+    Ok(clock_config_ready)
 }
 
 pub fn lock_clock_config() {
     todo!("lock_clock_config");
+}
+
+pub fn enable_gpio_clock() {
+    let cmu = unsafe { &*pac::CMU::ptr() };
+    cmu.hfperclken0.write(|w| {
+        w.gpio().set_bit();
+        w
+    });
+}
+
+pub fn disable_gpio_clock() {
+    let cmu = unsafe { &*pac::CMU::ptr() };
+    cmu.hfperclken0.write(|w| w.gpio().clear_bit());
 }

@@ -10,24 +10,24 @@ use defmt::Format;
 pub struct Bps(pub u32);
 
 /// Hertz
-#[derive(Clone, Copy, Format)]
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Format)]
 pub struct Hertz(pub u32);
 
 /// KiloHertz
-#[derive(Clone, Copy, Format)]
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Format)]
 pub struct KiloHertz(pub u32);
 
 /// MegaHertz
-#[derive(Clone, Copy, Format)]
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Format)]
 pub struct MegaHertz(pub u32);
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Format)]
 pub struct Seconds(u32);
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Format)]
 pub struct MilliSeconds(u32);
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Format)]
 pub struct MicroSeconds(u32);
 
 /// Extension trait that adds convenience methods to the `u32` type

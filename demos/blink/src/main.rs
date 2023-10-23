@@ -12,12 +12,14 @@ use cortex_m::peripheral::syst::SystClkSource;
 use efm32hg322_hal as hal;
 use efm32hg322_pac as pac;
 use embedded_hal::watchdog::WatchdogDisable;
-use hal::clocks::ClockConfiguration;
+use hal::clocks::enable_gpio_clock;
+use hal::clocks::ClockSetup;
 use hal::clocks::ClockSource;
 use hal::gpio::GPIOExt;
-use hal::oscillator::Clocks;
 use hal::systick::SystickExt;
 use hal::watchdog::WatchdogExt;
+use hal::HfClkDiv;
+use hal::HfrcoBand;
 use slstk3400a::SlStk3400a;
 
 #[cortex_m_rt::entry]
@@ -29,8 +31,7 @@ fn main() -> ! {
     p.WDOG.constrain().disable();
 
     // Enable GPIO clock to enable GPIO as outputs.
-    let clks = Clocks::init();
-    clks.enable_gpio_clock();
+    enable_gpio_clock();
 
     let gpio = p.GPIO.constrain().split();
     let mut board = SlStk3400a::new(gpio).unwrap();
@@ -40,24 +41,28 @@ fn main() -> ! {
     // this oscillator is always chosen by hardware as the clock source for HFCLK when the device starts up (e.g.
     // after reset and after waking up from EM2 and EM3). After reset, the HFRCO frequency is 14 MHz.
 
-    let cf = hal::clocks::get_clock_config();
-    defmt::info!("Clock configuration: {}", cf);
-    let mut cf = ClockConfiguration::default();
-    defmt::info!("default clock configuration: {}", cf);
+    let cf = hal::clocks::get_clock_config().expect("Must be able to get clock config");
+    defmt::info!("Clock configuration after reset: {}", cf);
     defmt::flush();
 
-    cf.source = ClockSource::HFRCO(hal::HfrcoBand::_7MHZ);
-    cf = hal::clocks::set_clock_config(cf).expect("Clock configuration must succeed");
-    defmt::info!("Updated clock configuration: {}", cf);
+    let cs = ClockSetup {
+        source: ClockSource::HFRCO(HfrcoBand::_7MHZ),
+        hfclkdiv: HfClkDiv::Div2,
+        ..Default::default()
+    };
+    let cf = hal::clocks::set_clock_config(&cs).expect("Clock configuration must succeed");
+    defmt::info!("Clock configuration: {}", cf);
+    defmt::flush();
 
     let mut systick = cp.SYST;
     systick.set_clock_source(SystClkSource::Core);
-    let mut systick = systick.constrain(hal::time_util::Hertz(cf.basefreq));
+    let mut systick = systick.constrain(&cf);
 
     let max_delay_us = systick.max_delay_us();
     defmt::info!("Max delay: {} us", max_delay_us);
 
     defmt::info!("Starting blinking");
+
     let delay_us = core::cmp::min(1_000_000u32, max_delay_us);
     let mut count = 0usize;
     loop {

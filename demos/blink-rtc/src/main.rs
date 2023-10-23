@@ -14,8 +14,8 @@ use critical_section::Mutex;
 use efm32hg322_hal as hal;
 use efm32hg322_pac as pac;
 use embedded_hal::watchdog::WatchdogDisable;
+use hal::clocks::enable_gpio_clock;
 use hal::gpio::GPIOExt;
-use hal::oscillator::Clocks;
 use hal::rtc::RTCExt;
 use hal::watchdog::WatchdogExt;
 use slstk3400a::SlStk3400a;
@@ -64,8 +64,7 @@ fn main() -> ! {
     });
 
     // Enable GPIO clock to enable GPIO as outputs.
-    let clks = Clocks::init();
-    clks.enable_gpio_clock();
+    enable_gpio_clock();
 
     // Board and GPIO.
     let gpio = p.GPIO.constrain().split();

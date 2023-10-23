@@ -1,19 +1,22 @@
 //! The Core-M SysTick peripheral
 
-use crate::time_util::{self as time, Hertz};
+use crate::{
+    clocks::ClockConfiguration,
+    time_util::{self as time, Hertz},
+};
 use cortex_m;
 
 const SYSTICK_MAX_COUNT: u32 = 1 << 24;
 
 pub trait SystickExt {
-    fn constrain(self, freq: Hertz) -> Systick;
+    fn constrain(self, clock_config: &ClockConfiguration) -> Systick;
 }
 
 impl SystickExt for cortex_m::peripheral::SYST {
-    fn constrain(self, osc_freq: Hertz) -> Systick {
+    fn constrain(self, clock_config: &ClockConfiguration) -> Systick {
         Systick {
             registerblock: self,
-            osc_freq,
+            osc_freq: clock_config.hclkfreq,
         }
     }
 }
