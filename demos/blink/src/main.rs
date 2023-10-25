@@ -46,8 +46,8 @@ fn main() -> ! {
     defmt::flush();
 
     let cs = ClockSetup {
-        source: ClockSource::HFRCO(HfrcoBand::_7MHZ),
-        hfclkdiv: HfClkDiv::Div2,
+        source: ClockSource::HFRCO(HfrcoBand::_1MHZ),
+        hfclkdiv: HfClkDiv::Div128,
         ..Default::default()
     };
     let cf = hal::clocks::set_clock_config(&cs).expect("Clock configuration must succeed");

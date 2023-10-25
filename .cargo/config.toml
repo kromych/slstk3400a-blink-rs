@@ -1,7 +1,10 @@
 [target.'cfg(all(target_arch = "arm", target_os = "none"))']
-runner = "cargo flash --chip EFM32HG322F64 --path"
+runner = "cargo flash --chip EFM32HG322F64 --protocol swd --speed 32 --path"
 # To attach to RTT logging right after flashing:
-# runner = "probe-rs --chip EFM32HG322F64"
+# runner = "probe-rs --chip EFM32HG322F64 --protocol swd --speed 32"
+
+# [alias]
+# attach = "probe-rs attach --chip EFM32HG322F64 --speed 32 --protocol swd"
 
 rustflags = [
   "-C",

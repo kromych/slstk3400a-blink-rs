@@ -41,6 +41,10 @@ or (for multi-channel RTT logging)
 cargo embed --release
 ```
 
+**NOTE**: if your code configures the clock to run at lower speeds, the speed of
+communication with the debug probe in [.cargo/config.toml](.cargo/config.toml)
+needs to be adjusted to be not greater than what the code sets for the board.
+
 In the terminal, there should be something resembling this:
 
 ```text
