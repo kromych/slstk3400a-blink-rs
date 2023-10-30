@@ -45,12 +45,12 @@ fn main() -> ! {
     defmt::info!("Clock configuration after reset: {}", cf);
     defmt::flush();
 
-    let cs = ClockSetup {
+    let clock_setup = ClockSetup {
         source: ClockSource::HFRCO(HfrcoBand::_1MHZ),
         hfclkdiv: HfClkDiv::Div128,
         ..Default::default()
     };
-    let cf = hal::clocks::set_clock_config(&cs).expect("Clock configuration must succeed");
+    let cf = hal::clocks::setup_clocks(&clock_setup).expect("Clock configuration must succeed");
     defmt::info!("Clock configuration: {}", cf);
     defmt::flush();
 

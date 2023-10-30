@@ -215,7 +215,7 @@ pub fn get_clock_config() -> Result<ClockConfiguration, ClockError> {
     })
 }
 
-pub fn set_clock_config(clock_config: &ClockSetup) -> Result<ClockConfiguration, ClockError> {
+pub fn setup_clocks(clock_setup: &ClockSetup) -> Result<ClockConfiguration, ClockError> {
     let cmu = unsafe { &*pac::CMU::ptr() };
 
     // Set wait states for the worst case for the flash access time.
@@ -248,7 +248,7 @@ pub fn set_clock_config(clock_config: &ClockSetup) -> Result<ClockConfiguration,
         .write(|w| w.hfperclkdiv().variant(HfPerClkDiv::HFCLK));
 
     let change_freq_and_wait = || {
-        match clock_config.source {
+        match clock_setup.source {
             ClockSource::HFRCO(band) => {
                 // Configure band and tuning.
                 let di = dev_info();
@@ -326,16 +326,16 @@ pub fn set_clock_config(clock_config: &ClockSetup) -> Result<ClockConfiguration,
 
     // Set the clock div, core clock and and the peripheral clock divisors
     cmu.ctrl
-        .write(|w| w.hfclkdiv().variant(clock_config.hfclkdiv as u8));
+        .write(|w| w.hfclkdiv().variant(clock_setup.hfclkdiv as u8));
     cmu.hfcoreclkdiv
-        .write(|w| w.hfcoreclkdiv().variant(clock_config.hfcoreclkdiv));
+        .write(|w| w.hfcoreclkdiv().variant(clock_setup.hfcoreclkdiv));
     cmu.hfperclkdiv
-        .write(|w| w.hfperclkdiv().variant(clock_config.hfperclkdiv));
+        .write(|w| w.hfperclkdiv().variant(clock_setup.hfperclkdiv));
 
     // Set the low-energy clock prescaler.
     cmu.hfcoreclkdiv.write(|w| {
         w.hfcoreclklediv()
-            .bit(clock_config.hfcoreclklediv == HfCoreClkLeDiv::Div4)
+            .bit(clock_setup.hfcoreclklediv == HfCoreClkLeDiv::Div4)
     });
 
     // TODO: assert on the configuration matching what was intended to have been set.
