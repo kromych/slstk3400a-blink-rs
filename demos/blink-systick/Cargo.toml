@@ -1,7 +1,7 @@
 [package]
 authors = ["kromych <kromych@users.noreply.github.con"]
 categories = ["embedded", "no-std", "efm32"]
-description = "SLSTK3400A blink on SysTick"
+description = "SLSTK3400A blink on SysTick interrupt"
 name = "blink-systick"
 keywords = ["arm", "cortex-m"]
 license = "MIT"

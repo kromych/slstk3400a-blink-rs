@@ -3,13 +3,7 @@ target = "thumbv6m-none-eabi"
 
 # To flash and disconnect:
 [target.'cfg(all(target_arch = "arm", target_os = "none"))']
-# runner = "cargo flash --chip EFM32HG322F64 --protocol swd --speed 16 --path"
-
-# To attach to RTT logging right after flashing:
-runner = "probe-rs run --chip EFM32HG322F64 --protocol swd --speed 16"
-
-# [alias]
-# attach = "probe-rs attach --chip EFM32HG322F64 --protocol swd --speed 16"
+runner = "cargo flash --chip EFM32HG322F64 --protocol swd --speed 16 --path"
 
 rustflags = [
   "-C",

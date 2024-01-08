@@ -32,18 +32,35 @@ coreutils cp ./blink.bin /Volumes/STK3400
 Run with
 
 ```sh
-cargo run --release
+cargo run --release blink
 ```
 
 or (for multi-channel RTT logging)
 
 ```sh
-cargo embed --release
+cargo embed --release blink
 ```
 
+Other demos:
+
+Demo | Description
+--- | ---
+blink | SLSTK3400A blink in a loop
+blink-pb | SLSTK3400A blink on push buttons
+blink-systick | SLSTK3400A blink on SysTick interrupt
+blink-rtc | SLSTK3400A blink on RTC interrupt
+
 **NOTE**: if your code configures the clock to run at lower speeds, the speed of
-communication with the debug probe in [.cargo/config.toml](.cargo/config.toml)
+communication with the debug probe in [`.cargo/config.toml`](.cargo/config.toml)
 needs to be adjusted to be not greater than what the code sets for the board.
+
+There is also a simple wrapper around `cargo` , [`./x.py`](./x.py), that can be used like this:
+
+```sh
+./x.py flash blink --release
+```
+
+Look for other commands in [`./x.json`](./x.json).
 
 In the terminal, there should be something resembling this:
 
@@ -59,7 +76,7 @@ INFO  Hello, world!
 To atach to the RTT logging after detaching:
 
 ```sh
-probe-rs attach --chip EFM32HG322F64 target/thumbv6m-none-eabi/release/slstk3400a-blink-rs
+./x.py attach blink --release
 ```
 
 ## SVD packs

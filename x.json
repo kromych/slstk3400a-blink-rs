@@ -1,0 +1,20 @@
+{
+    "flash": {
+        "command": "cargo-flash",
+        "params": ["--chip", "EFM32HG322F64", "--protocol", "swd", "--speed", "16", "--path", "$binary"],
+        "target": "thumbv6m-none-eabi",
+        "release": true
+    },
+    "run": {
+        "command": "probe-rs",
+        "params": ["run", "--chip", "EFM32HG322F64", "--protocol", "swd", "--speed", "16", "$binary"],
+        "target": "thumbv6m-none-eabi",
+        "release": false
+    },
+    "attach": {
+        "command": "probe-rs",
+        "params": ["attach", "--chip", "EFM32HG322F64", "--protocol", "swd", "--speed", "16", "$binary"],
+        "target": "thumbv6m-none-eabi",
+        "release": true
+    }
+}
