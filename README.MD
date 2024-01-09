@@ -93,7 +93,7 @@ cargo install svdtools
 cargo install form
 ```
 
-and then run [`./support/efm32hg322_pac/gen.sh`](./support/efm32hg322_pac/gen.sh) from its directory.
+and then run [`./support/efm32hg322_pac/svd/gen.sh`](./support/efm32hg322_pac/svd/gen.sh) from its directory.
 Finally, `cargo fmt` will format the generated desciptions.
 
 ## Thank you
