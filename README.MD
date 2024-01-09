@@ -85,6 +85,17 @@ https://www.keil.arm.com/packs/
 
 * [EFM32HG](https://www.silabs.com/documents/public/cmsis-packs/SiliconLabs.GeckoPlatform_EFM32HG_DFP.4.3.0.pack)
 
+To create the Peripheral Access Crate (a.k.a PAC) from the SVD, you'll need these tools:
+
+```sh
+cargo install svd2rust
+cargo install svdtools
+cargo install form
+```
+
+and then run [`./support/efm32hg322_pac/gen.sh`](./support/efm32hg322_pac/gen.sh) from its directory.
+Finally, `cargo fmt` will format the generated desciptions.
+
 ## Thank you
 
 It is speculated that if one wants to build something from scratch, they ought to start from creating the Universe itself :)

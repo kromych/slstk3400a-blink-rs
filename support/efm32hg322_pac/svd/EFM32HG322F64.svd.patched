@@ -3,8 +3,7 @@
   <name>EFM32HG322F64</name>
   <version>4.3.0</version>
   <description>Silicon Labs EFM32HG322F64 Cortex-M MCU</description>
-  <licenseText>
-    *******************************************************************************\n
+  <licenseText>*******************************************************************************\n
     * # License                                                                    \n
     * Copyright 2022 Silicon Laboratories Inc. www.silabs.com                      \n
     *******************************************************************************\n
@@ -29,8 +28,7 @@
     *    misrepresented as being the original software.                            \n
     * 3. This notice may not be removed or altered from any source distribution.   \n
     *                                                                              \n
-    *******************************************************************************
-  </licenseText>
+    *******************************************************************************</licenseText>
   <cpu>
     <name>CM0PLUS</name>
     <revision>r0p1</revision>
@@ -5992,7 +5990,7 @@
           <fields>
             <field>
               <name>WREN</name>
-              <description>Enable Write/Erase Controller </description>
+              <description>Enable Write/Erase Controller</description>
               <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
@@ -34882,7 +34880,7 @@
             </field>
             <field>
               <name>GIBITO</name>
-              <description>Go Idle on Bus Idle Timeout </description>
+              <description>Go Idle on Bus Idle Timeout</description>
               <bitOffset>15</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
