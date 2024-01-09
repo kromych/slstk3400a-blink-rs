@@ -29,7 +29,7 @@ impl crate::FieldSpec for LFA_A {
 impl LFA_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> LFA_A {
+    pub const fn variant(&self) -> LFA_A {
         match self.bits {
             0 => LFA_A::DISABLED,
             1 => LFA_A::LFRCO,
@@ -60,8 +60,8 @@ impl LFA_R {
     }
 }
 #[doc = "Field `LFA` writer - Clock Select for LFA"]
-pub type LFA_W<'a, REG, const O: u8> = crate::FieldWriterSafe<'a, REG, 2, O, LFA_A>;
-impl<'a, REG, const O: u8> LFA_W<'a, REG, O>
+pub type LFA_W<'a, REG> = crate::FieldWriterSafe<'a, REG, 2, LFA_A>;
+impl<'a, REG> LFA_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -114,7 +114,7 @@ impl crate::FieldSpec for LFB_A {
 impl LFB_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> LFB_A {
+    pub const fn variant(&self) -> LFB_A {
         match self.bits {
             0 => LFB_A::DISABLED,
             1 => LFB_A::LFRCO,
@@ -145,8 +145,8 @@ impl LFB_R {
     }
 }
 #[doc = "Field `LFB` writer - Clock Select for LFB"]
-pub type LFB_W<'a, REG, const O: u8> = crate::FieldWriterSafe<'a, REG, 2, O, LFB_A>;
-impl<'a, REG, const O: u8> LFB_W<'a, REG, O>
+pub type LFB_W<'a, REG> = crate::FieldWriterSafe<'a, REG, 2, LFB_A>;
+impl<'a, REG> LFB_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -197,7 +197,7 @@ impl crate::FieldSpec for LFC_A {
 impl LFC_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<LFC_A> {
+    pub const fn variant(&self) -> Option<LFC_A> {
         match self.bits {
             0 => Some(LFC_A::DISABLED),
             1 => Some(LFC_A::LFRCO),
@@ -222,8 +222,8 @@ impl LFC_R {
     }
 }
 #[doc = "Field `LFC` writer - Clock Select for LFC"]
-pub type LFC_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 2, O, LFC_A>;
-impl<'a, REG, const O: u8> LFC_W<'a, REG, O>
+pub type LFC_W<'a, REG> = crate::FieldWriter<'a, REG, 2, LFC_A>;
+impl<'a, REG> LFC_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -247,11 +247,11 @@ where
 #[doc = "Field `LFAE` reader - Clock Select for LFA Extended"]
 pub type LFAE_R = crate::BitReader;
 #[doc = "Field `LFAE` writer - Clock Select for LFA Extended"]
-pub type LFAE_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type LFAE_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `LFBE` reader - Clock Select for LFB Extended"]
 pub type LFBE_R = crate::BitReader;
 #[doc = "Field `LFBE` writer - Clock Select for LFB Extended"]
-pub type LFBE_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type LFBE_W<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bits 0:1 - Clock Select for LFA"]
     #[inline(always)]
@@ -283,34 +283,38 @@ impl W {
     #[doc = "Bits 0:1 - Clock Select for LFA"]
     #[inline(always)]
     #[must_use]
-    pub fn lfa(&mut self) -> LFA_W<LFCLKSEL_SPEC, 0> {
-        LFA_W::new(self)
+    pub fn lfa(&mut self) -> LFA_W<LFCLKSEL_SPEC> {
+        LFA_W::new(self, 0)
     }
     #[doc = "Bits 2:3 - Clock Select for LFB"]
     #[inline(always)]
     #[must_use]
-    pub fn lfb(&mut self) -> LFB_W<LFCLKSEL_SPEC, 2> {
-        LFB_W::new(self)
+    pub fn lfb(&mut self) -> LFB_W<LFCLKSEL_SPEC> {
+        LFB_W::new(self, 2)
     }
     #[doc = "Bits 4:5 - Clock Select for LFC"]
     #[inline(always)]
     #[must_use]
-    pub fn lfc(&mut self) -> LFC_W<LFCLKSEL_SPEC, 4> {
-        LFC_W::new(self)
+    pub fn lfc(&mut self) -> LFC_W<LFCLKSEL_SPEC> {
+        LFC_W::new(self, 4)
     }
     #[doc = "Bit 16 - Clock Select for LFA Extended"]
     #[inline(always)]
     #[must_use]
-    pub fn lfae(&mut self) -> LFAE_W<LFCLKSEL_SPEC, 16> {
-        LFAE_W::new(self)
+    pub fn lfae(&mut self) -> LFAE_W<LFCLKSEL_SPEC> {
+        LFAE_W::new(self, 16)
     }
     #[doc = "Bit 20 - Clock Select for LFB Extended"]
     #[inline(always)]
     #[must_use]
-    pub fn lfbe(&mut self) -> LFBE_W<LFCLKSEL_SPEC, 20> {
-        LFBE_W::new(self)
+    pub fn lfbe(&mut self) -> LFBE_W<LFCLKSEL_SPEC> {
+        LFBE_W::new(self, 20)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -326,10 +330,10 @@ impl crate::RegisterSpec for LFCLKSEL_SPEC {
 impl crate::Readable for LFCLKSEL_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`lfclksel::W`](W) writer structure"]
 impl crate::Writable for LFCLKSEL_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets LFCLKSEL to value 0x15"]
 impl crate::Resettable for LFCLKSEL_SPEC {
-    const RESET_VALUE: Self::Ux = 0x15;
+    const RESET_VALUE: u32 = 0x15;
 }

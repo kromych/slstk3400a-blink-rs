@@ -18,5 +18,5 @@ impl crate::RegisterSpec for CACHEMISSES_SPEC {
 impl crate::Readable for CACHEMISSES_SPEC {}
 #[doc = "`reset()` method sets CACHEMISSES to value 0"]
 impl crate::Resettable for CACHEMISSES_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

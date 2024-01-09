@@ -5,7 +5,7 @@ pub type W = crate::W<CTRL_SPEC>;
 #[doc = "Field `EM4RET` reader - Enable EM4 retention"]
 pub type EM4RET_R = crate::BitReader;
 #[doc = "Field `EM4RET` writer - Enable EM4 retention"]
-pub type EM4RET_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type EM4RET_W<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bit 0 - Enable EM4 retention"]
     #[inline(always)]
@@ -17,10 +17,14 @@ impl W {
     #[doc = "Bit 0 - Enable EM4 retention"]
     #[inline(always)]
     #[must_use]
-    pub fn em4ret(&mut self) -> EM4RET_W<CTRL_SPEC, 0> {
-        EM4RET_W::new(self)
+    pub fn em4ret(&mut self) -> EM4RET_W<CTRL_SPEC> {
+        EM4RET_W::new(self, 0)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -36,10 +40,10 @@ impl crate::RegisterSpec for CTRL_SPEC {
 impl crate::Readable for CTRL_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`ctrl::W`](W) writer structure"]
 impl crate::Writable for CTRL_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL to value 0"]
 impl crate::Resettable for CTRL_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

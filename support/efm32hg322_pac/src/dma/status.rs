@@ -43,7 +43,7 @@ impl crate::FieldSpec for STATE_A {
 impl STATE_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<STATE_A> {
+    pub const fn variant(&self) -> Option<STATE_A> {
         match self.bits {
             0 => Some(STATE_A::IDLE),
             1 => Some(STATE_A::RDCHCTRLDATA),
@@ -143,5 +143,5 @@ impl crate::RegisterSpec for STATUS_SPEC {
 impl crate::Readable for STATUS_SPEC {}
 #[doc = "`reset()` method sets STATUS to value 0x1005_0000"]
 impl crate::Resettable for STATUS_SPEC {
-    const RESET_VALUE: Self::Ux = 0x1005_0000;
+    const RESET_VALUE: u32 = 0x1005_0000;
 }

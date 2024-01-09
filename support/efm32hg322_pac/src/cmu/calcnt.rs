@@ -5,7 +5,7 @@ pub type W = crate::W<CALCNT_SPEC>;
 #[doc = "Field `CALCNT` reader - Calibration Counter"]
 pub type CALCNT_R = crate::FieldReader<u32>;
 #[doc = "Field `CALCNT` writer - Calibration Counter"]
-pub type CALCNT_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 20, O, u32>;
+pub type CALCNT_W<'a, REG> = crate::FieldWriter<'a, REG, 20, u32>;
 impl R {
     #[doc = "Bits 0:19 - Calibration Counter"]
     #[inline(always)]
@@ -17,10 +17,14 @@ impl W {
     #[doc = "Bits 0:19 - Calibration Counter"]
     #[inline(always)]
     #[must_use]
-    pub fn calcnt(&mut self) -> CALCNT_W<CALCNT_SPEC, 0> {
-        CALCNT_W::new(self)
+    pub fn calcnt(&mut self) -> CALCNT_W<CALCNT_SPEC> {
+        CALCNT_W::new(self, 0)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -36,10 +40,10 @@ impl crate::RegisterSpec for CALCNT_SPEC {
 impl crate::Readable for CALCNT_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`calcnt::W`](W) writer structure"]
 impl crate::Writable for CALCNT_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CALCNT to value 0"]
 impl crate::Resettable for CALCNT_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

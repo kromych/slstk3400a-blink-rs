@@ -5,11 +5,11 @@ pub type W = crate::W<GDFIFOCFG_SPEC>;
 #[doc = "Field `GDFIFOCFG` reader - DFIFO Config"]
 pub type GDFIFOCFG_R = crate::FieldReader<u16>;
 #[doc = "Field `GDFIFOCFG` writer - DFIFO Config"]
-pub type GDFIFOCFG_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 16, O, u16>;
+pub type GDFIFOCFG_W<'a, REG> = crate::FieldWriter<'a, REG, 16, u16>;
 #[doc = "Field `EPINFOBASEADDR` reader - Endpoint Info Base Address"]
 pub type EPINFOBASEADDR_R = crate::FieldReader<u16>;
 #[doc = "Field `EPINFOBASEADDR` writer - Endpoint Info Base Address"]
-pub type EPINFOBASEADDR_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 16, O, u16>;
+pub type EPINFOBASEADDR_W<'a, REG> = crate::FieldWriter<'a, REG, 16, u16>;
 impl R {
     #[doc = "Bits 0:15 - DFIFO Config"]
     #[inline(always)]
@@ -26,16 +26,20 @@ impl W {
     #[doc = "Bits 0:15 - DFIFO Config"]
     #[inline(always)]
     #[must_use]
-    pub fn gdfifocfg(&mut self) -> GDFIFOCFG_W<GDFIFOCFG_SPEC, 0> {
-        GDFIFOCFG_W::new(self)
+    pub fn gdfifocfg(&mut self) -> GDFIFOCFG_W<GDFIFOCFG_SPEC> {
+        GDFIFOCFG_W::new(self, 0)
     }
     #[doc = "Bits 16:31 - Endpoint Info Base Address"]
     #[inline(always)]
     #[must_use]
-    pub fn epinfobaseaddr(&mut self) -> EPINFOBASEADDR_W<GDFIFOCFG_SPEC, 16> {
-        EPINFOBASEADDR_W::new(self)
+    pub fn epinfobaseaddr(&mut self) -> EPINFOBASEADDR_W<GDFIFOCFG_SPEC> {
+        EPINFOBASEADDR_W::new(self, 16)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -51,10 +55,10 @@ impl crate::RegisterSpec for GDFIFOCFG_SPEC {
 impl crate::Readable for GDFIFOCFG_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`gdfifocfg::W`](W) writer structure"]
 impl crate::Writable for GDFIFOCFG_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets GDFIFOCFG to value 0x05f8_0600"]
 impl crate::Resettable for GDFIFOCFG_SPEC {
-    const RESET_VALUE: Self::Ux = 0x05f8_0600;
+    const RESET_VALUE: u32 = 0x05f8_0600;
 }

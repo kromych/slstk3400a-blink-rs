@@ -5,7 +5,7 @@ pub type W = crate::W<ERRORC_SPEC>;
 #[doc = "Field `ERRORC` reader - Bus Error Clear"]
 pub type ERRORC_R = crate::BitReader;
 #[doc = "Field `ERRORC` writer - Bus Error Clear"]
-pub type ERRORC_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type ERRORC_W<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bit 0 - Bus Error Clear"]
     #[inline(always)]
@@ -17,10 +17,14 @@ impl W {
     #[doc = "Bit 0 - Bus Error Clear"]
     #[inline(always)]
     #[must_use]
-    pub fn errorc(&mut self) -> ERRORC_W<ERRORC_SPEC, 0> {
-        ERRORC_W::new(self)
+    pub fn errorc(&mut self) -> ERRORC_W<ERRORC_SPEC> {
+        ERRORC_W::new(self, 0)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -36,10 +40,10 @@ impl crate::RegisterSpec for ERRORC_SPEC {
 impl crate::Readable for ERRORC_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`errorc::W`](W) writer structure"]
 impl crate::Writable for ERRORC_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets ERRORC to value 0"]
 impl crate::Resettable for ERRORC_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

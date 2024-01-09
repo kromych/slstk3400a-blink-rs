@@ -5,15 +5,15 @@ pub type W = crate::W<CTRL_SPEC>;
 #[doc = "Field `EMVREG` reader - Energy Mode Voltage Regulator Control"]
 pub type EMVREG_R = crate::BitReader;
 #[doc = "Field `EMVREG` writer - Energy Mode Voltage Regulator Control"]
-pub type EMVREG_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type EMVREG_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `EM2BLOCK` reader - Energy Mode 2 Block"]
 pub type EM2BLOCK_R = crate::BitReader;
 #[doc = "Field `EM2BLOCK` writer - Energy Mode 2 Block"]
-pub type EM2BLOCK_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type EM2BLOCK_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `EM4CTRL` reader - Energy Mode 4 Control"]
 pub type EM4CTRL_R = crate::FieldReader;
 #[doc = "Field `EM4CTRL` writer - Energy Mode 4 Control"]
-pub type EM4CTRL_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 2, O>;
+pub type EM4CTRL_W<'a, REG> = crate::FieldWriter<'a, REG, 2>;
 impl R {
     #[doc = "Bit 0 - Energy Mode Voltage Regulator Control"]
     #[inline(always)]
@@ -35,22 +35,26 @@ impl W {
     #[doc = "Bit 0 - Energy Mode Voltage Regulator Control"]
     #[inline(always)]
     #[must_use]
-    pub fn emvreg(&mut self) -> EMVREG_W<CTRL_SPEC, 0> {
-        EMVREG_W::new(self)
+    pub fn emvreg(&mut self) -> EMVREG_W<CTRL_SPEC> {
+        EMVREG_W::new(self, 0)
     }
     #[doc = "Bit 1 - Energy Mode 2 Block"]
     #[inline(always)]
     #[must_use]
-    pub fn em2block(&mut self) -> EM2BLOCK_W<CTRL_SPEC, 1> {
-        EM2BLOCK_W::new(self)
+    pub fn em2block(&mut self) -> EM2BLOCK_W<CTRL_SPEC> {
+        EM2BLOCK_W::new(self, 1)
     }
     #[doc = "Bits 2:3 - Energy Mode 4 Control"]
     #[inline(always)]
     #[must_use]
-    pub fn em4ctrl(&mut self) -> EM4CTRL_W<CTRL_SPEC, 2> {
-        EM4CTRL_W::new(self)
+    pub fn em4ctrl(&mut self) -> EM4CTRL_W<CTRL_SPEC> {
+        EM4CTRL_W::new(self, 2)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -66,10 +70,10 @@ impl crate::RegisterSpec for CTRL_SPEC {
 impl crate::Readable for CTRL_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`ctrl::W`](W) writer structure"]
 impl crate::Writable for CTRL_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL to value 0"]
 impl crate::Resettable for CTRL_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

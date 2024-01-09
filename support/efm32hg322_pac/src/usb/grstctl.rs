@@ -5,19 +5,19 @@ pub type W = crate::W<GRSTCTL_SPEC>;
 #[doc = "Field `CSFTRST` reader - Core Soft Reset"]
 pub type CSFTRST_R = crate::BitReader;
 #[doc = "Field `CSFTRST` writer - Core Soft Reset"]
-pub type CSFTRST_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type CSFTRST_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `PIUFSSFTRST` reader - PIU FS Dedicated Controller Soft Reset"]
 pub type PIUFSSFTRST_R = crate::BitReader;
 #[doc = "Field `PIUFSSFTRST` writer - PIU FS Dedicated Controller Soft Reset"]
-pub type PIUFSSFTRST_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type PIUFSSFTRST_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `RXFFLSH` reader - RxFIFO Flush"]
 pub type RXFFLSH_R = crate::BitReader;
 #[doc = "Field `RXFFLSH` writer - RxFIFO Flush"]
-pub type RXFFLSH_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type RXFFLSH_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TXFFLSH` reader - TxFIFO Flush"]
 pub type TXFFLSH_R = crate::BitReader;
 #[doc = "Field `TXFFLSH` writer - TxFIFO Flush"]
-pub type TXFFLSH_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type TXFFLSH_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TXFNUM` reader - TxFIFO Number"]
 pub type TXFNUM_R = crate::FieldReader<TXFNUM_A>;
 #[doc = "TxFIFO Number\n\nValue on reset: 0"]
@@ -53,7 +53,7 @@ impl crate::FieldSpec for TXFNUM_A {
 impl TXFNUM_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<TXFNUM_A> {
+    pub const fn variant(&self) -> Option<TXFNUM_A> {
         match self.bits {
             0 => Some(TXFNUM_A::F0),
             1 => Some(TXFNUM_A::F1),
@@ -108,8 +108,8 @@ impl TXFNUM_R {
     }
 }
 #[doc = "Field `TXFNUM` writer - TxFIFO Number"]
-pub type TXFNUM_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 5, O, TXFNUM_A>;
-impl<'a, REG, const O: u8> TXFNUM_W<'a, REG, O>
+pub type TXFNUM_W<'a, REG> = crate::FieldWriter<'a, REG, 5, TXFNUM_A>;
+impl<'a, REG> TXFNUM_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -200,34 +200,38 @@ impl W {
     #[doc = "Bit 0 - Core Soft Reset"]
     #[inline(always)]
     #[must_use]
-    pub fn csftrst(&mut self) -> CSFTRST_W<GRSTCTL_SPEC, 0> {
-        CSFTRST_W::new(self)
+    pub fn csftrst(&mut self) -> CSFTRST_W<GRSTCTL_SPEC> {
+        CSFTRST_W::new(self, 0)
     }
     #[doc = "Bit 1 - PIU FS Dedicated Controller Soft Reset"]
     #[inline(always)]
     #[must_use]
-    pub fn piufssftrst(&mut self) -> PIUFSSFTRST_W<GRSTCTL_SPEC, 1> {
-        PIUFSSFTRST_W::new(self)
+    pub fn piufssftrst(&mut self) -> PIUFSSFTRST_W<GRSTCTL_SPEC> {
+        PIUFSSFTRST_W::new(self, 1)
     }
     #[doc = "Bit 4 - RxFIFO Flush"]
     #[inline(always)]
     #[must_use]
-    pub fn rxfflsh(&mut self) -> RXFFLSH_W<GRSTCTL_SPEC, 4> {
-        RXFFLSH_W::new(self)
+    pub fn rxfflsh(&mut self) -> RXFFLSH_W<GRSTCTL_SPEC> {
+        RXFFLSH_W::new(self, 4)
     }
     #[doc = "Bit 5 - TxFIFO Flush"]
     #[inline(always)]
     #[must_use]
-    pub fn txfflsh(&mut self) -> TXFFLSH_W<GRSTCTL_SPEC, 5> {
-        TXFFLSH_W::new(self)
+    pub fn txfflsh(&mut self) -> TXFFLSH_W<GRSTCTL_SPEC> {
+        TXFFLSH_W::new(self, 5)
     }
     #[doc = "Bits 6:10 - TxFIFO Number"]
     #[inline(always)]
     #[must_use]
-    pub fn txfnum(&mut self) -> TXFNUM_W<GRSTCTL_SPEC, 6> {
-        TXFNUM_W::new(self)
+    pub fn txfnum(&mut self) -> TXFNUM_W<GRSTCTL_SPEC> {
+        TXFNUM_W::new(self, 6)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -243,10 +247,10 @@ impl crate::RegisterSpec for GRSTCTL_SPEC {
 impl crate::Readable for GRSTCTL_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`grstctl::W`](W) writer structure"]
 impl crate::Writable for GRSTCTL_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets GRSTCTL to value 0x8000_0000"]
 impl crate::Resettable for GRSTCTL_SPEC {
-    const RESET_VALUE: Self::Ux = 0x8000_0000;
+    const RESET_VALUE: u32 = 0x8000_0000;
 }

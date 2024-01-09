@@ -37,7 +37,7 @@ impl crate::FieldSpec for POSSEL_A {
 impl POSSEL_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> POSSEL_A {
+    pub const fn variant(&self) -> POSSEL_A {
         match self.bits {
             0 => POSSEL_A::CH0,
             1 => POSSEL_A::CH1,
@@ -92,8 +92,8 @@ impl POSSEL_R {
     }
 }
 #[doc = "Field `POSSEL` writer - Positive Input Select"]
-pub type POSSEL_W<'a, REG, const O: u8> = crate::FieldWriterSafe<'a, REG, 3, O, POSSEL_A>;
-impl<'a, REG, const O: u8> POSSEL_W<'a, REG, O>
+pub type POSSEL_W<'a, REG> = crate::FieldWriterSafe<'a, REG, 3, POSSEL_A>;
+impl<'a, REG> POSSEL_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -182,7 +182,7 @@ impl crate::FieldSpec for NEGSEL_A {
 impl NEGSEL_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<NEGSEL_A> {
+    pub const fn variant(&self) -> Option<NEGSEL_A> {
         match self.bits {
             0 => Some(NEGSEL_A::CH0),
             1 => Some(NEGSEL_A::CH1),
@@ -261,8 +261,8 @@ impl NEGSEL_R {
     }
 }
 #[doc = "Field `NEGSEL` writer - Negative Input Select"]
-pub type NEGSEL_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 4, O, NEGSEL_A>;
-impl<'a, REG, const O: u8> NEGSEL_W<'a, REG, O>
+pub type NEGSEL_W<'a, REG> = crate::FieldWriter<'a, REG, 4, NEGSEL_A>;
+impl<'a, REG> NEGSEL_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -331,15 +331,15 @@ where
 #[doc = "Field `VDDLEVEL` reader - VDD Reference Level"]
 pub type VDDLEVEL_R = crate::FieldReader;
 #[doc = "Field `VDDLEVEL` writer - VDD Reference Level"]
-pub type VDDLEVEL_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 6, O>;
+pub type VDDLEVEL_W<'a, REG> = crate::FieldWriter<'a, REG, 6>;
 #[doc = "Field `LPREF` reader - Low Power Reference Mode"]
 pub type LPREF_R = crate::BitReader;
 #[doc = "Field `LPREF` writer - Low Power Reference Mode"]
-pub type LPREF_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type LPREF_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `CSRESEN` reader - Capacitive Sense Mode Internal Resistor Enable"]
 pub type CSRESEN_R = crate::BitReader;
 #[doc = "Field `CSRESEN` writer - Capacitive Sense Mode Internal Resistor Enable"]
-pub type CSRESEN_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type CSRESEN_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `CSRESSEL` reader - Capacitive Sense Mode Internal Resistor Select"]
 pub type CSRESSEL_R = crate::FieldReader<CSRESSEL_A>;
 #[doc = "Capacitive Sense Mode Internal Resistor Select\n\nValue on reset: 0"]
@@ -367,7 +367,7 @@ impl crate::FieldSpec for CSRESSEL_A {
 impl CSRESSEL_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> CSRESSEL_A {
+    pub const fn variant(&self) -> CSRESSEL_A {
         match self.bits {
             0 => CSRESSEL_A::RES0,
             1 => CSRESSEL_A::RES1,
@@ -398,8 +398,8 @@ impl CSRESSEL_R {
     }
 }
 #[doc = "Field `CSRESSEL` writer - Capacitive Sense Mode Internal Resistor Select"]
-pub type CSRESSEL_W<'a, REG, const O: u8> = crate::FieldWriterSafe<'a, REG, 2, O, CSRESSEL_A>;
-impl<'a, REG, const O: u8> CSRESSEL_W<'a, REG, O>
+pub type CSRESSEL_W<'a, REG> = crate::FieldWriterSafe<'a, REG, 2, CSRESSEL_A>;
+impl<'a, REG> CSRESSEL_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -461,40 +461,44 @@ impl W {
     #[doc = "Bits 0:2 - Positive Input Select"]
     #[inline(always)]
     #[must_use]
-    pub fn possel(&mut self) -> POSSEL_W<INPUTSEL_SPEC, 0> {
-        POSSEL_W::new(self)
+    pub fn possel(&mut self) -> POSSEL_W<INPUTSEL_SPEC> {
+        POSSEL_W::new(self, 0)
     }
     #[doc = "Bits 4:7 - Negative Input Select"]
     #[inline(always)]
     #[must_use]
-    pub fn negsel(&mut self) -> NEGSEL_W<INPUTSEL_SPEC, 4> {
-        NEGSEL_W::new(self)
+    pub fn negsel(&mut self) -> NEGSEL_W<INPUTSEL_SPEC> {
+        NEGSEL_W::new(self, 4)
     }
     #[doc = "Bits 8:13 - VDD Reference Level"]
     #[inline(always)]
     #[must_use]
-    pub fn vddlevel(&mut self) -> VDDLEVEL_W<INPUTSEL_SPEC, 8> {
-        VDDLEVEL_W::new(self)
+    pub fn vddlevel(&mut self) -> VDDLEVEL_W<INPUTSEL_SPEC> {
+        VDDLEVEL_W::new(self, 8)
     }
     #[doc = "Bit 16 - Low Power Reference Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn lpref(&mut self) -> LPREF_W<INPUTSEL_SPEC, 16> {
-        LPREF_W::new(self)
+    pub fn lpref(&mut self) -> LPREF_W<INPUTSEL_SPEC> {
+        LPREF_W::new(self, 16)
     }
     #[doc = "Bit 24 - Capacitive Sense Mode Internal Resistor Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn csresen(&mut self) -> CSRESEN_W<INPUTSEL_SPEC, 24> {
-        CSRESEN_W::new(self)
+    pub fn csresen(&mut self) -> CSRESEN_W<INPUTSEL_SPEC> {
+        CSRESEN_W::new(self, 24)
     }
     #[doc = "Bits 28:29 - Capacitive Sense Mode Internal Resistor Select"]
     #[inline(always)]
     #[must_use]
-    pub fn csressel(&mut self) -> CSRESSEL_W<INPUTSEL_SPEC, 28> {
-        CSRESSEL_W::new(self)
+    pub fn csressel(&mut self) -> CSRESSEL_W<INPUTSEL_SPEC> {
+        CSRESSEL_W::new(self, 28)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -510,10 +514,10 @@ impl crate::RegisterSpec for INPUTSEL_SPEC {
 impl crate::Readable for INPUTSEL_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`inputsel::W`](W) writer structure"]
 impl crate::Writable for INPUTSEL_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets INPUTSEL to value 0x0001_0080"]
 impl crate::Resettable for INPUTSEL_SPEC {
-    const RESET_VALUE: Self::Ux = 0x0001_0080;
+    const RESET_VALUE: u32 = 0x0001_0080;
 }

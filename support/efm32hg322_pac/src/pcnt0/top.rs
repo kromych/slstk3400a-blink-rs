@@ -18,5 +18,5 @@ impl crate::RegisterSpec for TOP_SPEC {
 impl crate::Readable for TOP_SPEC {}
 #[doc = "`reset()` method sets TOP to value 0xff"]
 impl crate::Resettable for TOP_SPEC {
-    const RESET_VALUE: Self::Ux = 0xff;
+    const RESET_VALUE: u32 = 0xff;
 }

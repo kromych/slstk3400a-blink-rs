@@ -5,11 +5,11 @@ pub type W = crate::W<DCTL_SPEC>;
 #[doc = "Field `RMTWKUPSIG` reader - Remote Wakeup Signaling"]
 pub type RMTWKUPSIG_R = crate::BitReader;
 #[doc = "Field `RMTWKUPSIG` writer - Remote Wakeup Signaling"]
-pub type RMTWKUPSIG_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type RMTWKUPSIG_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SFTDISCON` reader - Soft Disconnect"]
 pub type SFTDISCON_R = crate::BitReader;
 #[doc = "Field `SFTDISCON` writer - Soft Disconnect"]
-pub type SFTDISCON_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type SFTDISCON_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `GNPINNAKSTS` reader - Global Non-periodic IN NAK Status"]
 pub type GNPINNAKSTS_R = crate::BitReader;
 #[doc = "Field `GOUTNAKSTS` reader - Global OUT NAK Status"]
@@ -45,7 +45,7 @@ impl crate::FieldSpec for TSTCTL_A {
 impl TSTCTL_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<TSTCTL_A> {
+    pub const fn variant(&self) -> Option<TSTCTL_A> {
         match self.bits {
             0 => Some(TSTCTL_A::DISABLE),
             1 => Some(TSTCTL_A::J),
@@ -88,8 +88,8 @@ impl TSTCTL_R {
     }
 }
 #[doc = "Field `TSTCTL` writer - Test Control"]
-pub type TSTCTL_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 3, O, TSTCTL_A>;
-impl<'a, REG, const O: u8> TSTCTL_W<'a, REG, O>
+pub type TSTCTL_W<'a, REG> = crate::FieldWriter<'a, REG, 3, TSTCTL_A>;
+impl<'a, REG> TSTCTL_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -126,25 +126,25 @@ where
     }
 }
 #[doc = "Field `SGNPINNAK` writer - Set Global Non-periodic IN NAK"]
-pub type SGNPINNAK_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type SGNPINNAK_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `CGNPINNAK` writer - Clear Global Non-periodic IN NAK"]
-pub type CGNPINNAK_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type CGNPINNAK_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SGOUTNAK` writer - Set Global OUT NAK"]
-pub type SGOUTNAK_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type SGOUTNAK_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `CGOUTNAK` writer - Clear Global OUT NAK"]
-pub type CGOUTNAK_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type CGOUTNAK_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `PWRONPRGDONE` reader - Power-On Programming Done"]
 pub type PWRONPRGDONE_R = crate::BitReader;
 #[doc = "Field `PWRONPRGDONE` writer - Power-On Programming Done"]
-pub type PWRONPRGDONE_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type PWRONPRGDONE_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `IGNRFRMNUM` reader - Ignore Frame number For Isochronous End points"]
 pub type IGNRFRMNUM_R = crate::BitReader;
 #[doc = "Field `IGNRFRMNUM` writer - Ignore Frame number For Isochronous End points"]
-pub type IGNRFRMNUM_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type IGNRFRMNUM_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `NAKONBBLE` reader - NAK on Babble Error"]
 pub type NAKONBBLE_R = crate::BitReader;
 #[doc = "Field `NAKONBBLE` writer - NAK on Babble Error"]
-pub type NAKONBBLE_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type NAKONBBLE_W<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bit 0 - Remote Wakeup Signaling"]
     #[inline(always)]
@@ -191,64 +191,68 @@ impl W {
     #[doc = "Bit 0 - Remote Wakeup Signaling"]
     #[inline(always)]
     #[must_use]
-    pub fn rmtwkupsig(&mut self) -> RMTWKUPSIG_W<DCTL_SPEC, 0> {
-        RMTWKUPSIG_W::new(self)
+    pub fn rmtwkupsig(&mut self) -> RMTWKUPSIG_W<DCTL_SPEC> {
+        RMTWKUPSIG_W::new(self, 0)
     }
     #[doc = "Bit 1 - Soft Disconnect"]
     #[inline(always)]
     #[must_use]
-    pub fn sftdiscon(&mut self) -> SFTDISCON_W<DCTL_SPEC, 1> {
-        SFTDISCON_W::new(self)
+    pub fn sftdiscon(&mut self) -> SFTDISCON_W<DCTL_SPEC> {
+        SFTDISCON_W::new(self, 1)
     }
     #[doc = "Bits 4:6 - Test Control"]
     #[inline(always)]
     #[must_use]
-    pub fn tstctl(&mut self) -> TSTCTL_W<DCTL_SPEC, 4> {
-        TSTCTL_W::new(self)
+    pub fn tstctl(&mut self) -> TSTCTL_W<DCTL_SPEC> {
+        TSTCTL_W::new(self, 4)
     }
     #[doc = "Bit 7 - Set Global Non-periodic IN NAK"]
     #[inline(always)]
     #[must_use]
-    pub fn sgnpinnak(&mut self) -> SGNPINNAK_W<DCTL_SPEC, 7> {
-        SGNPINNAK_W::new(self)
+    pub fn sgnpinnak(&mut self) -> SGNPINNAK_W<DCTL_SPEC> {
+        SGNPINNAK_W::new(self, 7)
     }
     #[doc = "Bit 8 - Clear Global Non-periodic IN NAK"]
     #[inline(always)]
     #[must_use]
-    pub fn cgnpinnak(&mut self) -> CGNPINNAK_W<DCTL_SPEC, 8> {
-        CGNPINNAK_W::new(self)
+    pub fn cgnpinnak(&mut self) -> CGNPINNAK_W<DCTL_SPEC> {
+        CGNPINNAK_W::new(self, 8)
     }
     #[doc = "Bit 9 - Set Global OUT NAK"]
     #[inline(always)]
     #[must_use]
-    pub fn sgoutnak(&mut self) -> SGOUTNAK_W<DCTL_SPEC, 9> {
-        SGOUTNAK_W::new(self)
+    pub fn sgoutnak(&mut self) -> SGOUTNAK_W<DCTL_SPEC> {
+        SGOUTNAK_W::new(self, 9)
     }
     #[doc = "Bit 10 - Clear Global OUT NAK"]
     #[inline(always)]
     #[must_use]
-    pub fn cgoutnak(&mut self) -> CGOUTNAK_W<DCTL_SPEC, 10> {
-        CGOUTNAK_W::new(self)
+    pub fn cgoutnak(&mut self) -> CGOUTNAK_W<DCTL_SPEC> {
+        CGOUTNAK_W::new(self, 10)
     }
     #[doc = "Bit 11 - Power-On Programming Done"]
     #[inline(always)]
     #[must_use]
-    pub fn pwronprgdone(&mut self) -> PWRONPRGDONE_W<DCTL_SPEC, 11> {
-        PWRONPRGDONE_W::new(self)
+    pub fn pwronprgdone(&mut self) -> PWRONPRGDONE_W<DCTL_SPEC> {
+        PWRONPRGDONE_W::new(self, 11)
     }
     #[doc = "Bit 15 - Ignore Frame number For Isochronous End points"]
     #[inline(always)]
     #[must_use]
-    pub fn ignrfrmnum(&mut self) -> IGNRFRMNUM_W<DCTL_SPEC, 15> {
-        IGNRFRMNUM_W::new(self)
+    pub fn ignrfrmnum(&mut self) -> IGNRFRMNUM_W<DCTL_SPEC> {
+        IGNRFRMNUM_W::new(self, 15)
     }
     #[doc = "Bit 16 - NAK on Babble Error"]
     #[inline(always)]
     #[must_use]
-    pub fn nakonbble(&mut self) -> NAKONBBLE_W<DCTL_SPEC, 16> {
-        NAKONBBLE_W::new(self)
+    pub fn nakonbble(&mut self) -> NAKONBBLE_W<DCTL_SPEC> {
+        NAKONBBLE_W::new(self, 16)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -264,10 +268,10 @@ impl crate::RegisterSpec for DCTL_SPEC {
 impl crate::Readable for DCTL_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`dctl::W`](W) writer structure"]
 impl crate::Writable for DCTL_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DCTL to value 0x02"]
 impl crate::Resettable for DCTL_SPEC {
-    const RESET_VALUE: Self::Ux = 0x02;
+    const RESET_VALUE: u32 = 0x02;
 }

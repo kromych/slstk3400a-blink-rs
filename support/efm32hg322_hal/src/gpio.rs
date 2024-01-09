@@ -128,176 +128,176 @@ macro_rules! gpio {
                 impl<MODE> $PXi<MODE> {
                     pub fn into_disabled(self) -> $PXi<Disabled<Floating>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().disabled());
-                        unsafe { gpio.$outclr.write(|w| w.bits(1 << $i)); }
+                        gpio.$px_modehl().modify(|_, w| w.$modei().disabled());
+                        unsafe { gpio.$outclr().write(|w| w.bits(1 << $i)); }
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_disabled_pulled_up(self) -> $PXi<Disabled<PullUp>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().disabled());
-                        unsafe { gpio.$outset.write(|w| w.bits(1 << $i)); }
+                        gpio.$px_modehl().modify(|_, w| w.$modei().disabled());
+                        unsafe { gpio.$outset().write(|w| w.bits(1 << $i)); }
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_input(self) -> $PXi<Input<Floating>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().input());
-                        unsafe { gpio.$outclr.write(|w| w.bits(1 << $i)); }
+                        gpio.$px_modehl().modify(|_, w| w.$modei().input());
+                        unsafe { gpio.$outclr().write(|w| w.bits(1 << $i)); }
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_input_with_filter(self) -> $PXi<Input<WithFilter<Floating>>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().input());
-                        unsafe { gpio.$outset.write(|w| w.bits(1 << $i)); }
+                        gpio.$px_modehl().modify(|_, w| w.$modei().input());
+                        unsafe { gpio.$outset().write(|w| w.bits(1 << $i)); }
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_input_pulled_down(self) -> $PXi<Input<PullDown>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().inputpull());
-                        unsafe { gpio.$outclr.write(|w| w.bits(1 << $i)); }
+                        gpio.$px_modehl().modify(|_, w| w.$modei().inputpull());
+                        unsafe { gpio.$outclr().write(|w| w.bits(1 << $i)); }
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_input_pulled_up(self) -> $PXi<Input<PullUp>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().inputpull());
-                        unsafe { gpio.$outset.write(|w| w.bits(1 << $i)); }
+                        gpio.$px_modehl().modify(|_, w| w.$modei().inputpull());
+                        unsafe { gpio.$outset().write(|w| w.bits(1 << $i)); }
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_input_pulled_down_with_filter(self) -> $PXi<Input<WithFilter<PullDown>>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().inputpullfilter());
-                        unsafe { gpio.$outclr.write(|w| w.bits(1 << $i)); }
+                        gpio.$px_modehl().modify(|_, w| w.$modei().inputpullfilter());
+                        unsafe { gpio.$outclr().write(|w| w.bits(1 << $i)); }
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_input_pulled_up_with_filter(self) -> $PXi<Input<WithFilter<PullUp>>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().inputpullfilter());
-                        unsafe { gpio.$outset.write(|w| w.bits(1 << $i)); }
+                        gpio.$px_modehl().modify(|_, w| w.$modei().inputpullfilter());
+                        unsafe { gpio.$outset().write(|w| w.bits(1 << $i)); }
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_pushpull(self) -> $PXi<Output<PushPull<Normal>>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().pushpull());
+                        gpio.$px_modehl().modify(|_, w| w.$modei().pushpull());
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_pushpull_alt_drive(self) -> $PXi<Output<PushPull<Alternate>>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().pushpulldrive());
+                        gpio.$px_modehl().modify(|_, w| w.$modei().pushpulldrive());
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_wiredor(self) -> $PXi<Output<WiredOr<Floating>>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().wiredor());
+                        gpio.$px_modehl().modify(|_, w| w.$modei().wiredor());
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_wiredor_pulled_down(self) -> $PXi<Output<WiredOr<PullDown>>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().wiredorpulldown());
+                        gpio.$px_modehl().modify(|_, w| w.$modei().wiredorpulldown());
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_wiredand(self) -> $PXi<Output<WiredAnd<Normal, Floating>>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().wiredand());
+                        gpio.$px_modehl().modify(|_, w| w.$modei().wiredand());
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_wiredand_pulled_up(self) -> $PXi<Output<WiredAnd<Normal, PullUp>>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().wiredandpullup());
+                        gpio.$px_modehl().modify(|_, w| w.$modei().wiredandpullup());
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_wiredand_with_filter(self) -> $PXi<Output<WithFilter<WiredAnd<Normal, Floating>>>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().wiredandfilter());
+                        gpio.$px_modehl().modify(|_, w| w.$modei().wiredandfilter());
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_wiredand_with_filter_pulled_up(self) -> $PXi<Output<WithFilter<WiredAnd<Normal, PullUp>>>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().wiredandpullupfilter());
+                        gpio.$px_modehl().modify(|_, w| w.$modei().wiredandpullupfilter());
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_wiredand_alt_drive(self) -> $PXi<Output<WiredAnd<Alternate, Floating>>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().wiredanddrive());
+                        gpio.$px_modehl().modify(|_, w| w.$modei().wiredanddrive());
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_wiredand_alt_drive_with_filter(self) -> $PXi<Output<WithFilter<WiredAnd<Alternate, Floating>>>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().wiredanddrivefilter());
+                        gpio.$px_modehl().modify(|_, w| w.$modei().wiredanddrivefilter());
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_wiredand_alt_drive_pulled_up(self) -> $PXi<Output<WiredAnd<Alternate, PullUp>>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().wiredanddrivepullup());
+                        gpio.$px_modehl().modify(|_, w| w.$modei().wiredanddrivepullup());
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_wiredand_alt_drive_with_filter_pulled_up(self) -> $PXi<Output<WithFilter<WiredAnd<Alternate, PullUp>>>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().wiredanddrivepullupfilter());
+                        gpio.$px_modehl().modify(|_, w| w.$modei().wiredanddrivepullupfilter());
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_io_pushpull(self) -> $PXi<Input<Output<PushPull<Normal>>>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().pushpull());
+                        gpio.$px_modehl().modify(|_, w| w.$modei().pushpull());
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_io_pushpull_alt_drive(self) -> $PXi<Input<Output<PushPull<Alternate>>>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().pushpulldrive());
+                        gpio.$px_modehl().modify(|_, w| w.$modei().pushpulldrive());
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_io_wiredor(self) -> $PXi<Input<Output<WiredOr<Floating>>>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().wiredor());
+                        gpio.$px_modehl().modify(|_, w| w.$modei().wiredor());
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_io_wiredor_pulled_down(self) -> $PXi<Input<Output<WiredOr<PullDown>>>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().wiredorpulldown());
+                        gpio.$px_modehl().modify(|_, w| w.$modei().wiredorpulldown());
 
                         $PXi { _mode: PhantomData }
                     }
@@ -305,56 +305,56 @@ macro_rules! gpio {
 
                     pub fn into_io_wiredand(self) -> $PXi<Input<Output<WiredAnd<Normal, Floating>>>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().wiredand());
+                        gpio.$px_modehl().modify(|_, w| w.$modei().wiredand());
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_io_wiredand_pulled_up(self) -> $PXi<Input<Output<WiredAnd<Normal, PullUp>>>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().wiredandpullup());
+                        gpio.$px_modehl().modify(|_, w| w.$modei().wiredandpullup());
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_io_wiredand_with_filter(self) -> $PXi<Input<Output<WithFilter<WiredAnd<Normal, Floating>>>>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().wiredandfilter());
+                        gpio.$px_modehl().modify(|_, w| w.$modei().wiredandfilter());
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_io_wiredand_with_filter_pulled_up(self) -> $PXi<Input<Output<WithFilter<WiredAnd<Normal, PullUp>>>>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().wiredandpullupfilter());
+                        gpio.$px_modehl().modify(|_, w| w.$modei().wiredandpullupfilter());
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_io_wiredand_alt_drive(self) -> $PXi<Input<Output<WiredAnd<Alternate, Floating>>>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().wiredanddrive());
+                        gpio.$px_modehl().modify(|_, w| w.$modei().wiredanddrive());
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_io_wiredand_alt_drive_with_filter(self) -> $PXi<Input<Output<WithFilter<WiredAnd<Alternate, Floating>>>>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().wiredanddrivefilter());
+                        gpio.$px_modehl().modify(|_, w| w.$modei().wiredanddrivefilter());
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_io_wiredand_alt_drive_pulled_up(self) -> $PXi<Input<Output<WiredAnd<Alternate, PullUp>>>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().wiredanddrivepullup());
+                        gpio.$px_modehl().modify(|_, w| w.$modei().wiredanddrivepullup());
 
                         $PXi { _mode: PhantomData }
                     }
 
                     pub fn into_io_wiredand_alt_drive_with_filter_pulled_up(self) -> $PXi<Input<Output<WithFilter<WiredAnd<Alternate, PullUp>>>>> {
                         let gpio = sneak_into_gpio();
-                        gpio.$px_modehl.modify(|_, w| w.$modei().wiredanddrivepullupfilter());
+                        gpio.$px_modehl().modify(|_, w| w.$modei().wiredanddrivepullupfilter());
 
                         $PXi { _mode: PhantomData }
                     }
@@ -363,34 +363,34 @@ macro_rules! gpio {
                 impl<MODE> GpioInterruptExt for $PXi<MODE> {
                     fn enable_interrupt(&mut self, edge: ExtInterruptEdge) {
                         let gpio = sneak_into_gpio();
-                        gpio.$lhsel.modify(|_, w| w.$pinsel().$portsel());
+                        gpio.$lhsel().modify(|_, w| w.$pinsel().$portsel());
 
                         let mask = (1 << $i) as u16;
                         match edge {
                             ExtInterruptEdge::Fall => {
-                                gpio.extifall.modify(|r, w| unsafe {
+                                gpio.extifall().modify(|r, w| unsafe {
                                     let current = r.bits() as u16;
                                     w.extifall().bits(current | mask)
                                 });
                             },
                             ExtInterruptEdge::Rise => {
-                                gpio.extirise.modify(|r, w| unsafe {
+                                gpio.extirise().modify(|r, w| unsafe {
                                     let current = r.bits() as u16;
                                     w.extirise().bits(current | mask)
                                 });
                             },
                             ExtInterruptEdge::Both => {
-                                gpio.extifall.modify(|r, w| unsafe {
+                                gpio.extifall().modify(|r, w| unsafe {
                                     let current = r.bits() as u16;
                                     w.extifall().bits(current | mask)
                                 });
-                                gpio.extirise.modify(|r, w| unsafe {
+                                gpio.extirise().modify(|r, w| unsafe {
                                     let current = r.bits() as u16;
                                     w.extirise().bits(current | mask)
                                 });
                             }
                         }
-                        gpio.ien.modify(|r, w| unsafe {
+                        gpio.ien().modify(|r, w| unsafe {
                             let current = r.bits() as u16;
                             w.ext().bits(current | mask)
                         });
@@ -400,29 +400,29 @@ macro_rules! gpio {
                         let gpio = sneak_into_gpio();
                         let mask = !(1 << $i) as u16;
 
-                        gpio.ien.modify(|r, w| unsafe {
+                        gpio.ien().modify(|r, w| unsafe {
                             let current = r.bits() as u16;
                             w.ext().bits(current & mask)
                         });
                         match edge {
                             ExtInterruptEdge::Fall => {
-                                gpio.extifall.modify(|r, w| unsafe {
+                                gpio.extifall().modify(|r, w| unsafe {
                                     let current = r.bits() as u16;
                                     w.extifall().bits(current & mask)
                                 });
                             },
                             ExtInterruptEdge::Rise => {
-                                gpio.extirise.modify(|r, w| unsafe {
+                                gpio.extirise().modify(|r, w| unsafe {
                                     let current = r.bits() as u16;
                                     w.extirise().bits(current & mask)
                                 });
                             },
                             ExtInterruptEdge::Both => {
-                                gpio.extifall.modify(|r, w| unsafe {
+                                gpio.extifall().modify(|r, w| unsafe {
                                     let current = r.bits() as u16;
                                     w.extifall().bits(current & mask)
                                 });
-                                gpio.extirise.modify(|r, w| unsafe {
+                                gpio.extirise().modify(|r, w| unsafe {
                                     let current = r.bits() as u16;
                                     w.extirise().bits(current & mask)
                                 });
@@ -432,13 +432,13 @@ macro_rules! gpio {
 
                     fn clear_interrupt(&mut self) {
                         let gpio = sneak_into_gpio();
-                        gpio.$lhsel.modify(|_, w| w.$pinsel().$portsel());
+                        gpio.$lhsel().modify(|_, w| w.$pinsel().$portsel());
 
                         // Clears interrupts for the entire port if needed:
                         // let pending = gpio.if_.read().ext().bits();
 
                         let pending = 1 << $i;
-                        gpio.ifc.write(|w| unsafe {
+                        gpio.ifc().write(|w| unsafe {
                             w.ext().bits(pending)
                         });
                     }
@@ -494,13 +494,13 @@ macro_rules! gpio {
 
                     fn set_low(self: &mut Self) -> Result<(), Self::Error> {
                         let gpio = sneak_into_gpio();
-                        unsafe { gpio.$outclr.write(|w| w.bits(1 << $i)); }
+                        unsafe { gpio.$outclr().write(|w| w.bits(1 << $i)); }
                         Ok(())
                     }
 
                     fn set_high(self: &mut Self) -> Result<(), Self::Error> {
                         let gpio = sneak_into_gpio();
-                        unsafe { gpio.$outset.write(|w| w.bits(1 << $i)); }
+                        unsafe { gpio.$outset().write(|w| w.bits(1 << $i)); }
                         Ok(())
                     }
                 }
@@ -547,13 +547,13 @@ macro_rules! gpio {
 
                     fn set_low(self: &mut Self) -> Result<(), Self::Error> {
                         let gpio = sneak_into_gpio();
-                        unsafe { gpio.$outclr.write(|w| w.bits(1 << $i)); }
+                        unsafe { gpio.$outclr().write(|w| w.bits(1 << $i)); }
                         Ok(())
                     }
 
                     fn set_high(self: &mut Self) -> Result<(), Self::Error> {
                         let gpio = sneak_into_gpio();
-                        unsafe { gpio.$outset.write(|w| w.bits(1 << $i)); }
+                        unsafe { gpio.$outset().write(|w| w.bits(1 << $i)); }
                         Ok(())
                     }
                 }
@@ -598,7 +598,7 @@ macro_rules! gpio {
             $(
                 pub fn $pX_drive(self, mode: DriveMode) -> Self {
                     let gpio = sneak_into_gpio();
-                    gpio.$pX_ctrl.write(|w| w.drivemode().bits(mode.into()));
+                    gpio.$pX_ctrl().write(|w| w.drivemode().bits(mode.into()));
                     self
                 }
             )+

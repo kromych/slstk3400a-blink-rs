@@ -18,5 +18,5 @@ impl crate::RegisterSpec for CACHEHITS_SPEC {
 impl crate::Readable for CACHEHITS_SPEC {}
 #[doc = "`reset()` method sets CACHEHITS to value 0"]
 impl crate::Resettable for CACHEHITS_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

@@ -25,30 +25,30 @@ macro_rules! timer {
         impl $TimerN {
             pub fn set_top(&mut self, top: u16) {
                 self.register
-                    .top
+                    .top()
                     .modify(|_, w| unsafe { w.top().bits(top) });
             }
 
             pub fn interrupt_enable(&mut self, interrupt: InterruptFlag) {
                 self.register
-                    .ien
+                    .ien()
                     .modify(|r, w| unsafe { w.bits(interrupt.bits() | r.bits()) });
             }
 
             pub fn interrupt_is_pending(interrupt: InterruptFlag) -> bool {
                 let reg = unsafe { &*pac::$TIMERn::ptr() };
-                reg.if_.read().bits() & interrupt.bits() != 0
+                reg.if_().read().bits() & interrupt.bits() != 0
             }
 
             pub fn interrupt_unpend(interrupt: InterruptFlag) {
                 unsafe {
                     let reg = &*pac::$TIMERn::ptr();
-                    reg.ifc.write(|w| w.bits(interrupt.bits()));
+                    reg.ifc().write(|w| w.bits(interrupt.bits()));
                 }
             }
 
             pub fn start(&mut self) {
-                self.register.cmd.write(|w| w.start().bit(true));
+                self.register.cmd().write(|w| w.start().bit(true));
             }
         }
     };

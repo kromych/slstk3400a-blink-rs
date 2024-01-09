@@ -5,15 +5,15 @@ pub type W = crate::W<CTRL_SPEC>;
 #[doc = "Field `EN` reader - RTC Enable"]
 pub type EN_R = crate::BitReader;
 #[doc = "Field `EN` writer - RTC Enable"]
-pub type EN_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type EN_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `DEBUGRUN` reader - Debug Mode Run Enable"]
 pub type DEBUGRUN_R = crate::BitReader;
 #[doc = "Field `DEBUGRUN` writer - Debug Mode Run Enable"]
-pub type DEBUGRUN_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type DEBUGRUN_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `COMP0TOP` reader - Compare Channel 0 is Top Value"]
 pub type COMP0TOP_R = crate::BitReader;
 #[doc = "Field `COMP0TOP` writer - Compare Channel 0 is Top Value"]
-pub type COMP0TOP_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type COMP0TOP_W<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bit 0 - RTC Enable"]
     #[inline(always)]
@@ -35,22 +35,26 @@ impl W {
     #[doc = "Bit 0 - RTC Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn en(&mut self) -> EN_W<CTRL_SPEC, 0> {
-        EN_W::new(self)
+    pub fn en(&mut self) -> EN_W<CTRL_SPEC> {
+        EN_W::new(self, 0)
     }
     #[doc = "Bit 1 - Debug Mode Run Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn debugrun(&mut self) -> DEBUGRUN_W<CTRL_SPEC, 1> {
-        DEBUGRUN_W::new(self)
+    pub fn debugrun(&mut self) -> DEBUGRUN_W<CTRL_SPEC> {
+        DEBUGRUN_W::new(self, 1)
     }
     #[doc = "Bit 2 - Compare Channel 0 is Top Value"]
     #[inline(always)]
     #[must_use]
-    pub fn comp0top(&mut self) -> COMP0TOP_W<CTRL_SPEC, 2> {
-        COMP0TOP_W::new(self)
+    pub fn comp0top(&mut self) -> COMP0TOP_W<CTRL_SPEC> {
+        COMP0TOP_W::new(self, 2)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -66,10 +70,10 @@ impl crate::RegisterSpec for CTRL_SPEC {
 impl crate::Readable for CTRL_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`ctrl::W`](W) writer structure"]
 impl crate::Writable for CTRL_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL to value 0"]
 impl crate::Resettable for CTRL_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

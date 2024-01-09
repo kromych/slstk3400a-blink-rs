@@ -33,7 +33,7 @@ impl crate::FieldSpec for TSEL_A {
 impl TSEL_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<TSEL_A> {
+    pub const fn variant(&self) -> Option<TSEL_A> {
         match self.bits {
             0 => Some(TSEL_A::PRSCH0),
             1 => Some(TSEL_A::PRSCH1),
@@ -76,8 +76,8 @@ impl TSEL_R {
     }
 }
 #[doc = "Field `TSEL` writer - Trigger PRS Channel Select"]
-pub type TSEL_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 3, O, TSEL_A>;
-impl<'a, REG, const O: u8> TSEL_W<'a, REG, O>
+pub type TSEL_W<'a, REG> = crate::FieldWriter<'a, REG, 3, TSEL_A>;
+impl<'a, REG> TSEL_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -116,15 +116,15 @@ where
 #[doc = "Field `RXTEN` reader - Receive Trigger Enable"]
 pub type RXTEN_R = crate::BitReader;
 #[doc = "Field `RXTEN` writer - Receive Trigger Enable"]
-pub type RXTEN_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type RXTEN_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TXTEN` reader - Transmit Trigger Enable"]
 pub type TXTEN_R = crate::BitReader;
 #[doc = "Field `TXTEN` writer - Transmit Trigger Enable"]
-pub type TXTEN_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type TXTEN_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `AUTOTXTEN` reader - AUTOTX Trigger Enable"]
 pub type AUTOTXTEN_R = crate::BitReader;
 #[doc = "Field `AUTOTXTEN` writer - AUTOTX Trigger Enable"]
-pub type AUTOTXTEN_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type AUTOTXTEN_W<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bits 0:2 - Trigger PRS Channel Select"]
     #[inline(always)]
@@ -151,28 +151,32 @@ impl W {
     #[doc = "Bits 0:2 - Trigger PRS Channel Select"]
     #[inline(always)]
     #[must_use]
-    pub fn tsel(&mut self) -> TSEL_W<TRIGCTRL_SPEC, 0> {
-        TSEL_W::new(self)
+    pub fn tsel(&mut self) -> TSEL_W<TRIGCTRL_SPEC> {
+        TSEL_W::new(self, 0)
     }
     #[doc = "Bit 4 - Receive Trigger Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn rxten(&mut self) -> RXTEN_W<TRIGCTRL_SPEC, 4> {
-        RXTEN_W::new(self)
+    pub fn rxten(&mut self) -> RXTEN_W<TRIGCTRL_SPEC> {
+        RXTEN_W::new(self, 4)
     }
     #[doc = "Bit 5 - Transmit Trigger Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn txten(&mut self) -> TXTEN_W<TRIGCTRL_SPEC, 5> {
-        TXTEN_W::new(self)
+    pub fn txten(&mut self) -> TXTEN_W<TRIGCTRL_SPEC> {
+        TXTEN_W::new(self, 5)
     }
     #[doc = "Bit 6 - AUTOTX Trigger Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn autotxten(&mut self) -> AUTOTXTEN_W<TRIGCTRL_SPEC, 6> {
-        AUTOTXTEN_W::new(self)
+    pub fn autotxten(&mut self) -> AUTOTXTEN_W<TRIGCTRL_SPEC> {
+        AUTOTXTEN_W::new(self, 6)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -188,10 +192,10 @@ impl crate::RegisterSpec for TRIGCTRL_SPEC {
 impl crate::Readable for TRIGCTRL_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`trigctrl::W`](W) writer structure"]
 impl crate::Writable for TRIGCTRL_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets TRIGCTRL to value 0"]
 impl crate::Resettable for TRIGCTRL_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

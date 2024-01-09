@@ -29,7 +29,7 @@ impl crate::FieldSpec for MPS_A {
 impl MPS_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> MPS_A {
+    pub const fn variant(&self) -> MPS_A {
         match self.bits {
             0 => MPS_A::_64B,
             1 => MPS_A::_32B,
@@ -60,8 +60,8 @@ impl MPS_R {
     }
 }
 #[doc = "Field `MPS` writer - Maximum Packet Size"]
-pub type MPS_W<'a, REG, const O: u8> = crate::FieldWriterSafe<'a, REG, 2, O, MPS_A>;
-impl<'a, REG, const O: u8> MPS_W<'a, REG, O>
+pub type MPS_W<'a, REG> = crate::FieldWriterSafe<'a, REG, 2, MPS_A>;
+impl<'a, REG> MPS_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -96,23 +96,23 @@ pub type EPTYPE_R = crate::FieldReader;
 #[doc = "Field `STALL` reader - Handshake"]
 pub type STALL_R = crate::BitReader;
 #[doc = "Field `STALL` writer - Handshake"]
-pub type STALL_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type STALL_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TXFNUM` reader - TxFIFO Number"]
 pub type TXFNUM_R = crate::FieldReader;
 #[doc = "Field `TXFNUM` writer - TxFIFO Number"]
-pub type TXFNUM_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 4, O>;
+pub type TXFNUM_W<'a, REG> = crate::FieldWriter<'a, REG, 4>;
 #[doc = "Field `CNAK` writer - Clear NAK"]
-pub type CNAK_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type CNAK_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SNAK` writer - Set NAK"]
-pub type SNAK_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type SNAK_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `EPDIS` reader - Endpoint Disable"]
 pub type EPDIS_R = crate::BitReader;
 #[doc = "Field `EPDIS` writer - Endpoint Disable"]
-pub type EPDIS_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type EPDIS_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `EPENA` reader - Endpoint Enable"]
 pub type EPENA_R = crate::BitReader;
 #[doc = "Field `EPENA` writer - Endpoint Enable"]
-pub type EPENA_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type EPENA_W<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bits 0:1 - Maximum Packet Size"]
     #[inline(always)]
@@ -159,46 +159,50 @@ impl W {
     #[doc = "Bits 0:1 - Maximum Packet Size"]
     #[inline(always)]
     #[must_use]
-    pub fn mps(&mut self) -> MPS_W<DIEP0CTL_SPEC, 0> {
-        MPS_W::new(self)
+    pub fn mps(&mut self) -> MPS_W<DIEP0CTL_SPEC> {
+        MPS_W::new(self, 0)
     }
     #[doc = "Bit 21 - Handshake"]
     #[inline(always)]
     #[must_use]
-    pub fn stall(&mut self) -> STALL_W<DIEP0CTL_SPEC, 21> {
-        STALL_W::new(self)
+    pub fn stall(&mut self) -> STALL_W<DIEP0CTL_SPEC> {
+        STALL_W::new(self, 21)
     }
     #[doc = "Bits 22:25 - TxFIFO Number"]
     #[inline(always)]
     #[must_use]
-    pub fn txfnum(&mut self) -> TXFNUM_W<DIEP0CTL_SPEC, 22> {
-        TXFNUM_W::new(self)
+    pub fn txfnum(&mut self) -> TXFNUM_W<DIEP0CTL_SPEC> {
+        TXFNUM_W::new(self, 22)
     }
     #[doc = "Bit 26 - Clear NAK"]
     #[inline(always)]
     #[must_use]
-    pub fn cnak(&mut self) -> CNAK_W<DIEP0CTL_SPEC, 26> {
-        CNAK_W::new(self)
+    pub fn cnak(&mut self) -> CNAK_W<DIEP0CTL_SPEC> {
+        CNAK_W::new(self, 26)
     }
     #[doc = "Bit 27 - Set NAK"]
     #[inline(always)]
     #[must_use]
-    pub fn snak(&mut self) -> SNAK_W<DIEP0CTL_SPEC, 27> {
-        SNAK_W::new(self)
+    pub fn snak(&mut self) -> SNAK_W<DIEP0CTL_SPEC> {
+        SNAK_W::new(self, 27)
     }
     #[doc = "Bit 30 - Endpoint Disable"]
     #[inline(always)]
     #[must_use]
-    pub fn epdis(&mut self) -> EPDIS_W<DIEP0CTL_SPEC, 30> {
-        EPDIS_W::new(self)
+    pub fn epdis(&mut self) -> EPDIS_W<DIEP0CTL_SPEC> {
+        EPDIS_W::new(self, 30)
     }
     #[doc = "Bit 31 - Endpoint Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn epena(&mut self) -> EPENA_W<DIEP0CTL_SPEC, 31> {
-        EPENA_W::new(self)
+    pub fn epena(&mut self) -> EPENA_W<DIEP0CTL_SPEC> {
+        EPENA_W::new(self, 31)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -214,10 +218,10 @@ impl crate::RegisterSpec for DIEP0CTL_SPEC {
 impl crate::Readable for DIEP0CTL_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`diep0ctl::W`](W) writer structure"]
 impl crate::Writable for DIEP0CTL_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DIEP0CTL to value 0x8000"]
 impl crate::Resettable for DIEP0CTL_SPEC {
-    const RESET_VALUE: Self::Ux = 0x8000;
+    const RESET_VALUE: u32 = 0x8000;
 }

@@ -141,7 +141,7 @@ fn dev_info() -> &'static RegisterBlock {
 /// Get the Production Revision of the chip
 fn get_prod_rev() -> u8 {
     let di = dev_info();
-    di.part.read().prod_rev().bits()
+    di.part().read().prod_rev().bits()
 }
 
 /// Returns clock configuration.
@@ -149,10 +149,10 @@ pub fn get_clock_config() -> Result<ClockConfiguration, ClockError> {
     let source;
     let basefreq;
     let cmu = unsafe { &*pac::CMU::ptr() };
-    let status = cmu.status.read();
+    let status = cmu.status().read();
 
     if status.hfrcosel().bit() {
-        if let Some(band) = cmu.hfrcoctrl.read().band().variant() {
+        if let Some(band) = cmu.hfrcoctrl().read().band().variant() {
             match band {
                 HfrcoBand::_1MHZ => {
                     if get_prod_rev() >= 19 {
@@ -195,10 +195,10 @@ pub fn get_clock_config() -> Result<ClockConfiguration, ClockError> {
         return Err(ClockError::UnknownClockSource);
     }
 
-    let hclkdiv = cmu.ctrl.read().hfclkdiv().bits();
-    let corediv = cmu.hfcoreclkdiv.read().hfcoreclkdiv().bits();
-    let hfcoreclklediv = 1 << (cmu.hfcoreclkdiv.read().hfcoreclklediv().bit() as u8 + 1);
-    let perdiv = cmu.hfperclkdiv.read().hfperclkdiv().bits();
+    let hclkdiv = cmu.ctrl().read().hfclkdiv().bits();
+    let corediv = cmu.hfcoreclkdiv().read().hfcoreclkdiv().bits();
+    let hfcoreclklediv = 1 << (cmu.hfcoreclkdiv().read().hfcoreclklediv().bit() as u8 + 1);
+    let perdiv = cmu.hfperclkdiv().read().hfperclkdiv().bits();
     let hclkfreq = basefreq / (hclkdiv as u32 + 1);
     let corefreq = hclkfreq / (1 << corediv);
     let perfreq = hclkfreq / (1 << perdiv);
@@ -220,7 +220,7 @@ pub fn setup_clocks(clock_setup: &ClockSetup) -> Result<ClockConfiguration, Cloc
 
     // Set wait states for the worst case for the flash access time.
     let msc = unsafe { &*pac::MSC::ptr() };
-    let msc_read_ctrl = &msc.readctrl;
+    let msc_read_ctrl = &msc.readctrl();
     // MSC_READCTL:
     //
     // If software wants to set a core clock frequency above 16 MHz, this register
@@ -240,11 +240,11 @@ pub fn setup_clocks(clock_setup: &ClockSetup) -> Result<ClockConfiguration, Cloc
     msc_read_ctrl.write(|w| w.mode().variant(MODE_A::WS1));
 
     // Set the clock divisors to 1.
-    cmu.ctrl
+    cmu.ctrl()
         .write(|w| w.hfclkdiv().variant(HfClkDiv::Div1 as u8));
-    cmu.hfcoreclkdiv
+    cmu.hfcoreclkdiv()
         .write(|w| w.hfcoreclkdiv().variant(HfCoreClkDiv::HFCLK));
-    cmu.hfperclkdiv
+    cmu.hfperclkdiv()
         .write(|w| w.hfperclkdiv().variant(HfPerClkDiv::HFCLK));
 
     let change_freq_and_wait = || {
@@ -253,68 +253,68 @@ pub fn setup_clocks(clock_setup: &ClockSetup) -> Result<ClockConfiguration, Cloc
                 // Configure band and tuning.
                 let di = dev_info();
                 let tuning = match band {
-                    HfrcoBand::_1MHZ => di.hfrcocal0.read().band1().bits(),
-                    HfrcoBand::_7MHZ => di.hfrcocal0.read().band7().bits(),
-                    HfrcoBand::_11MHZ => di.hfrcocal0.read().band11().bits(),
-                    HfrcoBand::_14MHZ => di.hfrcocal0.read().band14().bits(),
-                    HfrcoBand::_21MHZ => di.hfrcocal1.read().band21().bits(),
+                    HfrcoBand::_1MHZ => di.hfrcocal0().read().band1().bits(),
+                    HfrcoBand::_7MHZ => di.hfrcocal0().read().band7().bits(),
+                    HfrcoBand::_11MHZ => di.hfrcocal0().read().band11().bits(),
+                    HfrcoBand::_14MHZ => di.hfrcocal0().read().band14().bits(),
+                    HfrcoBand::_21MHZ => di.hfrcocal1().read().band21().bits(),
                 };
-                cmu.hfrcoctrl.write(|w| {
+                cmu.hfrcoctrl().write(|w| {
                     w.band().variant(band);
                     w.tuning().variant(tuning)
                 });
 
                 // Check if HFRCO is already enabled.
-                if !cmu.status.read().hfrcordy().bit() {
+                if !cmu.status().read().hfrcordy().bit() {
                     // Enable HFRCO and wait until it is stable.
-                    cmu.oscencmd.write(|w| w.hfrcoen().set_bit());
+                    cmu.oscencmd().write(|w| w.hfrcoen().set_bit());
                     // Wait until ready.
-                    while !cmu.status.read().hfrcoens().bit() {}
-                    while !cmu.status.read().hfrcordy().bit() {}
+                    while !cmu.status().read().hfrcoens().bit() {}
+                    while !cmu.status().read().hfrcordy().bit() {}
                 }
 
                 // Select HFRCO as source for HFCLK.
-                cmu.cmd.write(|w| w.hfclksel().hfrco());
-                while !cmu.status.read().hfrcosel().bit() {}
+                cmu.cmd().write(|w| w.hfclksel().hfrco());
+                while !cmu.status().read().hfrcosel().bit() {}
             }
             ClockSource::HFXO => {
                 // Check if HFXO is already enabled.
-                if !cmu.status.read().hfxordy().bit() {
+                if !cmu.status().read().hfxordy().bit() {
                     // Enable HFXO and wait until it is stable.
-                    cmu.oscencmd.write(|w| w.hfxoen().set_bit());
-                    while !cmu.status.read().hfxoens().bit() {}
-                    while !cmu.status.read().hfxordy().bit() {}
+                    cmu.oscencmd().write(|w| w.hfxoen().set_bit());
+                    while !cmu.status().read().hfxoens().bit() {}
+                    while !cmu.status().read().hfxordy().bit() {}
                 }
 
                 // Select HFXO as source for HFCLK.
-                cmu.cmd.write(|w| w.hfclksel().hfxo());
-                while !cmu.status.read().hfxosel().bit() {}
+                cmu.cmd().write(|w| w.hfclksel().hfxo());
+                while !cmu.status().read().hfxosel().bit() {}
             }
             ClockSource::LFRCO => {
                 // Check if LFRCO is already enabled.
-                if !cmu.status.read().lfrcordy().bit() {
+                if !cmu.status().read().lfrcordy().bit() {
                     // Enable LFRCO and wait until it is stable.
-                    cmu.oscencmd.write(|w| w.lfrcoen().set_bit());
-                    while !cmu.status.read().lfrcoens().bit() {}
-                    while !cmu.status.read().lfrcordy().bit() {}
+                    cmu.oscencmd().write(|w| w.lfrcoen().set_bit());
+                    while !cmu.status().read().lfrcoens().bit() {}
+                    while !cmu.status().read().lfrcordy().bit() {}
                 }
 
                 // Select LFRCO as source for HFCLK.
-                cmu.cmd.write(|w| w.hfclksel().lfrco());
-                while !cmu.status.read().lfrcosel().bit() {}
+                cmu.cmd().write(|w| w.hfclksel().lfrco());
+                while !cmu.status().read().lfrcosel().bit() {}
             }
             ClockSource::LFXO => {
                 // Check if LFXO is already enabled.
-                if !cmu.status.read().lfxordy().bit() {
+                if !cmu.status().read().lfxordy().bit() {
                     // Enable LFXO and wait until it is stable.
-                    cmu.oscencmd.write(|w| w.lfxoen().set_bit());
-                    while !cmu.status.read().lfxoens().bit() {}
-                    while !cmu.status.read().lfxordy().bit() {}
+                    cmu.oscencmd().write(|w| w.lfxoen().set_bit());
+                    while !cmu.status().read().lfxoens().bit() {}
+                    while !cmu.status().read().lfxordy().bit() {}
                 }
 
                 // Select LFXO as source for HFCLK.
-                cmu.cmd.write(|w| w.hfclksel().lfxo());
-                while !cmu.status.read().lfxosel().bit() {}
+                cmu.cmd().write(|w| w.hfclksel().lfxo());
+                while !cmu.status().read().lfxosel().bit() {}
             }
         }
 
@@ -325,15 +325,15 @@ pub fn setup_clocks(clock_setup: &ClockSetup) -> Result<ClockConfiguration, Cloc
     change_freq_and_wait()?;
 
     // Set the clock div, core clock and and the peripheral clock divisors
-    cmu.ctrl
+    cmu.ctrl()
         .write(|w| w.hfclkdiv().variant(clock_setup.hfclkdiv as u8));
-    cmu.hfcoreclkdiv
+    cmu.hfcoreclkdiv()
         .write(|w| w.hfcoreclkdiv().variant(clock_setup.hfcoreclkdiv));
-    cmu.hfperclkdiv
+    cmu.hfperclkdiv()
         .write(|w| w.hfperclkdiv().variant(clock_setup.hfperclkdiv));
 
     // Set the low-energy clock prescaler.
-    cmu.hfcoreclkdiv.write(|w| {
+    cmu.hfcoreclkdiv().write(|w| {
         w.hfcoreclklediv()
             .bit(clock_setup.hfcoreclklediv == HfCoreClkLeDiv::Div4)
     });
@@ -355,7 +355,7 @@ pub fn lock_clock_config() {
 
 pub fn enable_gpio_clock() {
     let cmu = unsafe { &*pac::CMU::ptr() };
-    cmu.hfperclken0.write(|w| {
+    cmu.hfperclken0().write(|w| {
         w.gpio().set_bit();
         w
     });
@@ -363,5 +363,5 @@ pub fn enable_gpio_clock() {
 
 pub fn disable_gpio_clock() {
     let cmu = unsafe { &*pac::CMU::ptr() };
-    cmu.hfperclken0.write(|w| w.gpio().clear_bit());
+    cmu.hfperclken0().write(|w| w.gpio().clear_bit());
 }

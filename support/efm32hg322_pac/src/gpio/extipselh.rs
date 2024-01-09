@@ -33,7 +33,7 @@ impl crate::FieldSpec for EXTIPSEL8_A {
 impl EXTIPSEL8_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<EXTIPSEL8_A> {
+    pub const fn variant(&self) -> Option<EXTIPSEL8_A> {
         match self.bits {
             0 => Some(EXTIPSEL8_A::PORTA),
             1 => Some(EXTIPSEL8_A::PORTB),
@@ -76,8 +76,8 @@ impl EXTIPSEL8_R {
     }
 }
 #[doc = "Field `EXTIPSEL8` writer - External Interrupt 8 Port Select"]
-pub type EXTIPSEL8_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 3, O, EXTIPSEL8_A>;
-impl<'a, REG, const O: u8> EXTIPSEL8_W<'a, REG, O>
+pub type EXTIPSEL8_W<'a, REG> = crate::FieldWriter<'a, REG, 3, EXTIPSEL8_A>;
+impl<'a, REG> EXTIPSEL8_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -144,7 +144,7 @@ impl crate::FieldSpec for EXTIPSEL9_A {
 impl EXTIPSEL9_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<EXTIPSEL9_A> {
+    pub const fn variant(&self) -> Option<EXTIPSEL9_A> {
         match self.bits {
             0 => Some(EXTIPSEL9_A::PORTA),
             1 => Some(EXTIPSEL9_A::PORTB),
@@ -187,8 +187,8 @@ impl EXTIPSEL9_R {
     }
 }
 #[doc = "Field `EXTIPSEL9` writer - External Interrupt 9 Port Select"]
-pub type EXTIPSEL9_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 3, O, EXTIPSEL9_A>;
-impl<'a, REG, const O: u8> EXTIPSEL9_W<'a, REG, O>
+pub type EXTIPSEL9_W<'a, REG> = crate::FieldWriter<'a, REG, 3, EXTIPSEL9_A>;
+impl<'a, REG> EXTIPSEL9_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -255,7 +255,7 @@ impl crate::FieldSpec for EXTIPSEL10_A {
 impl EXTIPSEL10_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<EXTIPSEL10_A> {
+    pub const fn variant(&self) -> Option<EXTIPSEL10_A> {
         match self.bits {
             0 => Some(EXTIPSEL10_A::PORTA),
             1 => Some(EXTIPSEL10_A::PORTB),
@@ -298,8 +298,8 @@ impl EXTIPSEL10_R {
     }
 }
 #[doc = "Field `EXTIPSEL10` writer - External Interrupt 10 Port Select"]
-pub type EXTIPSEL10_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 3, O, EXTIPSEL10_A>;
-impl<'a, REG, const O: u8> EXTIPSEL10_W<'a, REG, O>
+pub type EXTIPSEL10_W<'a, REG> = crate::FieldWriter<'a, REG, 3, EXTIPSEL10_A>;
+impl<'a, REG> EXTIPSEL10_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -366,7 +366,7 @@ impl crate::FieldSpec for EXTIPSEL11_A {
 impl EXTIPSEL11_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<EXTIPSEL11_A> {
+    pub const fn variant(&self) -> Option<EXTIPSEL11_A> {
         match self.bits {
             0 => Some(EXTIPSEL11_A::PORTA),
             1 => Some(EXTIPSEL11_A::PORTB),
@@ -409,8 +409,8 @@ impl EXTIPSEL11_R {
     }
 }
 #[doc = "Field `EXTIPSEL11` writer - External Interrupt 11 Port Select"]
-pub type EXTIPSEL11_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 3, O, EXTIPSEL11_A>;
-impl<'a, REG, const O: u8> EXTIPSEL11_W<'a, REG, O>
+pub type EXTIPSEL11_W<'a, REG> = crate::FieldWriter<'a, REG, 3, EXTIPSEL11_A>;
+impl<'a, REG> EXTIPSEL11_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -477,7 +477,7 @@ impl crate::FieldSpec for EXTIPSEL12_A {
 impl EXTIPSEL12_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<EXTIPSEL12_A> {
+    pub const fn variant(&self) -> Option<EXTIPSEL12_A> {
         match self.bits {
             0 => Some(EXTIPSEL12_A::PORTA),
             1 => Some(EXTIPSEL12_A::PORTB),
@@ -520,8 +520,8 @@ impl EXTIPSEL12_R {
     }
 }
 #[doc = "Field `EXTIPSEL12` writer - External Interrupt 12 Port Select"]
-pub type EXTIPSEL12_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 3, O, EXTIPSEL12_A>;
-impl<'a, REG, const O: u8> EXTIPSEL12_W<'a, REG, O>
+pub type EXTIPSEL12_W<'a, REG> = crate::FieldWriter<'a, REG, 3, EXTIPSEL12_A>;
+impl<'a, REG> EXTIPSEL12_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -588,7 +588,7 @@ impl crate::FieldSpec for EXTIPSEL13_A {
 impl EXTIPSEL13_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<EXTIPSEL13_A> {
+    pub const fn variant(&self) -> Option<EXTIPSEL13_A> {
         match self.bits {
             0 => Some(EXTIPSEL13_A::PORTA),
             1 => Some(EXTIPSEL13_A::PORTB),
@@ -631,8 +631,8 @@ impl EXTIPSEL13_R {
     }
 }
 #[doc = "Field `EXTIPSEL13` writer - External Interrupt 13 Port Select"]
-pub type EXTIPSEL13_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 3, O, EXTIPSEL13_A>;
-impl<'a, REG, const O: u8> EXTIPSEL13_W<'a, REG, O>
+pub type EXTIPSEL13_W<'a, REG> = crate::FieldWriter<'a, REG, 3, EXTIPSEL13_A>;
+impl<'a, REG> EXTIPSEL13_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -699,7 +699,7 @@ impl crate::FieldSpec for EXTIPSEL14_A {
 impl EXTIPSEL14_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<EXTIPSEL14_A> {
+    pub const fn variant(&self) -> Option<EXTIPSEL14_A> {
         match self.bits {
             0 => Some(EXTIPSEL14_A::PORTA),
             1 => Some(EXTIPSEL14_A::PORTB),
@@ -742,8 +742,8 @@ impl EXTIPSEL14_R {
     }
 }
 #[doc = "Field `EXTIPSEL14` writer - External Interrupt 14 Port Select"]
-pub type EXTIPSEL14_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 3, O, EXTIPSEL14_A>;
-impl<'a, REG, const O: u8> EXTIPSEL14_W<'a, REG, O>
+pub type EXTIPSEL14_W<'a, REG> = crate::FieldWriter<'a, REG, 3, EXTIPSEL14_A>;
+impl<'a, REG> EXTIPSEL14_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -810,7 +810,7 @@ impl crate::FieldSpec for EXTIPSEL15_A {
 impl EXTIPSEL15_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<EXTIPSEL15_A> {
+    pub const fn variant(&self) -> Option<EXTIPSEL15_A> {
         match self.bits {
             0 => Some(EXTIPSEL15_A::PORTA),
             1 => Some(EXTIPSEL15_A::PORTB),
@@ -853,8 +853,8 @@ impl EXTIPSEL15_R {
     }
 }
 #[doc = "Field `EXTIPSEL15` writer - External Interrupt 15 Port Select"]
-pub type EXTIPSEL15_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 3, O, EXTIPSEL15_A>;
-impl<'a, REG, const O: u8> EXTIPSEL15_W<'a, REG, O>
+pub type EXTIPSEL15_W<'a, REG> = crate::FieldWriter<'a, REG, 3, EXTIPSEL15_A>;
+impl<'a, REG> EXTIPSEL15_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -936,52 +936,56 @@ impl W {
     #[doc = "Bits 0:2 - External Interrupt 8 Port Select"]
     #[inline(always)]
     #[must_use]
-    pub fn extipsel8(&mut self) -> EXTIPSEL8_W<EXTIPSELH_SPEC, 0> {
-        EXTIPSEL8_W::new(self)
+    pub fn extipsel8(&mut self) -> EXTIPSEL8_W<EXTIPSELH_SPEC> {
+        EXTIPSEL8_W::new(self, 0)
     }
     #[doc = "Bits 4:6 - External Interrupt 9 Port Select"]
     #[inline(always)]
     #[must_use]
-    pub fn extipsel9(&mut self) -> EXTIPSEL9_W<EXTIPSELH_SPEC, 4> {
-        EXTIPSEL9_W::new(self)
+    pub fn extipsel9(&mut self) -> EXTIPSEL9_W<EXTIPSELH_SPEC> {
+        EXTIPSEL9_W::new(self, 4)
     }
     #[doc = "Bits 8:10 - External Interrupt 10 Port Select"]
     #[inline(always)]
     #[must_use]
-    pub fn extipsel10(&mut self) -> EXTIPSEL10_W<EXTIPSELH_SPEC, 8> {
-        EXTIPSEL10_W::new(self)
+    pub fn extipsel10(&mut self) -> EXTIPSEL10_W<EXTIPSELH_SPEC> {
+        EXTIPSEL10_W::new(self, 8)
     }
     #[doc = "Bits 12:14 - External Interrupt 11 Port Select"]
     #[inline(always)]
     #[must_use]
-    pub fn extipsel11(&mut self) -> EXTIPSEL11_W<EXTIPSELH_SPEC, 12> {
-        EXTIPSEL11_W::new(self)
+    pub fn extipsel11(&mut self) -> EXTIPSEL11_W<EXTIPSELH_SPEC> {
+        EXTIPSEL11_W::new(self, 12)
     }
     #[doc = "Bits 16:18 - External Interrupt 12 Port Select"]
     #[inline(always)]
     #[must_use]
-    pub fn extipsel12(&mut self) -> EXTIPSEL12_W<EXTIPSELH_SPEC, 16> {
-        EXTIPSEL12_W::new(self)
+    pub fn extipsel12(&mut self) -> EXTIPSEL12_W<EXTIPSELH_SPEC> {
+        EXTIPSEL12_W::new(self, 16)
     }
     #[doc = "Bits 20:22 - External Interrupt 13 Port Select"]
     #[inline(always)]
     #[must_use]
-    pub fn extipsel13(&mut self) -> EXTIPSEL13_W<EXTIPSELH_SPEC, 20> {
-        EXTIPSEL13_W::new(self)
+    pub fn extipsel13(&mut self) -> EXTIPSEL13_W<EXTIPSELH_SPEC> {
+        EXTIPSEL13_W::new(self, 20)
     }
     #[doc = "Bits 24:26 - External Interrupt 14 Port Select"]
     #[inline(always)]
     #[must_use]
-    pub fn extipsel14(&mut self) -> EXTIPSEL14_W<EXTIPSELH_SPEC, 24> {
-        EXTIPSEL14_W::new(self)
+    pub fn extipsel14(&mut self) -> EXTIPSEL14_W<EXTIPSELH_SPEC> {
+        EXTIPSEL14_W::new(self, 24)
     }
     #[doc = "Bits 28:30 - External Interrupt 15 Port Select"]
     #[inline(always)]
     #[must_use]
-    pub fn extipsel15(&mut self) -> EXTIPSEL15_W<EXTIPSELH_SPEC, 28> {
-        EXTIPSEL15_W::new(self)
+    pub fn extipsel15(&mut self) -> EXTIPSEL15_W<EXTIPSELH_SPEC> {
+        EXTIPSEL15_W::new(self, 28)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -997,10 +1001,10 @@ impl crate::RegisterSpec for EXTIPSELH_SPEC {
 impl crate::Readable for EXTIPSELH_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`extipselh::W`](W) writer structure"]
 impl crate::Writable for EXTIPSELH_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets EXTIPSELH to value 0"]
 impl crate::Resettable for EXTIPSELH_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

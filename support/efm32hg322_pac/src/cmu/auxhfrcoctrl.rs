@@ -5,7 +5,7 @@ pub type W = crate::W<AUXHFRCOCTRL_SPEC>;
 #[doc = "Field `TUNING` reader - AUXHFRCO Tuning Value"]
 pub type TUNING_R = crate::FieldReader;
 #[doc = "Field `TUNING` writer - AUXHFRCO Tuning Value"]
-pub type TUNING_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 8, O>;
+pub type TUNING_W<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 #[doc = "Field `BAND` reader - AUXHFRCO Band Select"]
 pub type BAND_R = crate::FieldReader<BAND_A>;
 #[doc = "AUXHFRCO Band Select\n\nValue on reset: 0"]
@@ -35,7 +35,7 @@ impl crate::FieldSpec for BAND_A {
 impl BAND_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<BAND_A> {
+    pub const fn variant(&self) -> Option<BAND_A> {
         match self.bits {
             0 => Some(BAND_A::_14MHZ),
             1 => Some(BAND_A::_11MHZ),
@@ -72,8 +72,8 @@ impl BAND_R {
     }
 }
 #[doc = "Field `BAND` writer - AUXHFRCO Band Select"]
-pub type BAND_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 3, O, BAND_A>;
-impl<'a, REG, const O: u8> BAND_W<'a, REG, O>
+pub type BAND_W<'a, REG> = crate::FieldWriter<'a, REG, 3, BAND_A>;
+impl<'a, REG> BAND_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -120,16 +120,20 @@ impl W {
     #[doc = "Bits 0:7 - AUXHFRCO Tuning Value"]
     #[inline(always)]
     #[must_use]
-    pub fn tuning(&mut self) -> TUNING_W<AUXHFRCOCTRL_SPEC, 0> {
-        TUNING_W::new(self)
+    pub fn tuning(&mut self) -> TUNING_W<AUXHFRCOCTRL_SPEC> {
+        TUNING_W::new(self, 0)
     }
     #[doc = "Bits 8:10 - AUXHFRCO Band Select"]
     #[inline(always)]
     #[must_use]
-    pub fn band(&mut self) -> BAND_W<AUXHFRCOCTRL_SPEC, 8> {
-        BAND_W::new(self)
+    pub fn band(&mut self) -> BAND_W<AUXHFRCOCTRL_SPEC> {
+        BAND_W::new(self, 8)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -145,10 +149,10 @@ impl crate::RegisterSpec for AUXHFRCOCTRL_SPEC {
 impl crate::Readable for AUXHFRCOCTRL_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`auxhfrcoctrl::W`](W) writer structure"]
 impl crate::Writable for AUXHFRCOCTRL_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets AUXHFRCOCTRL to value 0x80"]
 impl crate::Resettable for AUXHFRCOCTRL_SPEC {
-    const RESET_VALUE: Self::Ux = 0x80;
+    const RESET_VALUE: u32 = 0x80;
 }

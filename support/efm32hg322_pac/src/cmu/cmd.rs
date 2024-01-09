@@ -25,8 +25,8 @@ impl crate::FieldSpec for HFCLKSEL_AW {
     type Ux = u8;
 }
 #[doc = "Field `HFCLKSEL` writer - HFCLK Select"]
-pub type HFCLKSEL_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 3, O, HFCLKSEL_AW>;
-impl<'a, REG, const O: u8> HFCLKSEL_W<'a, REG, O>
+pub type HFCLKSEL_W<'a, REG> = crate::FieldWriter<'a, REG, 3, HFCLKSEL_AW>;
+impl<'a, REG> HFCLKSEL_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -58,9 +58,9 @@ where
     }
 }
 #[doc = "Field `CALSTART` writer - Calibration Start"]
-pub type CALSTART_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type CALSTART_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `CALSTOP` writer - Calibration Stop"]
-pub type CALSTOP_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type CALSTOP_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "USB Core Clock Select\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
@@ -82,8 +82,8 @@ impl crate::FieldSpec for USBCCLKSEL_AW {
     type Ux = u8;
 }
 #[doc = "Field `USBCCLKSEL` writer - USB Core Clock Select"]
-pub type USBCCLKSEL_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 3, O, USBCCLKSEL_AW>;
-impl<'a, REG, const O: u8> USBCCLKSEL_W<'a, REG, O>
+pub type USBCCLKSEL_W<'a, REG> = crate::FieldWriter<'a, REG, 3, USBCCLKSEL_AW>;
+impl<'a, REG> USBCCLKSEL_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -108,28 +108,32 @@ impl W {
     #[doc = "Bits 0:2 - HFCLK Select"]
     #[inline(always)]
     #[must_use]
-    pub fn hfclksel(&mut self) -> HFCLKSEL_W<CMD_SPEC, 0> {
-        HFCLKSEL_W::new(self)
+    pub fn hfclksel(&mut self) -> HFCLKSEL_W<CMD_SPEC> {
+        HFCLKSEL_W::new(self, 0)
     }
     #[doc = "Bit 3 - Calibration Start"]
     #[inline(always)]
     #[must_use]
-    pub fn calstart(&mut self) -> CALSTART_W<CMD_SPEC, 3> {
-        CALSTART_W::new(self)
+    pub fn calstart(&mut self) -> CALSTART_W<CMD_SPEC> {
+        CALSTART_W::new(self, 3)
     }
     #[doc = "Bit 4 - Calibration Stop"]
     #[inline(always)]
     #[must_use]
-    pub fn calstop(&mut self) -> CALSTOP_W<CMD_SPEC, 4> {
-        CALSTOP_W::new(self)
+    pub fn calstop(&mut self) -> CALSTOP_W<CMD_SPEC> {
+        CALSTOP_W::new(self, 4)
     }
     #[doc = "Bits 5:7 - USB Core Clock Select"]
     #[inline(always)]
     #[must_use]
-    pub fn usbcclksel(&mut self) -> USBCCLKSEL_W<CMD_SPEC, 5> {
-        USBCCLKSEL_W::new(self)
+    pub fn usbcclksel(&mut self) -> USBCCLKSEL_W<CMD_SPEC> {
+        USBCCLKSEL_W::new(self, 5)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -143,10 +147,10 @@ impl crate::RegisterSpec for CMD_SPEC {
 }
 #[doc = "`write(|w| ..)` method takes [`cmd::W`](W) writer structure"]
 impl crate::Writable for CMD_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CMD to value 0"]
 impl crate::Resettable for CMD_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

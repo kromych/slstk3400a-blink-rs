@@ -18,5 +18,5 @@ impl crate::RegisterSpec for RXDATAP_SPEC {
 impl crate::Readable for RXDATAP_SPEC {}
 #[doc = "`reset()` method sets RXDATAP to value 0"]
 impl crate::Resettable for RXDATAP_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

@@ -5,19 +5,19 @@ pub type W = crate::W<DTCTRL_SPEC>;
 #[doc = "Field `DTEN` reader - DTI Enable"]
 pub type DTEN_R = crate::BitReader;
 #[doc = "Field `DTEN` writer - DTI Enable"]
-pub type DTEN_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type DTEN_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `DTDAS` reader - DTI Automatic Start-up Functionality"]
 pub type DTDAS_R = crate::BitReader;
 #[doc = "Field `DTDAS` writer - DTI Automatic Start-up Functionality"]
-pub type DTDAS_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type DTDAS_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `DTIPOL` reader - DTI Inactive Polarity"]
 pub type DTIPOL_R = crate::BitReader;
 #[doc = "Field `DTIPOL` writer - DTI Inactive Polarity"]
-pub type DTIPOL_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type DTIPOL_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `DTCINV` reader - DTI Complementary Output Invert."]
 pub type DTCINV_R = crate::BitReader;
 #[doc = "Field `DTCINV` writer - DTI Complementary Output Invert."]
-pub type DTCINV_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type DTCINV_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `DTPRSSEL` reader - DTI PRS Source Channel Select"]
 pub type DTPRSSEL_R = crate::FieldReader<DTPRSSEL_A>;
 #[doc = "DTI PRS Source Channel Select\n\nValue on reset: 0"]
@@ -49,7 +49,7 @@ impl crate::FieldSpec for DTPRSSEL_A {
 impl DTPRSSEL_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<DTPRSSEL_A> {
+    pub const fn variant(&self) -> Option<DTPRSSEL_A> {
         match self.bits {
             0 => Some(DTPRSSEL_A::PRSCH0),
             1 => Some(DTPRSSEL_A::PRSCH1),
@@ -92,8 +92,8 @@ impl DTPRSSEL_R {
     }
 }
 #[doc = "Field `DTPRSSEL` writer - DTI PRS Source Channel Select"]
-pub type DTPRSSEL_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 3, O, DTPRSSEL_A>;
-impl<'a, REG, const O: u8> DTPRSSEL_W<'a, REG, O>
+pub type DTPRSSEL_W<'a, REG> = crate::FieldWriter<'a, REG, 3, DTPRSSEL_A>;
+impl<'a, REG> DTPRSSEL_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -132,7 +132,7 @@ where
 #[doc = "Field `DTPRSEN` reader - DTI PRS Source Enable"]
 pub type DTPRSEN_R = crate::BitReader;
 #[doc = "Field `DTPRSEN` writer - DTI PRS Source Enable"]
-pub type DTPRSEN_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type DTPRSEN_W<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bit 0 - DTI Enable"]
     #[inline(always)]
@@ -169,40 +169,44 @@ impl W {
     #[doc = "Bit 0 - DTI Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn dten(&mut self) -> DTEN_W<DTCTRL_SPEC, 0> {
-        DTEN_W::new(self)
+    pub fn dten(&mut self) -> DTEN_W<DTCTRL_SPEC> {
+        DTEN_W::new(self, 0)
     }
     #[doc = "Bit 1 - DTI Automatic Start-up Functionality"]
     #[inline(always)]
     #[must_use]
-    pub fn dtdas(&mut self) -> DTDAS_W<DTCTRL_SPEC, 1> {
-        DTDAS_W::new(self)
+    pub fn dtdas(&mut self) -> DTDAS_W<DTCTRL_SPEC> {
+        DTDAS_W::new(self, 1)
     }
     #[doc = "Bit 2 - DTI Inactive Polarity"]
     #[inline(always)]
     #[must_use]
-    pub fn dtipol(&mut self) -> DTIPOL_W<DTCTRL_SPEC, 2> {
-        DTIPOL_W::new(self)
+    pub fn dtipol(&mut self) -> DTIPOL_W<DTCTRL_SPEC> {
+        DTIPOL_W::new(self, 2)
     }
     #[doc = "Bit 3 - DTI Complementary Output Invert."]
     #[inline(always)]
     #[must_use]
-    pub fn dtcinv(&mut self) -> DTCINV_W<DTCTRL_SPEC, 3> {
-        DTCINV_W::new(self)
+    pub fn dtcinv(&mut self) -> DTCINV_W<DTCTRL_SPEC> {
+        DTCINV_W::new(self, 3)
     }
     #[doc = "Bits 4:6 - DTI PRS Source Channel Select"]
     #[inline(always)]
     #[must_use]
-    pub fn dtprssel(&mut self) -> DTPRSSEL_W<DTCTRL_SPEC, 4> {
-        DTPRSSEL_W::new(self)
+    pub fn dtprssel(&mut self) -> DTPRSSEL_W<DTCTRL_SPEC> {
+        DTPRSSEL_W::new(self, 4)
     }
     #[doc = "Bit 24 - DTI PRS Source Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn dtprsen(&mut self) -> DTPRSEN_W<DTCTRL_SPEC, 24> {
-        DTPRSEN_W::new(self)
+    pub fn dtprsen(&mut self) -> DTPRSEN_W<DTCTRL_SPEC> {
+        DTPRSEN_W::new(self, 24)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -218,10 +222,10 @@ impl crate::RegisterSpec for DTCTRL_SPEC {
 impl crate::Readable for DTCTRL_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`dtctrl::W`](W) writer structure"]
 impl crate::Writable for DTCTRL_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DTCTRL to value 0"]
 impl crate::Resettable for DTCTRL_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

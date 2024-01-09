@@ -1,23 +1,27 @@
 #[doc = "Register `TXDOUBLE` writer"]
 pub type W = crate::W<TXDOUBLE_SPEC>;
 #[doc = "Field `TXDATA0` writer - TX Data"]
-pub type TXDATA0_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 8, O>;
+pub type TXDATA0_W<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 #[doc = "Field `TXDATA1` writer - TX Data"]
-pub type TXDATA1_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 8, O>;
+pub type TXDATA1_W<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl W {
     #[doc = "Bits 0:7 - TX Data"]
     #[inline(always)]
     #[must_use]
-    pub fn txdata0(&mut self) -> TXDATA0_W<TXDOUBLE_SPEC, 0> {
-        TXDATA0_W::new(self)
+    pub fn txdata0(&mut self) -> TXDATA0_W<TXDOUBLE_SPEC> {
+        TXDATA0_W::new(self, 0)
     }
     #[doc = "Bits 8:15 - TX Data"]
     #[inline(always)]
     #[must_use]
-    pub fn txdata1(&mut self) -> TXDATA1_W<TXDOUBLE_SPEC, 8> {
-        TXDATA1_W::new(self)
+    pub fn txdata1(&mut self) -> TXDATA1_W<TXDOUBLE_SPEC> {
+        TXDATA1_W::new(self, 8)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -31,10 +35,10 @@ impl crate::RegisterSpec for TXDOUBLE_SPEC {
 }
 #[doc = "`write(|w| ..)` method takes [`txdouble::W`](W) writer structure"]
 impl crate::Writable for TXDOUBLE_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets TXDOUBLE to value 0"]
 impl crate::Resettable for TXDOUBLE_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

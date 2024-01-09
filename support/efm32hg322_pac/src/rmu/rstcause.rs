@@ -88,5 +88,5 @@ impl crate::RegisterSpec for RSTCAUSE_SPEC {
 impl crate::Readable for RSTCAUSE_SPEC {}
 #[doc = "`reset()` method sets RSTCAUSE to value 0"]
 impl crate::Resettable for RSTCAUSE_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

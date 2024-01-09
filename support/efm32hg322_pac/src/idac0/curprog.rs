@@ -29,7 +29,7 @@ impl crate::FieldSpec for RANGESEL_A {
 impl RANGESEL_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> RANGESEL_A {
+    pub const fn variant(&self) -> RANGESEL_A {
         match self.bits {
             0 => RANGESEL_A::RANGE0,
             1 => RANGESEL_A::RANGE1,
@@ -60,8 +60,8 @@ impl RANGESEL_R {
     }
 }
 #[doc = "Field `RANGESEL` writer - Current Range Select"]
-pub type RANGESEL_W<'a, REG, const O: u8> = crate::FieldWriterSafe<'a, REG, 2, O, RANGESEL_A>;
-impl<'a, REG, const O: u8> RANGESEL_W<'a, REG, O>
+pub type RANGESEL_W<'a, REG> = crate::FieldWriterSafe<'a, REG, 2, RANGESEL_A>;
+impl<'a, REG> RANGESEL_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -90,7 +90,7 @@ where
 #[doc = "Field `STEPSEL` reader - Current Step Size Select"]
 pub type STEPSEL_R = crate::FieldReader;
 #[doc = "Field `STEPSEL` writer - Current Step Size Select"]
-pub type STEPSEL_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 5, O>;
+pub type STEPSEL_W<'a, REG> = crate::FieldWriter<'a, REG, 5>;
 impl R {
     #[doc = "Bits 0:1 - Current Range Select"]
     #[inline(always)]
@@ -107,16 +107,20 @@ impl W {
     #[doc = "Bits 0:1 - Current Range Select"]
     #[inline(always)]
     #[must_use]
-    pub fn rangesel(&mut self) -> RANGESEL_W<CURPROG_SPEC, 0> {
-        RANGESEL_W::new(self)
+    pub fn rangesel(&mut self) -> RANGESEL_W<CURPROG_SPEC> {
+        RANGESEL_W::new(self, 0)
     }
     #[doc = "Bits 8:12 - Current Step Size Select"]
     #[inline(always)]
     #[must_use]
-    pub fn stepsel(&mut self) -> STEPSEL_W<CURPROG_SPEC, 8> {
-        STEPSEL_W::new(self)
+    pub fn stepsel(&mut self) -> STEPSEL_W<CURPROG_SPEC> {
+        STEPSEL_W::new(self, 8)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -132,10 +136,10 @@ impl crate::RegisterSpec for CURPROG_SPEC {
 impl crate::Readable for CURPROG_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`curprog::W`](W) writer structure"]
 impl crate::Writable for CURPROG_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CURPROG to value 0"]
 impl crate::Resettable for CURPROG_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

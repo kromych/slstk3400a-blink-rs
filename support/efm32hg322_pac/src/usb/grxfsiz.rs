@@ -5,7 +5,7 @@ pub type W = crate::W<GRXFSIZ_SPEC>;
 #[doc = "Field `RXFDEP` reader - RxFIFO Depth"]
 pub type RXFDEP_R = crate::FieldReader<u16>;
 #[doc = "Field `RXFDEP` writer - RxFIFO Depth"]
-pub type RXFDEP_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 10, O, u16>;
+pub type RXFDEP_W<'a, REG> = crate::FieldWriter<'a, REG, 10, u16>;
 impl R {
     #[doc = "Bits 0:9 - RxFIFO Depth"]
     #[inline(always)]
@@ -17,10 +17,14 @@ impl W {
     #[doc = "Bits 0:9 - RxFIFO Depth"]
     #[inline(always)]
     #[must_use]
-    pub fn rxfdep(&mut self) -> RXFDEP_W<GRXFSIZ_SPEC, 0> {
-        RXFDEP_W::new(self)
+    pub fn rxfdep(&mut self) -> RXFDEP_W<GRXFSIZ_SPEC> {
+        RXFDEP_W::new(self, 0)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -36,10 +40,10 @@ impl crate::RegisterSpec for GRXFSIZ_SPEC {
 impl crate::Readable for GRXFSIZ_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`grxfsiz::W`](W) writer structure"]
 impl crate::Writable for GRXFSIZ_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets GRXFSIZ to value 0x0200"]
 impl crate::Resettable for GRXFSIZ_SPEC {
-    const RESET_VALUE: Self::Ux = 0x0200;
+    const RESET_VALUE: u32 = 0x0200;
 }

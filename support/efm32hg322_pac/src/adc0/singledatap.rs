@@ -18,5 +18,5 @@ impl crate::RegisterSpec for SINGLEDATAP_SPEC {
 impl crate::Readable for SINGLEDATAP_SPEC {}
 #[doc = "`reset()` method sets SINGLEDATAP to value 0"]
 impl crate::Resettable for SINGLEDATAP_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

@@ -5,11 +5,11 @@ pub type W = crate::W<INPUTSEL_SPEC>;
 #[doc = "Field `TRIGLEVEL` reader - Trigger Level"]
 pub type TRIGLEVEL_R = crate::FieldReader;
 #[doc = "Field `TRIGLEVEL` writer - Trigger Level"]
-pub type TRIGLEVEL_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 6, O>;
+pub type TRIGLEVEL_W<'a, REG> = crate::FieldWriter<'a, REG, 6>;
 #[doc = "Field `LPREF` reader - Low Power Reference"]
 pub type LPREF_R = crate::BitReader;
 #[doc = "Field `LPREF` writer - Low Power Reference"]
-pub type LPREF_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type LPREF_W<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bits 0:5 - Trigger Level"]
     #[inline(always)]
@@ -26,16 +26,20 @@ impl W {
     #[doc = "Bits 0:5 - Trigger Level"]
     #[inline(always)]
     #[must_use]
-    pub fn triglevel(&mut self) -> TRIGLEVEL_W<INPUTSEL_SPEC, 0> {
-        TRIGLEVEL_W::new(self)
+    pub fn triglevel(&mut self) -> TRIGLEVEL_W<INPUTSEL_SPEC> {
+        TRIGLEVEL_W::new(self, 0)
     }
     #[doc = "Bit 8 - Low Power Reference"]
     #[inline(always)]
     #[must_use]
-    pub fn lpref(&mut self) -> LPREF_W<INPUTSEL_SPEC, 8> {
-        LPREF_W::new(self)
+    pub fn lpref(&mut self) -> LPREF_W<INPUTSEL_SPEC> {
+        LPREF_W::new(self, 8)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -51,10 +55,10 @@ impl crate::RegisterSpec for INPUTSEL_SPEC {
 impl crate::Readable for INPUTSEL_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`inputsel::W`](W) writer structure"]
 impl crate::Writable for INPUTSEL_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets INPUTSEL to value 0"]
 impl crate::Resettable for INPUTSEL_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

@@ -5,25 +5,25 @@ pub type W = crate::W<GUSBCFG_SPEC>;
 #[doc = "Field `TOUTCAL` reader - Timeout Calibration"]
 pub type TOUTCAL_R = crate::FieldReader;
 #[doc = "Field `TOUTCAL` writer - Timeout Calibration"]
-pub type TOUTCAL_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 3, O>;
+pub type TOUTCAL_W<'a, REG> = crate::FieldWriter<'a, REG, 3>;
 #[doc = "Field `FSINTF` reader - Full-Speed Serial Interface Select"]
 pub type FSINTF_R = crate::BitReader;
 #[doc = "Field `FSINTF` writer - Full-Speed Serial Interface Select"]
-pub type FSINTF_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type FSINTF_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `USBTRDTIM` reader - USB Turnaround Time"]
 pub type USBTRDTIM_R = crate::FieldReader;
 #[doc = "Field `USBTRDTIM` writer - USB Turnaround Time"]
-pub type USBTRDTIM_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 4, O>;
+pub type USBTRDTIM_W<'a, REG> = crate::FieldWriter<'a, REG, 4>;
 #[doc = "Field `TERMSELDLPULSE` reader - TermSel DLine Pulsing Selection"]
 pub type TERMSELDLPULSE_R = crate::BitReader;
 #[doc = "Field `TERMSELDLPULSE` writer - TermSel DLine Pulsing Selection"]
-pub type TERMSELDLPULSE_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type TERMSELDLPULSE_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TXENDDELAY` reader - Tx End Delay"]
 pub type TXENDDELAY_R = crate::BitReader;
 #[doc = "Field `TXENDDELAY` writer - Tx End Delay"]
-pub type TXENDDELAY_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type TXENDDELAY_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `CORRUPTTXPKT` writer - Corrupt Tx packet"]
-pub type CORRUPTTXPKT_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type CORRUPTTXPKT_W<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bits 0:2 - Timeout Calibration"]
     #[inline(always)]
@@ -55,40 +55,44 @@ impl W {
     #[doc = "Bits 0:2 - Timeout Calibration"]
     #[inline(always)]
     #[must_use]
-    pub fn toutcal(&mut self) -> TOUTCAL_W<GUSBCFG_SPEC, 0> {
-        TOUTCAL_W::new(self)
+    pub fn toutcal(&mut self) -> TOUTCAL_W<GUSBCFG_SPEC> {
+        TOUTCAL_W::new(self, 0)
     }
     #[doc = "Bit 5 - Full-Speed Serial Interface Select"]
     #[inline(always)]
     #[must_use]
-    pub fn fsintf(&mut self) -> FSINTF_W<GUSBCFG_SPEC, 5> {
-        FSINTF_W::new(self)
+    pub fn fsintf(&mut self) -> FSINTF_W<GUSBCFG_SPEC> {
+        FSINTF_W::new(self, 5)
     }
     #[doc = "Bits 10:13 - USB Turnaround Time"]
     #[inline(always)]
     #[must_use]
-    pub fn usbtrdtim(&mut self) -> USBTRDTIM_W<GUSBCFG_SPEC, 10> {
-        USBTRDTIM_W::new(self)
+    pub fn usbtrdtim(&mut self) -> USBTRDTIM_W<GUSBCFG_SPEC> {
+        USBTRDTIM_W::new(self, 10)
     }
     #[doc = "Bit 22 - TermSel DLine Pulsing Selection"]
     #[inline(always)]
     #[must_use]
-    pub fn termseldlpulse(&mut self) -> TERMSELDLPULSE_W<GUSBCFG_SPEC, 22> {
-        TERMSELDLPULSE_W::new(self)
+    pub fn termseldlpulse(&mut self) -> TERMSELDLPULSE_W<GUSBCFG_SPEC> {
+        TERMSELDLPULSE_W::new(self, 22)
     }
     #[doc = "Bit 28 - Tx End Delay"]
     #[inline(always)]
     #[must_use]
-    pub fn txenddelay(&mut self) -> TXENDDELAY_W<GUSBCFG_SPEC, 28> {
-        TXENDDELAY_W::new(self)
+    pub fn txenddelay(&mut self) -> TXENDDELAY_W<GUSBCFG_SPEC> {
+        TXENDDELAY_W::new(self, 28)
     }
     #[doc = "Bit 31 - Corrupt Tx packet"]
     #[inline(always)]
     #[must_use]
-    pub fn corrupttxpkt(&mut self) -> CORRUPTTXPKT_W<GUSBCFG_SPEC, 31> {
-        CORRUPTTXPKT_W::new(self)
+    pub fn corrupttxpkt(&mut self) -> CORRUPTTXPKT_W<GUSBCFG_SPEC> {
+        CORRUPTTXPKT_W::new(self, 31)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -104,10 +108,10 @@ impl crate::RegisterSpec for GUSBCFG_SPEC {
 impl crate::Readable for GUSBCFG_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`gusbcfg::W`](W) writer structure"]
 impl crate::Writable for GUSBCFG_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets GUSBCFG to value 0x1440"]
 impl crate::Resettable for GUSBCFG_SPEC {
-    const RESET_VALUE: Self::Ux = 0x1440;
+    const RESET_VALUE: u32 = 0x1440;
 }

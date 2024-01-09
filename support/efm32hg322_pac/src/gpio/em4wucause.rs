@@ -31,7 +31,7 @@ impl crate::FieldSpec for EM4WUCAUSE_A {
 impl EM4WUCAUSE_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<EM4WUCAUSE_A> {
+    pub const fn variant(&self) -> Option<EM4WUCAUSE_A> {
         match self.bits {
             1 => Some(EM4WUCAUSE_A::A0),
             4 => Some(EM4WUCAUSE_A::C9),
@@ -89,5 +89,5 @@ impl crate::RegisterSpec for EM4WUCAUSE_SPEC {
 impl crate::Readable for EM4WUCAUSE_SPEC {}
 #[doc = "`reset()` method sets EM4WUCAUSE to value 0"]
 impl crate::Resettable for EM4WUCAUSE_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

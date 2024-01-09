@@ -5,11 +5,11 @@ pub type W = crate::W<CLKDIV_SPEC>;
 #[doc = "Field `DIVEXT` reader - Extended Fractional Clock Divider"]
 pub type DIVEXT_R = crate::FieldReader;
 #[doc = "Field `DIVEXT` writer - Extended Fractional Clock Divider"]
-pub type DIVEXT_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 3, O>;
+pub type DIVEXT_W<'a, REG> = crate::FieldWriter<'a, REG, 3>;
 #[doc = "Field `DIV` reader - Fractional Clock Divider"]
 pub type DIV_R = crate::FieldReader<u16>;
 #[doc = "Field `DIV` writer - Fractional Clock Divider"]
-pub type DIV_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 15, O, u16>;
+pub type DIV_W<'a, REG> = crate::FieldWriter<'a, REG, 15, u16>;
 impl R {
     #[doc = "Bits 3:5 - Extended Fractional Clock Divider"]
     #[inline(always)]
@@ -26,16 +26,20 @@ impl W {
     #[doc = "Bits 3:5 - Extended Fractional Clock Divider"]
     #[inline(always)]
     #[must_use]
-    pub fn divext(&mut self) -> DIVEXT_W<CLKDIV_SPEC, 3> {
-        DIVEXT_W::new(self)
+    pub fn divext(&mut self) -> DIVEXT_W<CLKDIV_SPEC> {
+        DIVEXT_W::new(self, 3)
     }
     #[doc = "Bits 6:20 - Fractional Clock Divider"]
     #[inline(always)]
     #[must_use]
-    pub fn div(&mut self) -> DIV_W<CLKDIV_SPEC, 6> {
-        DIV_W::new(self)
+    pub fn div(&mut self) -> DIV_W<CLKDIV_SPEC> {
+        DIV_W::new(self, 6)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -51,10 +55,10 @@ impl crate::RegisterSpec for CLKDIV_SPEC {
 impl crate::Readable for CLKDIV_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`clkdiv::W`](W) writer structure"]
 impl crate::Writable for CLKDIV_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CLKDIV to value 0"]
 impl crate::Resettable for CLKDIV_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

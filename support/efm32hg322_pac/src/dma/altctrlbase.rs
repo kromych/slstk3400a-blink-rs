@@ -18,5 +18,5 @@ impl crate::RegisterSpec for ALTCTRLBASE_SPEC {
 impl crate::Readable for ALTCTRLBASE_SPEC {}
 #[doc = "`reset()` method sets ALTCTRLBASE to value 0x80"]
 impl crate::Resettable for ALTCTRLBASE_SPEC {
-    const RESET_VALUE: Self::Ux = 0x80;
+    const RESET_VALUE: u32 = 0x80;
 }

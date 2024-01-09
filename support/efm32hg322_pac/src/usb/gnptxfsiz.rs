@@ -5,11 +5,11 @@ pub type W = crate::W<GNPTXFSIZ_SPEC>;
 #[doc = "Field `NPTXFSTADDR` reader - Non-periodic Transmit RAM Start Address host only"]
 pub type NPTXFSTADDR_R = crate::FieldReader<u16>;
 #[doc = "Field `NPTXFSTADDR` writer - Non-periodic Transmit RAM Start Address host only"]
-pub type NPTXFSTADDR_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 10, O, u16>;
+pub type NPTXFSTADDR_W<'a, REG> = crate::FieldWriter<'a, REG, 10, u16>;
 #[doc = "Field `NPTXFINEPTXF0DEP` reader - Non-periodic TxFIFO Depth host only / IN Endpoint TxFIFO 0 Depth"]
 pub type NPTXFINEPTXF0DEP_R = crate::FieldReader<u16>;
 #[doc = "Field `NPTXFINEPTXF0DEP` writer - Non-periodic TxFIFO Depth host only / IN Endpoint TxFIFO 0 Depth"]
-pub type NPTXFINEPTXF0DEP_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 16, O, u16>;
+pub type NPTXFINEPTXF0DEP_W<'a, REG> = crate::FieldWriter<'a, REG, 16, u16>;
 impl R {
     #[doc = "Bits 0:9 - Non-periodic Transmit RAM Start Address host only"]
     #[inline(always)]
@@ -26,16 +26,20 @@ impl W {
     #[doc = "Bits 0:9 - Non-periodic Transmit RAM Start Address host only"]
     #[inline(always)]
     #[must_use]
-    pub fn nptxfstaddr(&mut self) -> NPTXFSTADDR_W<GNPTXFSIZ_SPEC, 0> {
-        NPTXFSTADDR_W::new(self)
+    pub fn nptxfstaddr(&mut self) -> NPTXFSTADDR_W<GNPTXFSIZ_SPEC> {
+        NPTXFSTADDR_W::new(self, 0)
     }
     #[doc = "Bits 16:31 - Non-periodic TxFIFO Depth host only / IN Endpoint TxFIFO 0 Depth"]
     #[inline(always)]
     #[must_use]
-    pub fn nptxfineptxf0dep(&mut self) -> NPTXFINEPTXF0DEP_W<GNPTXFSIZ_SPEC, 16> {
-        NPTXFINEPTXF0DEP_W::new(self)
+    pub fn nptxfineptxf0dep(&mut self) -> NPTXFINEPTXF0DEP_W<GNPTXFSIZ_SPEC> {
+        NPTXFINEPTXF0DEP_W::new(self, 16)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -51,10 +55,10 @@ impl crate::RegisterSpec for GNPTXFSIZ_SPEC {
 impl crate::Readable for GNPTXFSIZ_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`gnptxfsiz::W`](W) writer structure"]
 impl crate::Writable for GNPTXFSIZ_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets GNPTXFSIZ to value 0x0200_0200"]
 impl crate::Resettable for GNPTXFSIZ_SPEC {
-    const RESET_VALUE: Self::Ux = 0x0200_0200;
+    const RESET_VALUE: u32 = 0x0200_0200;
 }

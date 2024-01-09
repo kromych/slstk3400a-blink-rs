@@ -39,5 +39,5 @@ impl crate::RegisterSpec for DTFAULT_SPEC {
 impl crate::Readable for DTFAULT_SPEC {}
 #[doc = "`reset()` method sets DTFAULT to value 0"]
 impl crate::Resettable for DTFAULT_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

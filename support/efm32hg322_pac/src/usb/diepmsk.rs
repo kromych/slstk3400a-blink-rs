@@ -5,35 +5,35 @@ pub type W = crate::W<DIEPMSK_SPEC>;
 #[doc = "Field `XFERCOMPLMSK` reader - Transfer Completed Interrupt Mask"]
 pub type XFERCOMPLMSK_R = crate::BitReader;
 #[doc = "Field `XFERCOMPLMSK` writer - Transfer Completed Interrupt Mask"]
-pub type XFERCOMPLMSK_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type XFERCOMPLMSK_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `EPDISBLDMSK` reader - Endpoint Disabled Interrupt Mask"]
 pub type EPDISBLDMSK_R = crate::BitReader;
 #[doc = "Field `EPDISBLDMSK` writer - Endpoint Disabled Interrupt Mask"]
-pub type EPDISBLDMSK_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type EPDISBLDMSK_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `AHBERRMSK` reader - AHB Error Mask"]
 pub type AHBERRMSK_R = crate::BitReader;
 #[doc = "Field `AHBERRMSK` writer - AHB Error Mask"]
-pub type AHBERRMSK_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type AHBERRMSK_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TIMEOUTMSK` reader - Timeout Condition Mask"]
 pub type TIMEOUTMSK_R = crate::BitReader;
 #[doc = "Field `TIMEOUTMSK` writer - Timeout Condition Mask"]
-pub type TIMEOUTMSK_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type TIMEOUTMSK_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `INTKNTXFEMPMSK` reader - IN Token Received When TxFIFO Empty Mask"]
 pub type INTKNTXFEMPMSK_R = crate::BitReader;
 #[doc = "Field `INTKNTXFEMPMSK` writer - IN Token Received When TxFIFO Empty Mask"]
-pub type INTKNTXFEMPMSK_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type INTKNTXFEMPMSK_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `INEPNAKEFFMSK` reader - IN Endpoint NAK Effective Mask"]
 pub type INEPNAKEFFMSK_R = crate::BitReader;
 #[doc = "Field `INEPNAKEFFMSK` writer - IN Endpoint NAK Effective Mask"]
-pub type INEPNAKEFFMSK_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type INEPNAKEFFMSK_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TXFIFOUNDRNMSK` reader - Fifo Underrun Mask"]
 pub type TXFIFOUNDRNMSK_R = crate::BitReader;
 #[doc = "Field `TXFIFOUNDRNMSK` writer - Fifo Underrun Mask"]
-pub type TXFIFOUNDRNMSK_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type TXFIFOUNDRNMSK_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `NAKMSK` reader - NAK interrupt Mask"]
 pub type NAKMSK_R = crate::BitReader;
 #[doc = "Field `NAKMSK` writer - NAK interrupt Mask"]
-pub type NAKMSK_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type NAKMSK_W<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bit 0 - Transfer Completed Interrupt Mask"]
     #[inline(always)]
@@ -80,52 +80,56 @@ impl W {
     #[doc = "Bit 0 - Transfer Completed Interrupt Mask"]
     #[inline(always)]
     #[must_use]
-    pub fn xfercomplmsk(&mut self) -> XFERCOMPLMSK_W<DIEPMSK_SPEC, 0> {
-        XFERCOMPLMSK_W::new(self)
+    pub fn xfercomplmsk(&mut self) -> XFERCOMPLMSK_W<DIEPMSK_SPEC> {
+        XFERCOMPLMSK_W::new(self, 0)
     }
     #[doc = "Bit 1 - Endpoint Disabled Interrupt Mask"]
     #[inline(always)]
     #[must_use]
-    pub fn epdisbldmsk(&mut self) -> EPDISBLDMSK_W<DIEPMSK_SPEC, 1> {
-        EPDISBLDMSK_W::new(self)
+    pub fn epdisbldmsk(&mut self) -> EPDISBLDMSK_W<DIEPMSK_SPEC> {
+        EPDISBLDMSK_W::new(self, 1)
     }
     #[doc = "Bit 2 - AHB Error Mask"]
     #[inline(always)]
     #[must_use]
-    pub fn ahberrmsk(&mut self) -> AHBERRMSK_W<DIEPMSK_SPEC, 2> {
-        AHBERRMSK_W::new(self)
+    pub fn ahberrmsk(&mut self) -> AHBERRMSK_W<DIEPMSK_SPEC> {
+        AHBERRMSK_W::new(self, 2)
     }
     #[doc = "Bit 3 - Timeout Condition Mask"]
     #[inline(always)]
     #[must_use]
-    pub fn timeoutmsk(&mut self) -> TIMEOUTMSK_W<DIEPMSK_SPEC, 3> {
-        TIMEOUTMSK_W::new(self)
+    pub fn timeoutmsk(&mut self) -> TIMEOUTMSK_W<DIEPMSK_SPEC> {
+        TIMEOUTMSK_W::new(self, 3)
     }
     #[doc = "Bit 4 - IN Token Received When TxFIFO Empty Mask"]
     #[inline(always)]
     #[must_use]
-    pub fn intkntxfempmsk(&mut self) -> INTKNTXFEMPMSK_W<DIEPMSK_SPEC, 4> {
-        INTKNTXFEMPMSK_W::new(self)
+    pub fn intkntxfempmsk(&mut self) -> INTKNTXFEMPMSK_W<DIEPMSK_SPEC> {
+        INTKNTXFEMPMSK_W::new(self, 4)
     }
     #[doc = "Bit 6 - IN Endpoint NAK Effective Mask"]
     #[inline(always)]
     #[must_use]
-    pub fn inepnakeffmsk(&mut self) -> INEPNAKEFFMSK_W<DIEPMSK_SPEC, 6> {
-        INEPNAKEFFMSK_W::new(self)
+    pub fn inepnakeffmsk(&mut self) -> INEPNAKEFFMSK_W<DIEPMSK_SPEC> {
+        INEPNAKEFFMSK_W::new(self, 6)
     }
     #[doc = "Bit 8 - Fifo Underrun Mask"]
     #[inline(always)]
     #[must_use]
-    pub fn txfifoundrnmsk(&mut self) -> TXFIFOUNDRNMSK_W<DIEPMSK_SPEC, 8> {
-        TXFIFOUNDRNMSK_W::new(self)
+    pub fn txfifoundrnmsk(&mut self) -> TXFIFOUNDRNMSK_W<DIEPMSK_SPEC> {
+        TXFIFOUNDRNMSK_W::new(self, 8)
     }
     #[doc = "Bit 13 - NAK interrupt Mask"]
     #[inline(always)]
     #[must_use]
-    pub fn nakmsk(&mut self) -> NAKMSK_W<DIEPMSK_SPEC, 13> {
-        NAKMSK_W::new(self)
+    pub fn nakmsk(&mut self) -> NAKMSK_W<DIEPMSK_SPEC> {
+        NAKMSK_W::new(self, 13)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -141,10 +145,10 @@ impl crate::RegisterSpec for DIEPMSK_SPEC {
 impl crate::Readable for DIEPMSK_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`diepmsk::W`](W) writer structure"]
 impl crate::Writable for DIEPMSK_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DIEPMSK to value 0"]
 impl crate::Resettable for DIEPMSK_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

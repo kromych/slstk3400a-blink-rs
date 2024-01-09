@@ -33,13 +33,13 @@ fn main() -> ! {
     // Configure clock to RTC:
     //  * LFRCO ticks at 32768 Hz
     //  * No clock divider
-    p.CMU.hfcoreclken0.write(|w| w.le().set_bit());
-    p.CMU.oscencmd.write(|w| w.lfrcoen().set_bit());
-    p.CMU.lfapresc0.reset();
-    p.CMU.lfclksel.write(|w| w.lfa().lfrco());
+    p.CMU.hfcoreclken0().write(|w| w.le().set_bit());
+    p.CMU.oscencmd().write(|w| w.lfrcoen().set_bit());
+    p.CMU.lfapresc0().reset();
+    p.CMU.lfclksel().write(|w| w.lfa().lfrco());
 
     // Enable clock to RTC, ticking at 32 KiHz.
-    p.CMU.lfaclken0.write(|w| w.rtc().set_bit());
+    p.CMU.lfaclken0().write(|w| w.rtc().set_bit());
 
     // Reset RTC
     let mut rtc = p.RTC.constrain();

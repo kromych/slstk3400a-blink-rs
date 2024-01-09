@@ -5,7 +5,7 @@ pub type W = crate::W<CH3_CTRL_SPEC>;
 #[doc = "Field `SIGSEL` reader - Signal Select"]
 pub type SIGSEL_R = crate::FieldReader;
 #[doc = "Field `SIGSEL` writer - Signal Select"]
-pub type SIGSEL_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 4, O>;
+pub type SIGSEL_W<'a, REG> = crate::FieldWriter<'a, REG, 4>;
 #[doc = "Field `SOURCESEL` reader - Source Select"]
 pub type SOURCESEL_R = crate::FieldReader<SOURCESEL_A>;
 #[doc = "Source Select\n\nValue on reset: 0"]
@@ -47,7 +47,7 @@ impl crate::FieldSpec for SOURCESEL_A {
 impl SOURCESEL_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<SOURCESEL_A> {
+    pub const fn variant(&self) -> Option<SOURCESEL_A> {
         match self.bits {
             0 => Some(SOURCESEL_A::NONE),
             8 => Some(SOURCESEL_A::ADC0),
@@ -120,8 +120,8 @@ impl SOURCESEL_R {
     }
 }
 #[doc = "Field `SOURCESEL` writer - Source Select"]
-pub type SOURCESEL_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 6, O, SOURCESEL_A>;
-impl<'a, REG, const O: u8> SOURCESEL_W<'a, REG, O>
+pub type SOURCESEL_W<'a, REG> = crate::FieldWriter<'a, REG, 6, SOURCESEL_A>;
+impl<'a, REG> SOURCESEL_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -198,16 +198,20 @@ impl W {
     #[doc = "Bits 0:3 - Signal Select"]
     #[inline(always)]
     #[must_use]
-    pub fn sigsel(&mut self) -> SIGSEL_W<CH3_CTRL_SPEC, 0> {
-        SIGSEL_W::new(self)
+    pub fn sigsel(&mut self) -> SIGSEL_W<CH3_CTRL_SPEC> {
+        SIGSEL_W::new(self, 0)
     }
     #[doc = "Bits 16:21 - Source Select"]
     #[inline(always)]
     #[must_use]
-    pub fn sourcesel(&mut self) -> SOURCESEL_W<CH3_CTRL_SPEC, 16> {
-        SOURCESEL_W::new(self)
+    pub fn sourcesel(&mut self) -> SOURCESEL_W<CH3_CTRL_SPEC> {
+        SOURCESEL_W::new(self, 16)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -223,10 +227,10 @@ impl crate::RegisterSpec for CH3_CTRL_SPEC {
 impl crate::Readable for CH3_CTRL_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`ch3_ctrl::W`](W) writer structure"]
 impl crate::Writable for CH3_CTRL_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CH3_CTRL to value 0"]
 impl crate::Resettable for CH3_CTRL_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

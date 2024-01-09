@@ -5,19 +5,19 @@ pub type W = crate::W<USHFRCOCTRL_SPEC>;
 #[doc = "Field `TUNING` reader - USHFRCO frequency adjust"]
 pub type TUNING_R = crate::FieldReader;
 #[doc = "Field `TUNING` writer - USHFRCO frequency adjust"]
-pub type TUNING_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 7, O>;
+pub type TUNING_W<'a, REG> = crate::FieldWriter<'a, REG, 7>;
 #[doc = "Field `DITHEN` reader - USHFRCO dither enable"]
 pub type DITHEN_R = crate::BitReader;
 #[doc = "Field `DITHEN` writer - USHFRCO dither enable"]
-pub type DITHEN_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type DITHEN_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SUSPEND` reader - USHFRCO suspend"]
 pub type SUSPEND_R = crate::BitReader;
 #[doc = "Field `SUSPEND` writer - USHFRCO suspend"]
-pub type SUSPEND_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type SUSPEND_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TIMEOUT` reader - USHFRCO Timeout"]
 pub type TIMEOUT_R = crate::FieldReader;
 #[doc = "Field `TIMEOUT` writer - USHFRCO Timeout"]
-pub type TIMEOUT_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 8, O>;
+pub type TIMEOUT_W<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl R {
     #[doc = "Bits 0:6 - USHFRCO frequency adjust"]
     #[inline(always)]
@@ -44,28 +44,32 @@ impl W {
     #[doc = "Bits 0:6 - USHFRCO frequency adjust"]
     #[inline(always)]
     #[must_use]
-    pub fn tuning(&mut self) -> TUNING_W<USHFRCOCTRL_SPEC, 0> {
-        TUNING_W::new(self)
+    pub fn tuning(&mut self) -> TUNING_W<USHFRCOCTRL_SPEC> {
+        TUNING_W::new(self, 0)
     }
     #[doc = "Bit 8 - USHFRCO dither enable"]
     #[inline(always)]
     #[must_use]
-    pub fn dithen(&mut self) -> DITHEN_W<USHFRCOCTRL_SPEC, 8> {
-        DITHEN_W::new(self)
+    pub fn dithen(&mut self) -> DITHEN_W<USHFRCOCTRL_SPEC> {
+        DITHEN_W::new(self, 8)
     }
     #[doc = "Bit 9 - USHFRCO suspend"]
     #[inline(always)]
     #[must_use]
-    pub fn suspend(&mut self) -> SUSPEND_W<USHFRCOCTRL_SPEC, 9> {
-        SUSPEND_W::new(self)
+    pub fn suspend(&mut self) -> SUSPEND_W<USHFRCOCTRL_SPEC> {
+        SUSPEND_W::new(self, 9)
     }
     #[doc = "Bits 12:19 - USHFRCO Timeout"]
     #[inline(always)]
     #[must_use]
-    pub fn timeout(&mut self) -> TIMEOUT_W<USHFRCOCTRL_SPEC, 12> {
-        TIMEOUT_W::new(self)
+    pub fn timeout(&mut self) -> TIMEOUT_W<USHFRCOCTRL_SPEC> {
+        TIMEOUT_W::new(self, 12)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -81,10 +85,10 @@ impl crate::RegisterSpec for USHFRCOCTRL_SPEC {
 impl crate::Readable for USHFRCOCTRL_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`ushfrcoctrl::W`](W) writer structure"]
 impl crate::Writable for USHFRCOCTRL_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets USHFRCOCTRL to value 0x000f_f040"]
 impl crate::Resettable for USHFRCOCTRL_SPEC {
-    const RESET_VALUE: Self::Ux = 0x000f_f040;
+    const RESET_VALUE: u32 = 0x000f_f040;
 }

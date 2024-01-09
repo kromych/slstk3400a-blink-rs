@@ -29,7 +29,7 @@ impl crate::FieldSpec for MPS_A {
 impl MPS_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> MPS_A {
+    pub const fn variant(&self) -> MPS_A {
         match self.bits {
             0 => MPS_A::_64B,
             1 => MPS_A::_32B,
@@ -68,21 +68,21 @@ pub type EPTYPE_R = crate::FieldReader;
 #[doc = "Field `SNP` reader - Snoop Mode"]
 pub type SNP_R = crate::BitReader;
 #[doc = "Field `SNP` writer - Snoop Mode"]
-pub type SNP_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type SNP_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `STALL` reader - Handshake"]
 pub type STALL_R = crate::BitReader;
 #[doc = "Field `STALL` writer - Handshake"]
-pub type STALL_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type STALL_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `CNAK` writer - Clear NAK"]
-pub type CNAK_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type CNAK_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SNAK` writer - Set NAK"]
-pub type SNAK_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type SNAK_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `EPDIS` reader - Endpoint Disable"]
 pub type EPDIS_R = crate::BitReader;
 #[doc = "Field `EPENA` reader - Endpoint Enable"]
 pub type EPENA_R = crate::BitReader;
 #[doc = "Field `EPENA` writer - Endpoint Enable"]
-pub type EPENA_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type EPENA_W<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bits 0:1 - Maximum Packet Size"]
     #[inline(always)]
@@ -129,34 +129,38 @@ impl W {
     #[doc = "Bit 20 - Snoop Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn snp(&mut self) -> SNP_W<DOEP0CTL_SPEC, 20> {
-        SNP_W::new(self)
+    pub fn snp(&mut self) -> SNP_W<DOEP0CTL_SPEC> {
+        SNP_W::new(self, 20)
     }
     #[doc = "Bit 21 - Handshake"]
     #[inline(always)]
     #[must_use]
-    pub fn stall(&mut self) -> STALL_W<DOEP0CTL_SPEC, 21> {
-        STALL_W::new(self)
+    pub fn stall(&mut self) -> STALL_W<DOEP0CTL_SPEC> {
+        STALL_W::new(self, 21)
     }
     #[doc = "Bit 26 - Clear NAK"]
     #[inline(always)]
     #[must_use]
-    pub fn cnak(&mut self) -> CNAK_W<DOEP0CTL_SPEC, 26> {
-        CNAK_W::new(self)
+    pub fn cnak(&mut self) -> CNAK_W<DOEP0CTL_SPEC> {
+        CNAK_W::new(self, 26)
     }
     #[doc = "Bit 27 - Set NAK"]
     #[inline(always)]
     #[must_use]
-    pub fn snak(&mut self) -> SNAK_W<DOEP0CTL_SPEC, 27> {
-        SNAK_W::new(self)
+    pub fn snak(&mut self) -> SNAK_W<DOEP0CTL_SPEC> {
+        SNAK_W::new(self, 27)
     }
     #[doc = "Bit 31 - Endpoint Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn epena(&mut self) -> EPENA_W<DOEP0CTL_SPEC, 31> {
-        EPENA_W::new(self)
+    pub fn epena(&mut self) -> EPENA_W<DOEP0CTL_SPEC> {
+        EPENA_W::new(self, 31)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -172,10 +176,10 @@ impl crate::RegisterSpec for DOEP0CTL_SPEC {
 impl crate::Readable for DOEP0CTL_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`doep0ctl::W`](W) writer structure"]
 impl crate::Writable for DOEP0CTL_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DOEP0CTL to value 0x8000"]
 impl crate::Resettable for DOEP0CTL_SPEC {
-    const RESET_VALUE: Self::Ux = 0x8000;
+    const RESET_VALUE: u32 = 0x8000;
 }

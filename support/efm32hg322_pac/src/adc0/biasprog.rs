@@ -5,15 +5,15 @@ pub type W = crate::W<BIASPROG_SPEC>;
 #[doc = "Field `BIASPROG` reader - Bias Programming Value"]
 pub type BIASPROG_R = crate::FieldReader;
 #[doc = "Field `BIASPROG` writer - Bias Programming Value"]
-pub type BIASPROG_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 4, O>;
+pub type BIASPROG_W<'a, REG> = crate::FieldWriter<'a, REG, 4>;
 #[doc = "Field `HALFBIAS` reader - Half Bias Current"]
 pub type HALFBIAS_R = crate::BitReader;
 #[doc = "Field `HALFBIAS` writer - Half Bias Current"]
-pub type HALFBIAS_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type HALFBIAS_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `COMPBIAS` reader - Comparator Bias Value"]
 pub type COMPBIAS_R = crate::FieldReader;
 #[doc = "Field `COMPBIAS` writer - Comparator Bias Value"]
-pub type COMPBIAS_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 4, O>;
+pub type COMPBIAS_W<'a, REG> = crate::FieldWriter<'a, REG, 4>;
 impl R {
     #[doc = "Bits 0:3 - Bias Programming Value"]
     #[inline(always)]
@@ -35,22 +35,26 @@ impl W {
     #[doc = "Bits 0:3 - Bias Programming Value"]
     #[inline(always)]
     #[must_use]
-    pub fn biasprog(&mut self) -> BIASPROG_W<BIASPROG_SPEC, 0> {
-        BIASPROG_W::new(self)
+    pub fn biasprog(&mut self) -> BIASPROG_W<BIASPROG_SPEC> {
+        BIASPROG_W::new(self, 0)
     }
     #[doc = "Bit 6 - Half Bias Current"]
     #[inline(always)]
     #[must_use]
-    pub fn halfbias(&mut self) -> HALFBIAS_W<BIASPROG_SPEC, 6> {
-        HALFBIAS_W::new(self)
+    pub fn halfbias(&mut self) -> HALFBIAS_W<BIASPROG_SPEC> {
+        HALFBIAS_W::new(self, 6)
     }
     #[doc = "Bits 8:11 - Comparator Bias Value"]
     #[inline(always)]
     #[must_use]
-    pub fn compbias(&mut self) -> COMPBIAS_W<BIASPROG_SPEC, 8> {
-        COMPBIAS_W::new(self)
+    pub fn compbias(&mut self) -> COMPBIAS_W<BIASPROG_SPEC> {
+        COMPBIAS_W::new(self, 8)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -66,10 +70,10 @@ impl crate::RegisterSpec for BIASPROG_SPEC {
 impl crate::Readable for BIASPROG_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`biasprog::W`](W) writer structure"]
 impl crate::Writable for BIASPROG_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets BIASPROG to value 0x0747"]
 impl crate::Resettable for BIASPROG_SPEC {
-    const RESET_VALUE: Self::Ux = 0x0747;
+    const RESET_VALUE: u32 = 0x0747;
 }

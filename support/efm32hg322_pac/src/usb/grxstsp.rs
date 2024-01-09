@@ -31,7 +31,7 @@ impl crate::FieldSpec for DPID_A {
 impl DPID_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> DPID_A {
+    pub const fn variant(&self) -> DPID_A {
         match self.bits {
             0 => DPID_A::DATA0,
             1 => DPID_A::DATA1,
@@ -94,7 +94,7 @@ impl crate::FieldSpec for PKTSTS_A {
 impl PKTSTS_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<PKTSTS_A> {
+    pub const fn variant(&self) -> Option<PKTSTS_A> {
         match self.bits {
             1 => Some(PKTSTS_A::GOUTNAK),
             2 => Some(PKTSTS_A::PKTRCV),
@@ -180,5 +180,5 @@ impl crate::RegisterSpec for GRXSTSP_SPEC {
 impl crate::Readable for GRXSTSP_SPEC {}
 #[doc = "`reset()` method sets GRXSTSP to value 0"]
 impl crate::Resettable for GRXSTSP_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

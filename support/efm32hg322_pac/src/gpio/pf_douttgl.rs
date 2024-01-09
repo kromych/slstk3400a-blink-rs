@@ -1,15 +1,19 @@
 #[doc = "Register `PF_DOUTTGL` writer"]
 pub type W = crate::W<PF_DOUTTGL_SPEC>;
 #[doc = "Field `DOUTTGL` writer - Data Out Toggle"]
-pub type DOUTTGL_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 16, O, u16>;
+pub type DOUTTGL_W<'a, REG> = crate::FieldWriter<'a, REG, 16, u16>;
 impl W {
     #[doc = "Bits 0:15 - Data Out Toggle"]
     #[inline(always)]
     #[must_use]
-    pub fn douttgl(&mut self) -> DOUTTGL_W<PF_DOUTTGL_SPEC, 0> {
-        DOUTTGL_W::new(self)
+    pub fn douttgl(&mut self) -> DOUTTGL_W<PF_DOUTTGL_SPEC> {
+        DOUTTGL_W::new(self, 0)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -23,10 +27,10 @@ impl crate::RegisterSpec for PF_DOUTTGL_SPEC {
 }
 #[doc = "`write(|w| ..)` method takes [`pf_douttgl::W`](W) writer structure"]
 impl crate::Writable for PF_DOUTTGL_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets PF_DOUTTGL to value 0"]
 impl crate::Resettable for PF_DOUTTGL_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

@@ -5,19 +5,19 @@ pub type W = crate::W<PCGCCTL_SPEC>;
 #[doc = "Field `STOPPCLK` reader - Stop PHY clock"]
 pub type STOPPCLK_R = crate::BitReader;
 #[doc = "Field `STOPPCLK` writer - Stop PHY clock"]
-pub type STOPPCLK_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type STOPPCLK_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `GATEHCLK` reader - Gate HCLK"]
 pub type GATEHCLK_R = crate::BitReader;
 #[doc = "Field `GATEHCLK` writer - Gate HCLK"]
-pub type GATEHCLK_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type GATEHCLK_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `PWRCLMP` reader - Power Clamp"]
 pub type PWRCLMP_R = crate::BitReader;
 #[doc = "Field `PWRCLMP` writer - Power Clamp"]
-pub type PWRCLMP_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type PWRCLMP_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `RSTPDWNMODULE` reader - Reset Power-Down Modules"]
 pub type RSTPDWNMODULE_R = crate::BitReader;
 #[doc = "Field `RSTPDWNMODULE` writer - Reset Power-Down Modules"]
-pub type RSTPDWNMODULE_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type RSTPDWNMODULE_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `PHYSLEEP` reader - PHY In Sleep"]
 pub type PHYSLEEP_R = crate::BitReader;
 impl R {
@@ -51,28 +51,32 @@ impl W {
     #[doc = "Bit 0 - Stop PHY clock"]
     #[inline(always)]
     #[must_use]
-    pub fn stoppclk(&mut self) -> STOPPCLK_W<PCGCCTL_SPEC, 0> {
-        STOPPCLK_W::new(self)
+    pub fn stoppclk(&mut self) -> STOPPCLK_W<PCGCCTL_SPEC> {
+        STOPPCLK_W::new(self, 0)
     }
     #[doc = "Bit 1 - Gate HCLK"]
     #[inline(always)]
     #[must_use]
-    pub fn gatehclk(&mut self) -> GATEHCLK_W<PCGCCTL_SPEC, 1> {
-        GATEHCLK_W::new(self)
+    pub fn gatehclk(&mut self) -> GATEHCLK_W<PCGCCTL_SPEC> {
+        GATEHCLK_W::new(self, 1)
     }
     #[doc = "Bit 2 - Power Clamp"]
     #[inline(always)]
     #[must_use]
-    pub fn pwrclmp(&mut self) -> PWRCLMP_W<PCGCCTL_SPEC, 2> {
-        PWRCLMP_W::new(self)
+    pub fn pwrclmp(&mut self) -> PWRCLMP_W<PCGCCTL_SPEC> {
+        PWRCLMP_W::new(self, 2)
     }
     #[doc = "Bit 3 - Reset Power-Down Modules"]
     #[inline(always)]
     #[must_use]
-    pub fn rstpdwnmodule(&mut self) -> RSTPDWNMODULE_W<PCGCCTL_SPEC, 3> {
-        RSTPDWNMODULE_W::new(self)
+    pub fn rstpdwnmodule(&mut self) -> RSTPDWNMODULE_W<PCGCCTL_SPEC> {
+        RSTPDWNMODULE_W::new(self, 3)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -88,10 +92,10 @@ impl crate::RegisterSpec for PCGCCTL_SPEC {
 impl crate::Readable for PCGCCTL_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`pcgcctl::W`](W) writer structure"]
 impl crate::Writable for PCGCCTL_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets PCGCCTL to value 0"]
 impl crate::Resettable for PCGCCTL_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

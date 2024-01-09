@@ -5,15 +5,15 @@ pub type W = crate::W<PULSECTRL_SPEC>;
 #[doc = "Field `PULSEW` reader - Pulse Width"]
 pub type PULSEW_R = crate::FieldReader;
 #[doc = "Field `PULSEW` writer - Pulse Width"]
-pub type PULSEW_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 4, O>;
+pub type PULSEW_W<'a, REG> = crate::FieldWriter<'a, REG, 4>;
 #[doc = "Field `PULSEEN` reader - Pulse Generator/Extender Enable"]
 pub type PULSEEN_R = crate::BitReader;
 #[doc = "Field `PULSEEN` writer - Pulse Generator/Extender Enable"]
-pub type PULSEEN_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type PULSEEN_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `PULSEFILT` reader - Pulse Filter"]
 pub type PULSEFILT_R = crate::BitReader;
 #[doc = "Field `PULSEFILT` writer - Pulse Filter"]
-pub type PULSEFILT_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type PULSEFILT_W<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bits 0:3 - Pulse Width"]
     #[inline(always)]
@@ -35,22 +35,26 @@ impl W {
     #[doc = "Bits 0:3 - Pulse Width"]
     #[inline(always)]
     #[must_use]
-    pub fn pulsew(&mut self) -> PULSEW_W<PULSECTRL_SPEC, 0> {
-        PULSEW_W::new(self)
+    pub fn pulsew(&mut self) -> PULSEW_W<PULSECTRL_SPEC> {
+        PULSEW_W::new(self, 0)
     }
     #[doc = "Bit 4 - Pulse Generator/Extender Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn pulseen(&mut self) -> PULSEEN_W<PULSECTRL_SPEC, 4> {
-        PULSEEN_W::new(self)
+    pub fn pulseen(&mut self) -> PULSEEN_W<PULSECTRL_SPEC> {
+        PULSEEN_W::new(self, 4)
     }
     #[doc = "Bit 5 - Pulse Filter"]
     #[inline(always)]
     #[must_use]
-    pub fn pulsefilt(&mut self) -> PULSEFILT_W<PULSECTRL_SPEC, 5> {
-        PULSEFILT_W::new(self)
+    pub fn pulsefilt(&mut self) -> PULSEFILT_W<PULSECTRL_SPEC> {
+        PULSEFILT_W::new(self, 5)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -66,10 +70,10 @@ impl crate::RegisterSpec for PULSECTRL_SPEC {
 impl crate::Readable for PULSECTRL_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`pulsectrl::W`](W) writer structure"]
 impl crate::Writable for PULSECTRL_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets PULSECTRL to value 0"]
 impl crate::Resettable for PULSECTRL_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

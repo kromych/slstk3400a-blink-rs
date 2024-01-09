@@ -5,23 +5,23 @@ pub type W = crate::W<HFCORECLKEN0_SPEC>;
 #[doc = "Field `AES` reader - Advanced Encryption Standard Accelerator Clock Enable"]
 pub type AES_R = crate::BitReader;
 #[doc = "Field `AES` writer - Advanced Encryption Standard Accelerator Clock Enable"]
-pub type AES_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type AES_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `DMA` reader - Direct Memory Access Controller Clock Enable"]
 pub type DMA_R = crate::BitReader;
 #[doc = "Field `DMA` writer - Direct Memory Access Controller Clock Enable"]
-pub type DMA_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type DMA_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `LE` reader - Low Energy Peripheral Interface Clock Enable"]
 pub type LE_R = crate::BitReader;
 #[doc = "Field `LE` writer - Low Energy Peripheral Interface Clock Enable"]
-pub type LE_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type LE_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `USBC` reader - Universal Serial Bus Interface Core Clock Enable"]
 pub type USBC_R = crate::BitReader;
 #[doc = "Field `USBC` writer - Universal Serial Bus Interface Core Clock Enable"]
-pub type USBC_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type USBC_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `USB` reader - Universal Serial Bus Interface Clock Enable"]
 pub type USB_R = crate::BitReader;
 #[doc = "Field `USB` writer - Universal Serial Bus Interface Clock Enable"]
-pub type USB_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type USB_W<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bit 0 - Advanced Encryption Standard Accelerator Clock Enable"]
     #[inline(always)]
@@ -53,34 +53,38 @@ impl W {
     #[doc = "Bit 0 - Advanced Encryption Standard Accelerator Clock Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn aes(&mut self) -> AES_W<HFCORECLKEN0_SPEC, 0> {
-        AES_W::new(self)
+    pub fn aes(&mut self) -> AES_W<HFCORECLKEN0_SPEC> {
+        AES_W::new(self, 0)
     }
     #[doc = "Bit 1 - Direct Memory Access Controller Clock Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn dma(&mut self) -> DMA_W<HFCORECLKEN0_SPEC, 1> {
-        DMA_W::new(self)
+    pub fn dma(&mut self) -> DMA_W<HFCORECLKEN0_SPEC> {
+        DMA_W::new(self, 1)
     }
     #[doc = "Bit 2 - Low Energy Peripheral Interface Clock Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn le(&mut self) -> LE_W<HFCORECLKEN0_SPEC, 2> {
-        LE_W::new(self)
+    pub fn le(&mut self) -> LE_W<HFCORECLKEN0_SPEC> {
+        LE_W::new(self, 2)
     }
     #[doc = "Bit 3 - Universal Serial Bus Interface Core Clock Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn usbc(&mut self) -> USBC_W<HFCORECLKEN0_SPEC, 3> {
-        USBC_W::new(self)
+    pub fn usbc(&mut self) -> USBC_W<HFCORECLKEN0_SPEC> {
+        USBC_W::new(self, 3)
     }
     #[doc = "Bit 4 - Universal Serial Bus Interface Clock Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn usb(&mut self) -> USB_W<HFCORECLKEN0_SPEC, 4> {
-        USB_W::new(self)
+    pub fn usb(&mut self) -> USB_W<HFCORECLKEN0_SPEC> {
+        USB_W::new(self, 4)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -96,10 +100,10 @@ impl crate::RegisterSpec for HFCORECLKEN0_SPEC {
 impl crate::Readable for HFCORECLKEN0_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`hfcoreclken0::W`](W) writer structure"]
 impl crate::Writable for HFCORECLKEN0_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets HFCORECLKEN0 to value 0"]
 impl crate::Resettable for HFCORECLKEN0_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

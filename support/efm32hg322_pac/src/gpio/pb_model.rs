@@ -53,7 +53,7 @@ impl crate::FieldSpec for MODE0_A {
 impl MODE0_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> MODE0_A {
+    pub const fn variant(&self) -> MODE0_A {
         match self.bits {
             0 => MODE0_A::DISABLED,
             1 => MODE0_A::INPUT,
@@ -156,8 +156,8 @@ impl MODE0_R {
     }
 }
 #[doc = "Field `MODE0` writer - Pin 0 Mode"]
-pub type MODE0_W<'a, REG, const O: u8> = crate::FieldWriterSafe<'a, REG, 4, O, MODE0_A>;
-impl<'a, REG, const O: u8> MODE0_W<'a, REG, O>
+pub type MODE0_W<'a, REG> = crate::FieldWriterSafe<'a, REG, 4, MODE0_A>;
+impl<'a, REG> MODE0_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -294,7 +294,7 @@ impl crate::FieldSpec for MODE1_A {
 impl MODE1_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> MODE1_A {
+    pub const fn variant(&self) -> MODE1_A {
         match self.bits {
             0 => MODE1_A::DISABLED,
             1 => MODE1_A::INPUT,
@@ -397,8 +397,8 @@ impl MODE1_R {
     }
 }
 #[doc = "Field `MODE1` writer - Pin 1 Mode"]
-pub type MODE1_W<'a, REG, const O: u8> = crate::FieldWriterSafe<'a, REG, 4, O, MODE1_A>;
-impl<'a, REG, const O: u8> MODE1_W<'a, REG, O>
+pub type MODE1_W<'a, REG> = crate::FieldWriterSafe<'a, REG, 4, MODE1_A>;
+impl<'a, REG> MODE1_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -535,7 +535,7 @@ impl crate::FieldSpec for MODE2_A {
 impl MODE2_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> MODE2_A {
+    pub const fn variant(&self) -> MODE2_A {
         match self.bits {
             0 => MODE2_A::DISABLED,
             1 => MODE2_A::INPUT,
@@ -638,8 +638,8 @@ impl MODE2_R {
     }
 }
 #[doc = "Field `MODE2` writer - Pin 2 Mode"]
-pub type MODE2_W<'a, REG, const O: u8> = crate::FieldWriterSafe<'a, REG, 4, O, MODE2_A>;
-impl<'a, REG, const O: u8> MODE2_W<'a, REG, O>
+pub type MODE2_W<'a, REG> = crate::FieldWriterSafe<'a, REG, 4, MODE2_A>;
+impl<'a, REG> MODE2_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -776,7 +776,7 @@ impl crate::FieldSpec for MODE3_A {
 impl MODE3_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> MODE3_A {
+    pub const fn variant(&self) -> MODE3_A {
         match self.bits {
             0 => MODE3_A::DISABLED,
             1 => MODE3_A::INPUT,
@@ -879,8 +879,8 @@ impl MODE3_R {
     }
 }
 #[doc = "Field `MODE3` writer - Pin 3 Mode"]
-pub type MODE3_W<'a, REG, const O: u8> = crate::FieldWriterSafe<'a, REG, 4, O, MODE3_A>;
-impl<'a, REG, const O: u8> MODE3_W<'a, REG, O>
+pub type MODE3_W<'a, REG> = crate::FieldWriterSafe<'a, REG, 4, MODE3_A>;
+impl<'a, REG> MODE3_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -1017,7 +1017,7 @@ impl crate::FieldSpec for MODE4_A {
 impl MODE4_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> MODE4_A {
+    pub const fn variant(&self) -> MODE4_A {
         match self.bits {
             0 => MODE4_A::DISABLED,
             1 => MODE4_A::INPUT,
@@ -1120,8 +1120,8 @@ impl MODE4_R {
     }
 }
 #[doc = "Field `MODE4` writer - Pin 4 Mode"]
-pub type MODE4_W<'a, REG, const O: u8> = crate::FieldWriterSafe<'a, REG, 4, O, MODE4_A>;
-impl<'a, REG, const O: u8> MODE4_W<'a, REG, O>
+pub type MODE4_W<'a, REG> = crate::FieldWriterSafe<'a, REG, 4, MODE4_A>;
+impl<'a, REG> MODE4_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -1258,7 +1258,7 @@ impl crate::FieldSpec for MODE5_A {
 impl MODE5_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> MODE5_A {
+    pub const fn variant(&self) -> MODE5_A {
         match self.bits {
             0 => MODE5_A::DISABLED,
             1 => MODE5_A::INPUT,
@@ -1361,8 +1361,8 @@ impl MODE5_R {
     }
 }
 #[doc = "Field `MODE5` writer - Pin 5 Mode"]
-pub type MODE5_W<'a, REG, const O: u8> = crate::FieldWriterSafe<'a, REG, 4, O, MODE5_A>;
-impl<'a, REG, const O: u8> MODE5_W<'a, REG, O>
+pub type MODE5_W<'a, REG> = crate::FieldWriterSafe<'a, REG, 4, MODE5_A>;
+impl<'a, REG> MODE5_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -1499,7 +1499,7 @@ impl crate::FieldSpec for MODE6_A {
 impl MODE6_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> MODE6_A {
+    pub const fn variant(&self) -> MODE6_A {
         match self.bits {
             0 => MODE6_A::DISABLED,
             1 => MODE6_A::INPUT,
@@ -1602,8 +1602,8 @@ impl MODE6_R {
     }
 }
 #[doc = "Field `MODE6` writer - Pin 6 Mode"]
-pub type MODE6_W<'a, REG, const O: u8> = crate::FieldWriterSafe<'a, REG, 4, O, MODE6_A>;
-impl<'a, REG, const O: u8> MODE6_W<'a, REG, O>
+pub type MODE6_W<'a, REG> = crate::FieldWriterSafe<'a, REG, 4, MODE6_A>;
+impl<'a, REG> MODE6_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -1740,7 +1740,7 @@ impl crate::FieldSpec for MODE7_A {
 impl MODE7_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> MODE7_A {
+    pub const fn variant(&self) -> MODE7_A {
         match self.bits {
             0 => MODE7_A::DISABLED,
             1 => MODE7_A::INPUT,
@@ -1843,8 +1843,8 @@ impl MODE7_R {
     }
 }
 #[doc = "Field `MODE7` writer - Pin 7 Mode"]
-pub type MODE7_W<'a, REG, const O: u8> = crate::FieldWriterSafe<'a, REG, 4, O, MODE7_A>;
-impl<'a, REG, const O: u8> MODE7_W<'a, REG, O>
+pub type MODE7_W<'a, REG> = crate::FieldWriterSafe<'a, REG, 4, MODE7_A>;
+impl<'a, REG> MODE7_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -1976,52 +1976,56 @@ impl W {
     #[doc = "Bits 0:3 - Pin 0 Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn mode0(&mut self) -> MODE0_W<PB_MODEL_SPEC, 0> {
-        MODE0_W::new(self)
+    pub fn mode0(&mut self) -> MODE0_W<PB_MODEL_SPEC> {
+        MODE0_W::new(self, 0)
     }
     #[doc = "Bits 4:7 - Pin 1 Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn mode1(&mut self) -> MODE1_W<PB_MODEL_SPEC, 4> {
-        MODE1_W::new(self)
+    pub fn mode1(&mut self) -> MODE1_W<PB_MODEL_SPEC> {
+        MODE1_W::new(self, 4)
     }
     #[doc = "Bits 8:11 - Pin 2 Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn mode2(&mut self) -> MODE2_W<PB_MODEL_SPEC, 8> {
-        MODE2_W::new(self)
+    pub fn mode2(&mut self) -> MODE2_W<PB_MODEL_SPEC> {
+        MODE2_W::new(self, 8)
     }
     #[doc = "Bits 12:15 - Pin 3 Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn mode3(&mut self) -> MODE3_W<PB_MODEL_SPEC, 12> {
-        MODE3_W::new(self)
+    pub fn mode3(&mut self) -> MODE3_W<PB_MODEL_SPEC> {
+        MODE3_W::new(self, 12)
     }
     #[doc = "Bits 16:19 - Pin 4 Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn mode4(&mut self) -> MODE4_W<PB_MODEL_SPEC, 16> {
-        MODE4_W::new(self)
+    pub fn mode4(&mut self) -> MODE4_W<PB_MODEL_SPEC> {
+        MODE4_W::new(self, 16)
     }
     #[doc = "Bits 20:23 - Pin 5 Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn mode5(&mut self) -> MODE5_W<PB_MODEL_SPEC, 20> {
-        MODE5_W::new(self)
+    pub fn mode5(&mut self) -> MODE5_W<PB_MODEL_SPEC> {
+        MODE5_W::new(self, 20)
     }
     #[doc = "Bits 24:27 - Pin 6 Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn mode6(&mut self) -> MODE6_W<PB_MODEL_SPEC, 24> {
-        MODE6_W::new(self)
+    pub fn mode6(&mut self) -> MODE6_W<PB_MODEL_SPEC> {
+        MODE6_W::new(self, 24)
     }
     #[doc = "Bits 28:31 - Pin 7 Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn mode7(&mut self) -> MODE7_W<PB_MODEL_SPEC, 28> {
-        MODE7_W::new(self)
+    pub fn mode7(&mut self) -> MODE7_W<PB_MODEL_SPEC> {
+        MODE7_W::new(self, 28)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -2037,10 +2041,10 @@ impl crate::RegisterSpec for PB_MODEL_SPEC {
 impl crate::Readable for PB_MODEL_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`pb_model::W`](W) writer structure"]
 impl crate::Writable for PB_MODEL_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets PB_MODEL to value 0"]
 impl crate::Resettable for PB_MODEL_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

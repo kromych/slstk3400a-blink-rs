@@ -5,19 +5,19 @@ pub type W = crate::W<CTRL_SPEC>;
 #[doc = "Field `DECRYPT` reader - Decryption/Encryption Mode"]
 pub type DECRYPT_R = crate::BitReader;
 #[doc = "Field `DECRYPT` writer - Decryption/Encryption Mode"]
-pub type DECRYPT_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type DECRYPT_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `DATASTART` reader - AES_DATA Write Start"]
 pub type DATASTART_R = crate::BitReader;
 #[doc = "Field `DATASTART` writer - AES_DATA Write Start"]
-pub type DATASTART_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type DATASTART_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `XORSTART` reader - AES_XORDATA Write Start"]
 pub type XORSTART_R = crate::BitReader;
 #[doc = "Field `XORSTART` writer - AES_XORDATA Write Start"]
-pub type XORSTART_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type XORSTART_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `BYTEORDER` reader - Configure byte order in data and key registers"]
 pub type BYTEORDER_R = crate::BitReader;
 #[doc = "Field `BYTEORDER` writer - Configure byte order in data and key registers"]
-pub type BYTEORDER_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type BYTEORDER_W<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bit 0 - Decryption/Encryption Mode"]
     #[inline(always)]
@@ -44,28 +44,32 @@ impl W {
     #[doc = "Bit 0 - Decryption/Encryption Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn decrypt(&mut self) -> DECRYPT_W<CTRL_SPEC, 0> {
-        DECRYPT_W::new(self)
+    pub fn decrypt(&mut self) -> DECRYPT_W<CTRL_SPEC> {
+        DECRYPT_W::new(self, 0)
     }
     #[doc = "Bit 4 - AES_DATA Write Start"]
     #[inline(always)]
     #[must_use]
-    pub fn datastart(&mut self) -> DATASTART_W<CTRL_SPEC, 4> {
-        DATASTART_W::new(self)
+    pub fn datastart(&mut self) -> DATASTART_W<CTRL_SPEC> {
+        DATASTART_W::new(self, 4)
     }
     #[doc = "Bit 5 - AES_XORDATA Write Start"]
     #[inline(always)]
     #[must_use]
-    pub fn xorstart(&mut self) -> XORSTART_W<CTRL_SPEC, 5> {
-        XORSTART_W::new(self)
+    pub fn xorstart(&mut self) -> XORSTART_W<CTRL_SPEC> {
+        XORSTART_W::new(self, 5)
     }
     #[doc = "Bit 6 - Configure byte order in data and key registers"]
     #[inline(always)]
     #[must_use]
-    pub fn byteorder(&mut self) -> BYTEORDER_W<CTRL_SPEC, 6> {
-        BYTEORDER_W::new(self)
+    pub fn byteorder(&mut self) -> BYTEORDER_W<CTRL_SPEC> {
+        BYTEORDER_W::new(self, 6)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -81,10 +85,10 @@ impl crate::RegisterSpec for CTRL_SPEC {
 impl crate::Readable for CTRL_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`ctrl::W`](W) writer structure"]
 impl crate::Writable for CTRL_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL to value 0"]
 impl crate::Resettable for CTRL_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

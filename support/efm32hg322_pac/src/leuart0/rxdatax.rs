@@ -32,5 +32,5 @@ impl crate::RegisterSpec for RXDATAX_SPEC {
 impl crate::Readable for RXDATAX_SPEC {}
 #[doc = "`reset()` method sets RXDATAX to value 0"]
 impl crate::Resettable for RXDATAX_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

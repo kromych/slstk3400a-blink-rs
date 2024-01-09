@@ -5,27 +5,27 @@ pub type W = crate::W<SWLEVEL_SPEC>;
 #[doc = "Field `CH0LEVEL` reader - Channel 0 Software Level"]
 pub type CH0LEVEL_R = crate::BitReader;
 #[doc = "Field `CH0LEVEL` writer - Channel 0 Software Level"]
-pub type CH0LEVEL_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type CH0LEVEL_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `CH1LEVEL` reader - Channel 1 Software Level"]
 pub type CH1LEVEL_R = crate::BitReader;
 #[doc = "Field `CH1LEVEL` writer - Channel 1 Software Level"]
-pub type CH1LEVEL_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type CH1LEVEL_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `CH2LEVEL` reader - Channel 2 Software Level"]
 pub type CH2LEVEL_R = crate::BitReader;
 #[doc = "Field `CH2LEVEL` writer - Channel 2 Software Level"]
-pub type CH2LEVEL_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type CH2LEVEL_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `CH3LEVEL` reader - Channel 3 Software Level"]
 pub type CH3LEVEL_R = crate::BitReader;
 #[doc = "Field `CH3LEVEL` writer - Channel 3 Software Level"]
-pub type CH3LEVEL_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type CH3LEVEL_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `CH4LEVEL` reader - Channel 4 Software Level"]
 pub type CH4LEVEL_R = crate::BitReader;
 #[doc = "Field `CH4LEVEL` writer - Channel 4 Software Level"]
-pub type CH4LEVEL_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type CH4LEVEL_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `CH5LEVEL` reader - Channel 5 Software Level"]
 pub type CH5LEVEL_R = crate::BitReader;
 #[doc = "Field `CH5LEVEL` writer - Channel 5 Software Level"]
-pub type CH5LEVEL_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type CH5LEVEL_W<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bit 0 - Channel 0 Software Level"]
     #[inline(always)]
@@ -62,40 +62,44 @@ impl W {
     #[doc = "Bit 0 - Channel 0 Software Level"]
     #[inline(always)]
     #[must_use]
-    pub fn ch0level(&mut self) -> CH0LEVEL_W<SWLEVEL_SPEC, 0> {
-        CH0LEVEL_W::new(self)
+    pub fn ch0level(&mut self) -> CH0LEVEL_W<SWLEVEL_SPEC> {
+        CH0LEVEL_W::new(self, 0)
     }
     #[doc = "Bit 1 - Channel 1 Software Level"]
     #[inline(always)]
     #[must_use]
-    pub fn ch1level(&mut self) -> CH1LEVEL_W<SWLEVEL_SPEC, 1> {
-        CH1LEVEL_W::new(self)
+    pub fn ch1level(&mut self) -> CH1LEVEL_W<SWLEVEL_SPEC> {
+        CH1LEVEL_W::new(self, 1)
     }
     #[doc = "Bit 2 - Channel 2 Software Level"]
     #[inline(always)]
     #[must_use]
-    pub fn ch2level(&mut self) -> CH2LEVEL_W<SWLEVEL_SPEC, 2> {
-        CH2LEVEL_W::new(self)
+    pub fn ch2level(&mut self) -> CH2LEVEL_W<SWLEVEL_SPEC> {
+        CH2LEVEL_W::new(self, 2)
     }
     #[doc = "Bit 3 - Channel 3 Software Level"]
     #[inline(always)]
     #[must_use]
-    pub fn ch3level(&mut self) -> CH3LEVEL_W<SWLEVEL_SPEC, 3> {
-        CH3LEVEL_W::new(self)
+    pub fn ch3level(&mut self) -> CH3LEVEL_W<SWLEVEL_SPEC> {
+        CH3LEVEL_W::new(self, 3)
     }
     #[doc = "Bit 4 - Channel 4 Software Level"]
     #[inline(always)]
     #[must_use]
-    pub fn ch4level(&mut self) -> CH4LEVEL_W<SWLEVEL_SPEC, 4> {
-        CH4LEVEL_W::new(self)
+    pub fn ch4level(&mut self) -> CH4LEVEL_W<SWLEVEL_SPEC> {
+        CH4LEVEL_W::new(self, 4)
     }
     #[doc = "Bit 5 - Channel 5 Software Level"]
     #[inline(always)]
     #[must_use]
-    pub fn ch5level(&mut self) -> CH5LEVEL_W<SWLEVEL_SPEC, 5> {
-        CH5LEVEL_W::new(self)
+    pub fn ch5level(&mut self) -> CH5LEVEL_W<SWLEVEL_SPEC> {
+        CH5LEVEL_W::new(self, 5)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -111,10 +115,10 @@ impl crate::RegisterSpec for SWLEVEL_SPEC {
 impl crate::Readable for SWLEVEL_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`swlevel::W`](W) writer structure"]
 impl crate::Writable for SWLEVEL_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets SWLEVEL to value 0"]
 impl crate::Resettable for SWLEVEL_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

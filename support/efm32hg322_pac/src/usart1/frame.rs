@@ -47,7 +47,7 @@ impl crate::FieldSpec for DATABITS_A {
 impl DATABITS_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<DATABITS_A> {
+    pub const fn variant(&self) -> Option<DATABITS_A> {
         match self.bits {
             1 => Some(DATABITS_A::FOUR),
             2 => Some(DATABITS_A::FIVE),
@@ -132,8 +132,8 @@ impl DATABITS_R {
     }
 }
 #[doc = "Field `DATABITS` writer - Data-Bit Mode"]
-pub type DATABITS_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 4, O, DATABITS_A>;
-impl<'a, REG, const O: u8> DATABITS_W<'a, REG, O>
+pub type DATABITS_W<'a, REG> = crate::FieldWriter<'a, REG, 4, DATABITS_A>;
+impl<'a, REG> DATABITS_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -229,7 +229,7 @@ impl crate::FieldSpec for PARITY_A {
 impl PARITY_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<PARITY_A> {
+    pub const fn variant(&self) -> Option<PARITY_A> {
         match self.bits {
             0 => Some(PARITY_A::NONE),
             2 => Some(PARITY_A::EVEN),
@@ -254,8 +254,8 @@ impl PARITY_R {
     }
 }
 #[doc = "Field `PARITY` writer - Parity-Bit Mode"]
-pub type PARITY_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 2, O, PARITY_A>;
-impl<'a, REG, const O: u8> PARITY_W<'a, REG, O>
+pub type PARITY_W<'a, REG> = crate::FieldWriter<'a, REG, 2, PARITY_A>;
+impl<'a, REG> PARITY_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -303,7 +303,7 @@ impl crate::FieldSpec for STOPBITS_A {
 impl STOPBITS_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> STOPBITS_A {
+    pub const fn variant(&self) -> STOPBITS_A {
         match self.bits {
             0 => STOPBITS_A::HALF,
             1 => STOPBITS_A::ONE,
@@ -334,8 +334,8 @@ impl STOPBITS_R {
     }
 }
 #[doc = "Field `STOPBITS` writer - Stop-Bit Mode"]
-pub type STOPBITS_W<'a, REG, const O: u8> = crate::FieldWriterSafe<'a, REG, 2, O, STOPBITS_A>;
-impl<'a, REG, const O: u8> STOPBITS_W<'a, REG, O>
+pub type STOPBITS_W<'a, REG> = crate::FieldWriterSafe<'a, REG, 2, STOPBITS_A>;
+impl<'a, REG> STOPBITS_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -382,22 +382,26 @@ impl W {
     #[doc = "Bits 0:3 - Data-Bit Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn databits(&mut self) -> DATABITS_W<FRAME_SPEC, 0> {
-        DATABITS_W::new(self)
+    pub fn databits(&mut self) -> DATABITS_W<FRAME_SPEC> {
+        DATABITS_W::new(self, 0)
     }
     #[doc = "Bits 8:9 - Parity-Bit Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn parity(&mut self) -> PARITY_W<FRAME_SPEC, 8> {
-        PARITY_W::new(self)
+    pub fn parity(&mut self) -> PARITY_W<FRAME_SPEC> {
+        PARITY_W::new(self, 8)
     }
     #[doc = "Bits 12:13 - Stop-Bit Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn stopbits(&mut self) -> STOPBITS_W<FRAME_SPEC, 12> {
-        STOPBITS_W::new(self)
+    pub fn stopbits(&mut self) -> STOPBITS_W<FRAME_SPEC> {
+        STOPBITS_W::new(self, 12)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -413,10 +417,10 @@ impl crate::RegisterSpec for FRAME_SPEC {
 impl crate::Readable for FRAME_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`frame::W`](W) writer structure"]
 impl crate::Writable for FRAME_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets FRAME to value 0x1005"]
 impl crate::Resettable for FRAME_SPEC {
-    const RESET_VALUE: Self::Ux = 0x1005;
+    const RESET_VALUE: u32 = 0x1005;
 }

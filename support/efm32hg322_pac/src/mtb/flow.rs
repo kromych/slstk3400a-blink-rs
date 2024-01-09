@@ -5,15 +5,15 @@ pub type W = crate::W<FLOW_SPEC>;
 #[doc = "Field `AUTOSTOP` reader - AUTOSTOP enable."]
 pub type AUTOSTOP_R = crate::BitReader;
 #[doc = "Field `AUTOSTOP` writer - AUTOSTOP enable."]
-pub type AUTOSTOP_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type AUTOSTOP_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `AUTOHALT` reader - AUTOHALT enable."]
 pub type AUTOHALT_R = crate::BitReader;
 #[doc = "Field `AUTOHALT` writer - AUTOHALT enable."]
-pub type AUTOHALT_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type AUTOHALT_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `WATERMARK` reader - WATERMARK value."]
 pub type WATERMARK_R = crate::FieldReader<u32>;
 #[doc = "Field `WATERMARK` writer - WATERMARK value."]
-pub type WATERMARK_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 29, O, u32>;
+pub type WATERMARK_W<'a, REG> = crate::FieldWriter<'a, REG, 29, u32>;
 impl R {
     #[doc = "Bit 0 - AUTOSTOP enable."]
     #[inline(always)]
@@ -35,22 +35,26 @@ impl W {
     #[doc = "Bit 0 - AUTOSTOP enable."]
     #[inline(always)]
     #[must_use]
-    pub fn autostop(&mut self) -> AUTOSTOP_W<FLOW_SPEC, 0> {
-        AUTOSTOP_W::new(self)
+    pub fn autostop(&mut self) -> AUTOSTOP_W<FLOW_SPEC> {
+        AUTOSTOP_W::new(self, 0)
     }
     #[doc = "Bit 1 - AUTOHALT enable."]
     #[inline(always)]
     #[must_use]
-    pub fn autohalt(&mut self) -> AUTOHALT_W<FLOW_SPEC, 1> {
-        AUTOHALT_W::new(self)
+    pub fn autohalt(&mut self) -> AUTOHALT_W<FLOW_SPEC> {
+        AUTOHALT_W::new(self, 1)
     }
     #[doc = "Bits 3:31 - WATERMARK value."]
     #[inline(always)]
     #[must_use]
-    pub fn watermark(&mut self) -> WATERMARK_W<FLOW_SPEC, 3> {
-        WATERMARK_W::new(self)
+    pub fn watermark(&mut self) -> WATERMARK_W<FLOW_SPEC> {
+        WATERMARK_W::new(self, 3)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -66,10 +70,10 @@ impl crate::RegisterSpec for FLOW_SPEC {
 impl crate::Readable for FLOW_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`flow::W`](W) writer structure"]
 impl crate::Writable for FLOW_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets FLOW to value 0"]
 impl crate::Resettable for FLOW_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

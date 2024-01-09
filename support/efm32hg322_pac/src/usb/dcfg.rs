@@ -25,7 +25,7 @@ impl crate::FieldSpec for DEVSPD_A {
 impl DEVSPD_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<DEVSPD_A> {
+    pub const fn variant(&self) -> Option<DEVSPD_A> {
         match self.bits {
             2 => Some(DEVSPD_A::LS),
             3 => Some(DEVSPD_A::FS),
@@ -44,8 +44,8 @@ impl DEVSPD_R {
     }
 }
 #[doc = "Field `DEVSPD` writer - Device Speed"]
-pub type DEVSPD_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 2, O, DEVSPD_A>;
-impl<'a, REG, const O: u8> DEVSPD_W<'a, REG, O>
+pub type DEVSPD_W<'a, REG> = crate::FieldWriter<'a, REG, 2, DEVSPD_A>;
+impl<'a, REG> DEVSPD_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -64,15 +64,15 @@ where
 #[doc = "Field `NZSTSOUTHSHK` reader - Non-Zero-Length Status OUT Handshake"]
 pub type NZSTSOUTHSHK_R = crate::BitReader;
 #[doc = "Field `NZSTSOUTHSHK` writer - Non-Zero-Length Status OUT Handshake"]
-pub type NZSTSOUTHSHK_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type NZSTSOUTHSHK_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `ENA32KHZSUSP` reader - Enable 32 KHz Suspend mode"]
 pub type ENA32KHZSUSP_R = crate::BitReader;
 #[doc = "Field `ENA32KHZSUSP` writer - Enable 32 KHz Suspend mode"]
-pub type ENA32KHZSUSP_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type ENA32KHZSUSP_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `DEVADDR` reader - Device Address"]
 pub type DEVADDR_R = crate::FieldReader;
 #[doc = "Field `DEVADDR` writer - Device Address"]
-pub type DEVADDR_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 7, O>;
+pub type DEVADDR_W<'a, REG> = crate::FieldWriter<'a, REG, 7>;
 #[doc = "Field `PERFRINT` reader - Periodic Frame Interval"]
 pub type PERFRINT_R = crate::FieldReader<PERFRINT_A>;
 #[doc = "Periodic Frame Interval\n\nValue on reset: 0"]
@@ -100,7 +100,7 @@ impl crate::FieldSpec for PERFRINT_A {
 impl PERFRINT_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> PERFRINT_A {
+    pub const fn variant(&self) -> PERFRINT_A {
         match self.bits {
             0 => PERFRINT_A::_80PCNT,
             1 => PERFRINT_A::_85PCNT,
@@ -131,8 +131,8 @@ impl PERFRINT_R {
     }
 }
 #[doc = "Field `PERFRINT` writer - Periodic Frame Interval"]
-pub type PERFRINT_W<'a, REG, const O: u8> = crate::FieldWriterSafe<'a, REG, 2, O, PERFRINT_A>;
-impl<'a, REG, const O: u8> PERFRINT_W<'a, REG, O>
+pub type PERFRINT_W<'a, REG> = crate::FieldWriterSafe<'a, REG, 2, PERFRINT_A>;
+impl<'a, REG> PERFRINT_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -161,11 +161,11 @@ where
 #[doc = "Field `ERRATICINTMSK` reader - "]
 pub type ERRATICINTMSK_R = crate::BitReader;
 #[doc = "Field `ERRATICINTMSK` writer - "]
-pub type ERRATICINTMSK_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type ERRATICINTMSK_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `RESVALID` reader - Resume Validation Period"]
 pub type RESVALID_R = crate::FieldReader;
 #[doc = "Field `RESVALID` writer - Resume Validation Period"]
-pub type RESVALID_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 6, O>;
+pub type RESVALID_W<'a, REG> = crate::FieldWriter<'a, REG, 6>;
 impl R {
     #[doc = "Bits 0:1 - Device Speed"]
     #[inline(always)]
@@ -207,46 +207,50 @@ impl W {
     #[doc = "Bits 0:1 - Device Speed"]
     #[inline(always)]
     #[must_use]
-    pub fn devspd(&mut self) -> DEVSPD_W<DCFG_SPEC, 0> {
-        DEVSPD_W::new(self)
+    pub fn devspd(&mut self) -> DEVSPD_W<DCFG_SPEC> {
+        DEVSPD_W::new(self, 0)
     }
     #[doc = "Bit 2 - Non-Zero-Length Status OUT Handshake"]
     #[inline(always)]
     #[must_use]
-    pub fn nzstsouthshk(&mut self) -> NZSTSOUTHSHK_W<DCFG_SPEC, 2> {
-        NZSTSOUTHSHK_W::new(self)
+    pub fn nzstsouthshk(&mut self) -> NZSTSOUTHSHK_W<DCFG_SPEC> {
+        NZSTSOUTHSHK_W::new(self, 2)
     }
     #[doc = "Bit 3 - Enable 32 KHz Suspend mode"]
     #[inline(always)]
     #[must_use]
-    pub fn ena32khzsusp(&mut self) -> ENA32KHZSUSP_W<DCFG_SPEC, 3> {
-        ENA32KHZSUSP_W::new(self)
+    pub fn ena32khzsusp(&mut self) -> ENA32KHZSUSP_W<DCFG_SPEC> {
+        ENA32KHZSUSP_W::new(self, 3)
     }
     #[doc = "Bits 4:10 - Device Address"]
     #[inline(always)]
     #[must_use]
-    pub fn devaddr(&mut self) -> DEVADDR_W<DCFG_SPEC, 4> {
-        DEVADDR_W::new(self)
+    pub fn devaddr(&mut self) -> DEVADDR_W<DCFG_SPEC> {
+        DEVADDR_W::new(self, 4)
     }
     #[doc = "Bits 11:12 - Periodic Frame Interval"]
     #[inline(always)]
     #[must_use]
-    pub fn perfrint(&mut self) -> PERFRINT_W<DCFG_SPEC, 11> {
-        PERFRINT_W::new(self)
+    pub fn perfrint(&mut self) -> PERFRINT_W<DCFG_SPEC> {
+        PERFRINT_W::new(self, 11)
     }
     #[doc = "Bit 15"]
     #[inline(always)]
     #[must_use]
-    pub fn erraticintmsk(&mut self) -> ERRATICINTMSK_W<DCFG_SPEC, 15> {
-        ERRATICINTMSK_W::new(self)
+    pub fn erraticintmsk(&mut self) -> ERRATICINTMSK_W<DCFG_SPEC> {
+        ERRATICINTMSK_W::new(self, 15)
     }
     #[doc = "Bits 26:31 - Resume Validation Period"]
     #[inline(always)]
     #[must_use]
-    pub fn resvalid(&mut self) -> RESVALID_W<DCFG_SPEC, 26> {
-        RESVALID_W::new(self)
+    pub fn resvalid(&mut self) -> RESVALID_W<DCFG_SPEC> {
+        RESVALID_W::new(self, 26)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -262,10 +266,10 @@ impl crate::RegisterSpec for DCFG_SPEC {
 impl crate::Readable for DCFG_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`dcfg::W`](W) writer structure"]
 impl crate::Writable for DCFG_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DCFG to value 0x0800_0000"]
 impl crate::Resettable for DCFG_SPEC {
-    const RESET_VALUE: Self::Ux = 0x0800_0000;
+    const RESET_VALUE: u32 = 0x0800_0000;
 }

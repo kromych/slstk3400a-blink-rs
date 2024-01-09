@@ -5,11 +5,11 @@ pub type W = crate::W<WRITECTRL_SPEC>;
 #[doc = "Field `WREN` reader - Enable Write/Erase Controller"]
 pub type WREN_R = crate::BitReader;
 #[doc = "Field `WREN` writer - Enable Write/Erase Controller"]
-pub type WREN_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type WREN_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `IRQERASEABORT` reader - Abort Page Erase on Interrupt"]
 pub type IRQERASEABORT_R = crate::BitReader;
 #[doc = "Field `IRQERASEABORT` writer - Abort Page Erase on Interrupt"]
-pub type IRQERASEABORT_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type IRQERASEABORT_W<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bit 0 - Enable Write/Erase Controller"]
     #[inline(always)]
@@ -26,16 +26,20 @@ impl W {
     #[doc = "Bit 0 - Enable Write/Erase Controller"]
     #[inline(always)]
     #[must_use]
-    pub fn wren(&mut self) -> WREN_W<WRITECTRL_SPEC, 0> {
-        WREN_W::new(self)
+    pub fn wren(&mut self) -> WREN_W<WRITECTRL_SPEC> {
+        WREN_W::new(self, 0)
     }
     #[doc = "Bit 1 - Abort Page Erase on Interrupt"]
     #[inline(always)]
     #[must_use]
-    pub fn irqeraseabort(&mut self) -> IRQERASEABORT_W<WRITECTRL_SPEC, 1> {
-        IRQERASEABORT_W::new(self)
+    pub fn irqeraseabort(&mut self) -> IRQERASEABORT_W<WRITECTRL_SPEC> {
+        IRQERASEABORT_W::new(self, 1)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -51,10 +55,10 @@ impl crate::RegisterSpec for WRITECTRL_SPEC {
 impl crate::Readable for WRITECTRL_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`writectrl::W`](W) writer structure"]
 impl crate::Writable for WRITECTRL_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets WRITECTRL to value 0"]
 impl crate::Resettable for WRITECTRL_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

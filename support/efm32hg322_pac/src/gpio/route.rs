@@ -5,11 +5,11 @@ pub type W = crate::W<ROUTE_SPEC>;
 #[doc = "Field `SWCLKPEN` reader - Serial Wire Clock Pin Enable"]
 pub type SWCLKPEN_R = crate::BitReader;
 #[doc = "Field `SWCLKPEN` writer - Serial Wire Clock Pin Enable"]
-pub type SWCLKPEN_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type SWCLKPEN_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SWDIOPEN` reader - Serial Wire Data Pin Enable"]
 pub type SWDIOPEN_R = crate::BitReader;
 #[doc = "Field `SWDIOPEN` writer - Serial Wire Data Pin Enable"]
-pub type SWDIOPEN_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type SWDIOPEN_W<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bit 0 - Serial Wire Clock Pin Enable"]
     #[inline(always)]
@@ -26,16 +26,20 @@ impl W {
     #[doc = "Bit 0 - Serial Wire Clock Pin Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn swclkpen(&mut self) -> SWCLKPEN_W<ROUTE_SPEC, 0> {
-        SWCLKPEN_W::new(self)
+    pub fn swclkpen(&mut self) -> SWCLKPEN_W<ROUTE_SPEC> {
+        SWCLKPEN_W::new(self, 0)
     }
     #[doc = "Bit 1 - Serial Wire Data Pin Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn swdiopen(&mut self) -> SWDIOPEN_W<ROUTE_SPEC, 1> {
-        SWDIOPEN_W::new(self)
+    pub fn swdiopen(&mut self) -> SWDIOPEN_W<ROUTE_SPEC> {
+        SWDIOPEN_W::new(self, 1)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -51,10 +55,10 @@ impl crate::RegisterSpec for ROUTE_SPEC {
 impl crate::Readable for ROUTE_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`route::W`](W) writer structure"]
 impl crate::Writable for ROUTE_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets ROUTE to value 0x03"]
 impl crate::Resettable for ROUTE_SPEC {
-    const RESET_VALUE: Self::Ux = 0x03;
+    const RESET_VALUE: u32 = 0x03;
 }

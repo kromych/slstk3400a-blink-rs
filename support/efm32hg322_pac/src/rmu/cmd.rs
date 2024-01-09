@@ -1,15 +1,19 @@
 #[doc = "Register `CMD` writer"]
 pub type W = crate::W<CMD_SPEC>;
 #[doc = "Field `RCCLR` writer - Reset Cause Clear"]
-pub type RCCLR_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type RCCLR_W<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
     #[doc = "Bit 0 - Reset Cause Clear"]
     #[inline(always)]
     #[must_use]
-    pub fn rcclr(&mut self) -> RCCLR_W<CMD_SPEC, 0> {
-        RCCLR_W::new(self)
+    pub fn rcclr(&mut self) -> RCCLR_W<CMD_SPEC> {
+        RCCLR_W::new(self, 0)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -23,10 +27,10 @@ impl crate::RegisterSpec for CMD_SPEC {
 }
 #[doc = "`write(|w| ..)` method takes [`cmd::W`](W) writer structure"]
 impl crate::Writable for CMD_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CMD to value 0"]
 impl crate::Resettable for CMD_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

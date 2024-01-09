@@ -5,11 +5,11 @@ pub type W = crate::W<DUTYCONFIG_SPEC>;
 #[doc = "Field `DUTYCYCLEEN` reader - Duty Cycle Enable."]
 pub type DUTYCYCLEEN_R = crate::BitReader;
 #[doc = "Field `DUTYCYCLEEN` writer - Duty Cycle Enable."]
-pub type DUTYCYCLEEN_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type DUTYCYCLEEN_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `EM2DUTYCYCLEDIS` reader - EM2/EM3 Duty Cycle Disable."]
 pub type EM2DUTYCYCLEDIS_R = crate::BitReader;
 #[doc = "Field `EM2DUTYCYCLEDIS` writer - EM2/EM3 Duty Cycle Disable."]
-pub type EM2DUTYCYCLEDIS_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type EM2DUTYCYCLEDIS_W<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bit 0 - Duty Cycle Enable."]
     #[inline(always)]
@@ -26,16 +26,20 @@ impl W {
     #[doc = "Bit 0 - Duty Cycle Enable."]
     #[inline(always)]
     #[must_use]
-    pub fn dutycycleen(&mut self) -> DUTYCYCLEEN_W<DUTYCONFIG_SPEC, 0> {
-        DUTYCYCLEEN_W::new(self)
+    pub fn dutycycleen(&mut self) -> DUTYCYCLEEN_W<DUTYCONFIG_SPEC> {
+        DUTYCYCLEEN_W::new(self, 0)
     }
     #[doc = "Bit 1 - EM2/EM3 Duty Cycle Disable."]
     #[inline(always)]
     #[must_use]
-    pub fn em2dutycycledis(&mut self) -> EM2DUTYCYCLEDIS_W<DUTYCONFIG_SPEC, 1> {
-        EM2DUTYCYCLEDIS_W::new(self)
+    pub fn em2dutycycledis(&mut self) -> EM2DUTYCYCLEDIS_W<DUTYCONFIG_SPEC> {
+        EM2DUTYCYCLEDIS_W::new(self, 1)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -51,10 +55,10 @@ impl crate::RegisterSpec for DUTYCONFIG_SPEC {
 impl crate::Readable for DUTYCONFIG_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`dutyconfig::W`](W) writer structure"]
 impl crate::Writable for DUTYCONFIG_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DUTYCONFIG to value 0"]
 impl crate::Resettable for DUTYCONFIG_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

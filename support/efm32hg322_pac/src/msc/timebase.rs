@@ -5,11 +5,11 @@ pub type W = crate::W<TIMEBASE_SPEC>;
 #[doc = "Field `BASE` reader - Timebase used by MSC to time flash writes and erases"]
 pub type BASE_R = crate::FieldReader;
 #[doc = "Field `BASE` writer - Timebase used by MSC to time flash writes and erases"]
-pub type BASE_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 6, O>;
+pub type BASE_W<'a, REG> = crate::FieldWriter<'a, REG, 6>;
 #[doc = "Field `PERIOD` reader - Sets the timebase period"]
 pub type PERIOD_R = crate::BitReader;
 #[doc = "Field `PERIOD` writer - Sets the timebase period"]
-pub type PERIOD_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type PERIOD_W<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bits 0:5 - Timebase used by MSC to time flash writes and erases"]
     #[inline(always)]
@@ -26,16 +26,20 @@ impl W {
     #[doc = "Bits 0:5 - Timebase used by MSC to time flash writes and erases"]
     #[inline(always)]
     #[must_use]
-    pub fn base(&mut self) -> BASE_W<TIMEBASE_SPEC, 0> {
-        BASE_W::new(self)
+    pub fn base(&mut self) -> BASE_W<TIMEBASE_SPEC> {
+        BASE_W::new(self, 0)
     }
     #[doc = "Bit 16 - Sets the timebase period"]
     #[inline(always)]
     #[must_use]
-    pub fn period(&mut self) -> PERIOD_W<TIMEBASE_SPEC, 16> {
-        PERIOD_W::new(self)
+    pub fn period(&mut self) -> PERIOD_W<TIMEBASE_SPEC> {
+        PERIOD_W::new(self, 16)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -51,10 +55,10 @@ impl crate::RegisterSpec for TIMEBASE_SPEC {
 impl crate::Readable for TIMEBASE_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`timebase::W`](W) writer structure"]
 impl crate::Writable for TIMEBASE_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets TIMEBASE to value 0x10"]
 impl crate::Resettable for TIMEBASE_SPEC {
-    const RESET_VALUE: Self::Ux = 0x10;
+    const RESET_VALUE: u32 = 0x10;
 }

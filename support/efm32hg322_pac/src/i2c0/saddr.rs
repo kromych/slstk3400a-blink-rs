@@ -5,7 +5,7 @@ pub type W = crate::W<SADDR_SPEC>;
 #[doc = "Field `ADDR` reader - Slave address"]
 pub type ADDR_R = crate::FieldReader;
 #[doc = "Field `ADDR` writer - Slave address"]
-pub type ADDR_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 7, O>;
+pub type ADDR_W<'a, REG> = crate::FieldWriter<'a, REG, 7>;
 impl R {
     #[doc = "Bits 1:7 - Slave address"]
     #[inline(always)]
@@ -17,10 +17,14 @@ impl W {
     #[doc = "Bits 1:7 - Slave address"]
     #[inline(always)]
     #[must_use]
-    pub fn addr(&mut self) -> ADDR_W<SADDR_SPEC, 1> {
-        ADDR_W::new(self)
+    pub fn addr(&mut self) -> ADDR_W<SADDR_SPEC> {
+        ADDR_W::new(self, 1)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -36,10 +40,10 @@ impl crate::RegisterSpec for SADDR_SPEC {
 impl crate::Readable for SADDR_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`saddr::W`](W) writer structure"]
 impl crate::Writable for SADDR_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets SADDR to value 0"]
 impl crate::Resettable for SADDR_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

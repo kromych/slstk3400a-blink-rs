@@ -41,7 +41,7 @@ impl crate::FieldSpec for HFPERCLKDIV_A {
 impl HFPERCLKDIV_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<HFPERCLKDIV_A> {
+    pub const fn variant(&self) -> Option<HFPERCLKDIV_A> {
         match self.bits {
             0 => Some(HFPERCLKDIV_A::HFCLK),
             1 => Some(HFPERCLKDIV_A::HFCLK2),
@@ -108,8 +108,8 @@ impl HFPERCLKDIV_R {
     }
 }
 #[doc = "Field `HFPERCLKDIV` writer - HFPERCLK Divider"]
-pub type HFPERCLKDIV_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 4, O, HFPERCLKDIV_A>;
-impl<'a, REG, const O: u8> HFPERCLKDIV_W<'a, REG, O>
+pub type HFPERCLKDIV_W<'a, REG> = crate::FieldWriter<'a, REG, 4, HFPERCLKDIV_A>;
+impl<'a, REG> HFPERCLKDIV_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -168,7 +168,7 @@ where
 #[doc = "Field `HFPERCLKEN` reader - HFPERCLK Enable"]
 pub type HFPERCLKEN_R = crate::BitReader;
 #[doc = "Field `HFPERCLKEN` writer - HFPERCLK Enable"]
-pub type HFPERCLKEN_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type HFPERCLKEN_W<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bits 0:3 - HFPERCLK Divider"]
     #[inline(always)]
@@ -185,16 +185,20 @@ impl W {
     #[doc = "Bits 0:3 - HFPERCLK Divider"]
     #[inline(always)]
     #[must_use]
-    pub fn hfperclkdiv(&mut self) -> HFPERCLKDIV_W<HFPERCLKDIV_SPEC, 0> {
-        HFPERCLKDIV_W::new(self)
+    pub fn hfperclkdiv(&mut self) -> HFPERCLKDIV_W<HFPERCLKDIV_SPEC> {
+        HFPERCLKDIV_W::new(self, 0)
     }
     #[doc = "Bit 8 - HFPERCLK Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn hfperclken(&mut self) -> HFPERCLKEN_W<HFPERCLKDIV_SPEC, 8> {
-        HFPERCLKEN_W::new(self)
+    pub fn hfperclken(&mut self) -> HFPERCLKEN_W<HFPERCLKDIV_SPEC> {
+        HFPERCLKEN_W::new(self, 8)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -210,10 +214,10 @@ impl crate::RegisterSpec for HFPERCLKDIV_SPEC {
 impl crate::Readable for HFPERCLKDIV_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`hfperclkdiv::W`](W) writer structure"]
 impl crate::Writable for HFPERCLKDIV_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets HFPERCLKDIV to value 0x0100"]
 impl crate::Resettable for HFPERCLKDIV_SPEC {
-    const RESET_VALUE: Self::Ux = 0x0100;
+    const RESET_VALUE: u32 = 0x0100;
 }

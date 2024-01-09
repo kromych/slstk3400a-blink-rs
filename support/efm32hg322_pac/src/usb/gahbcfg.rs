@@ -5,7 +5,7 @@ pub type W = crate::W<GAHBCFG_SPEC>;
 #[doc = "Field `GLBLINTRMSK` reader - Global Interrupt Mask"]
 pub type GLBLINTRMSK_R = crate::BitReader;
 #[doc = "Field `GLBLINTRMSK` writer - Global Interrupt Mask"]
-pub type GLBLINTRMSK_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type GLBLINTRMSK_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `HBSTLEN` reader - Burst Length/Type"]
 pub type HBSTLEN_R = crate::FieldReader<HBSTLEN_A>;
 #[doc = "Burst Length/Type\n\nValue on reset: 0"]
@@ -35,7 +35,7 @@ impl crate::FieldSpec for HBSTLEN_A {
 impl HBSTLEN_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<HBSTLEN_A> {
+    pub const fn variant(&self) -> Option<HBSTLEN_A> {
         match self.bits {
             0 => Some(HBSTLEN_A::SINGLE),
             1 => Some(HBSTLEN_A::INCR),
@@ -72,8 +72,8 @@ impl HBSTLEN_R {
     }
 }
 #[doc = "Field `HBSTLEN` writer - Burst Length/Type"]
-pub type HBSTLEN_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 4, O, HBSTLEN_A>;
-impl<'a, REG, const O: u8> HBSTLEN_W<'a, REG, O>
+pub type HBSTLEN_W<'a, REG> = crate::FieldWriter<'a, REG, 4, HBSTLEN_A>;
+impl<'a, REG> HBSTLEN_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -107,23 +107,23 @@ where
 #[doc = "Field `DMAEN` reader - DMA Enable"]
 pub type DMAEN_R = crate::BitReader;
 #[doc = "Field `DMAEN` writer - DMA Enable"]
-pub type DMAEN_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type DMAEN_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `NPTXFEMPLVL` reader - Non-Periodic TxFIFO Empty Level"]
 pub type NPTXFEMPLVL_R = crate::BitReader;
 #[doc = "Field `NPTXFEMPLVL` writer - Non-Periodic TxFIFO Empty Level"]
-pub type NPTXFEMPLVL_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type NPTXFEMPLVL_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `REMMEMSUPP` reader - Remote Memory Support"]
 pub type REMMEMSUPP_R = crate::BitReader;
 #[doc = "Field `REMMEMSUPP` writer - Remote Memory Support"]
-pub type REMMEMSUPP_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type REMMEMSUPP_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `NOTIALLDMAWRIT` reader - Notify All DMA Writes"]
 pub type NOTIALLDMAWRIT_R = crate::BitReader;
 #[doc = "Field `NOTIALLDMAWRIT` writer - Notify All DMA Writes"]
-pub type NOTIALLDMAWRIT_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type NOTIALLDMAWRIT_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `AHBSINGLE` reader - AHB Single Support"]
 pub type AHBSINGLE_R = crate::BitReader;
 #[doc = "Field `AHBSINGLE` writer - AHB Single Support"]
-pub type AHBSINGLE_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type AHBSINGLE_W<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bit 0 - Global Interrupt Mask"]
     #[inline(always)]
@@ -165,46 +165,50 @@ impl W {
     #[doc = "Bit 0 - Global Interrupt Mask"]
     #[inline(always)]
     #[must_use]
-    pub fn glblintrmsk(&mut self) -> GLBLINTRMSK_W<GAHBCFG_SPEC, 0> {
-        GLBLINTRMSK_W::new(self)
+    pub fn glblintrmsk(&mut self) -> GLBLINTRMSK_W<GAHBCFG_SPEC> {
+        GLBLINTRMSK_W::new(self, 0)
     }
     #[doc = "Bits 1:4 - Burst Length/Type"]
     #[inline(always)]
     #[must_use]
-    pub fn hbstlen(&mut self) -> HBSTLEN_W<GAHBCFG_SPEC, 1> {
-        HBSTLEN_W::new(self)
+    pub fn hbstlen(&mut self) -> HBSTLEN_W<GAHBCFG_SPEC> {
+        HBSTLEN_W::new(self, 1)
     }
     #[doc = "Bit 5 - DMA Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn dmaen(&mut self) -> DMAEN_W<GAHBCFG_SPEC, 5> {
-        DMAEN_W::new(self)
+    pub fn dmaen(&mut self) -> DMAEN_W<GAHBCFG_SPEC> {
+        DMAEN_W::new(self, 5)
     }
     #[doc = "Bit 7 - Non-Periodic TxFIFO Empty Level"]
     #[inline(always)]
     #[must_use]
-    pub fn nptxfemplvl(&mut self) -> NPTXFEMPLVL_W<GAHBCFG_SPEC, 7> {
-        NPTXFEMPLVL_W::new(self)
+    pub fn nptxfemplvl(&mut self) -> NPTXFEMPLVL_W<GAHBCFG_SPEC> {
+        NPTXFEMPLVL_W::new(self, 7)
     }
     #[doc = "Bit 21 - Remote Memory Support"]
     #[inline(always)]
     #[must_use]
-    pub fn remmemsupp(&mut self) -> REMMEMSUPP_W<GAHBCFG_SPEC, 21> {
-        REMMEMSUPP_W::new(self)
+    pub fn remmemsupp(&mut self) -> REMMEMSUPP_W<GAHBCFG_SPEC> {
+        REMMEMSUPP_W::new(self, 21)
     }
     #[doc = "Bit 22 - Notify All DMA Writes"]
     #[inline(always)]
     #[must_use]
-    pub fn notialldmawrit(&mut self) -> NOTIALLDMAWRIT_W<GAHBCFG_SPEC, 22> {
-        NOTIALLDMAWRIT_W::new(self)
+    pub fn notialldmawrit(&mut self) -> NOTIALLDMAWRIT_W<GAHBCFG_SPEC> {
+        NOTIALLDMAWRIT_W::new(self, 22)
     }
     #[doc = "Bit 23 - AHB Single Support"]
     #[inline(always)]
     #[must_use]
-    pub fn ahbsingle(&mut self) -> AHBSINGLE_W<GAHBCFG_SPEC, 23> {
-        AHBSINGLE_W::new(self)
+    pub fn ahbsingle(&mut self) -> AHBSINGLE_W<GAHBCFG_SPEC> {
+        AHBSINGLE_W::new(self, 23)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -220,10 +224,10 @@ impl crate::RegisterSpec for GAHBCFG_SPEC {
 impl crate::Readable for GAHBCFG_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`gahbcfg::W`](W) writer structure"]
 impl crate::Writable for GAHBCFG_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets GAHBCFG to value 0"]
 impl crate::Resettable for GAHBCFG_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

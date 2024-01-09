@@ -5,11 +5,11 @@ pub type W = crate::W<ROUTE_SPEC>;
 #[doc = "Field `CLKOUT0PEN` reader - CLKOUT0 Pin Enable"]
 pub type CLKOUT0PEN_R = crate::BitReader;
 #[doc = "Field `CLKOUT0PEN` writer - CLKOUT0 Pin Enable"]
-pub type CLKOUT0PEN_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type CLKOUT0PEN_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `CLKOUT1PEN` reader - CLKOUT1 Pin Enable"]
 pub type CLKOUT1PEN_R = crate::BitReader;
 #[doc = "Field `CLKOUT1PEN` writer - CLKOUT1 Pin Enable"]
-pub type CLKOUT1PEN_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type CLKOUT1PEN_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `LOCATION` reader - I/O Location"]
 pub type LOCATION_R = crate::FieldReader<LOCATION_A>;
 #[doc = "I/O Location\n\nValue on reset: 0"]
@@ -37,7 +37,7 @@ impl crate::FieldSpec for LOCATION_A {
 impl LOCATION_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<LOCATION_A> {
+    pub const fn variant(&self) -> Option<LOCATION_A> {
         match self.bits {
             0 => Some(LOCATION_A::LOC0),
             1 => Some(LOCATION_A::LOC1),
@@ -68,8 +68,8 @@ impl LOCATION_R {
     }
 }
 #[doc = "Field `LOCATION` writer - I/O Location"]
-pub type LOCATION_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 3, O, LOCATION_A>;
-impl<'a, REG, const O: u8> LOCATION_W<'a, REG, O>
+pub type LOCATION_W<'a, REG> = crate::FieldWriter<'a, REG, 3, LOCATION_A>;
+impl<'a, REG> LOCATION_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -116,22 +116,26 @@ impl W {
     #[doc = "Bit 0 - CLKOUT0 Pin Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn clkout0pen(&mut self) -> CLKOUT0PEN_W<ROUTE_SPEC, 0> {
-        CLKOUT0PEN_W::new(self)
+    pub fn clkout0pen(&mut self) -> CLKOUT0PEN_W<ROUTE_SPEC> {
+        CLKOUT0PEN_W::new(self, 0)
     }
     #[doc = "Bit 1 - CLKOUT1 Pin Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn clkout1pen(&mut self) -> CLKOUT1PEN_W<ROUTE_SPEC, 1> {
-        CLKOUT1PEN_W::new(self)
+    pub fn clkout1pen(&mut self) -> CLKOUT1PEN_W<ROUTE_SPEC> {
+        CLKOUT1PEN_W::new(self, 1)
     }
     #[doc = "Bits 2:4 - I/O Location"]
     #[inline(always)]
     #[must_use]
-    pub fn location(&mut self) -> LOCATION_W<ROUTE_SPEC, 2> {
-        LOCATION_W::new(self)
+    pub fn location(&mut self) -> LOCATION_W<ROUTE_SPEC> {
+        LOCATION_W::new(self, 2)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -147,10 +151,10 @@ impl crate::RegisterSpec for ROUTE_SPEC {
 impl crate::Readable for ROUTE_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`route::W`](W) writer structure"]
 impl crate::Writable for ROUTE_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets ROUTE to value 0"]
 impl crate::Resettable for ROUTE_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }

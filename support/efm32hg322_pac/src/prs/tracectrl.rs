@@ -5,7 +5,7 @@ pub type W = crate::W<TRACECTRL_SPEC>;
 #[doc = "Field `TSTARTEN` reader - PRS TSTART Enable"]
 pub type TSTARTEN_R = crate::BitReader;
 #[doc = "Field `TSTARTEN` writer - PRS TSTART Enable"]
-pub type TSTARTEN_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type TSTARTEN_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TSTART` reader - MTB TSTART PRS select"]
 pub type TSTART_R = crate::FieldReader<TSTART_A>;
 #[doc = "MTB TSTART PRS select\n\nValue on reset: 0"]
@@ -37,7 +37,7 @@ impl crate::FieldSpec for TSTART_A {
 impl TSTART_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<TSTART_A> {
+    pub const fn variant(&self) -> Option<TSTART_A> {
         match self.bits {
             0 => Some(TSTART_A::PRSCH0),
             1 => Some(TSTART_A::PRSCH1),
@@ -80,8 +80,8 @@ impl TSTART_R {
     }
 }
 #[doc = "Field `TSTART` writer - MTB TSTART PRS select"]
-pub type TSTART_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 3, O, TSTART_A>;
-impl<'a, REG, const O: u8> TSTART_W<'a, REG, O>
+pub type TSTART_W<'a, REG> = crate::FieldWriter<'a, REG, 3, TSTART_A>;
+impl<'a, REG> TSTART_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -120,7 +120,7 @@ where
 #[doc = "Field `TSTOPEN` reader - PRS TSTOP Enable"]
 pub type TSTOPEN_R = crate::BitReader;
 #[doc = "Field `TSTOPEN` writer - PRS TSTOP Enable"]
-pub type TSTOPEN_W<'a, REG, const O: u8> = crate::BitWriter<'a, REG, O>;
+pub type TSTOPEN_W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TSTOP` reader - MTB TSTOP PRS select"]
 pub type TSTOP_R = crate::FieldReader<TSTOP_A>;
 #[doc = "MTB TSTOP PRS select\n\nValue on reset: 0"]
@@ -152,7 +152,7 @@ impl crate::FieldSpec for TSTOP_A {
 impl TSTOP_R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<TSTOP_A> {
+    pub const fn variant(&self) -> Option<TSTOP_A> {
         match self.bits {
             0 => Some(TSTOP_A::PRSCH0),
             1 => Some(TSTOP_A::PRSCH1),
@@ -195,8 +195,8 @@ impl TSTOP_R {
     }
 }
 #[doc = "Field `TSTOP` writer - MTB TSTOP PRS select"]
-pub type TSTOP_W<'a, REG, const O: u8> = crate::FieldWriter<'a, REG, 3, O, TSTOP_A>;
-impl<'a, REG, const O: u8> TSTOP_W<'a, REG, O>
+pub type TSTOP_W<'a, REG> = crate::FieldWriter<'a, REG, 3, TSTOP_A>;
+impl<'a, REG> TSTOP_W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -258,28 +258,32 @@ impl W {
     #[doc = "Bit 0 - PRS TSTART Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn tstarten(&mut self) -> TSTARTEN_W<TRACECTRL_SPEC, 0> {
-        TSTARTEN_W::new(self)
+    pub fn tstarten(&mut self) -> TSTARTEN_W<TRACECTRL_SPEC> {
+        TSTARTEN_W::new(self, 0)
     }
     #[doc = "Bits 1:3 - MTB TSTART PRS select"]
     #[inline(always)]
     #[must_use]
-    pub fn tstart(&mut self) -> TSTART_W<TRACECTRL_SPEC, 1> {
-        TSTART_W::new(self)
+    pub fn tstart(&mut self) -> TSTART_W<TRACECTRL_SPEC> {
+        TSTART_W::new(self, 1)
     }
     #[doc = "Bit 8 - PRS TSTOP Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn tstopen(&mut self) -> TSTOPEN_W<TRACECTRL_SPEC, 8> {
-        TSTOPEN_W::new(self)
+    pub fn tstopen(&mut self) -> TSTOPEN_W<TRACECTRL_SPEC> {
+        TSTOPEN_W::new(self, 8)
     }
     #[doc = "Bits 9:11 - MTB TSTOP PRS select"]
     #[inline(always)]
     #[must_use]
-    pub fn tstop(&mut self) -> TSTOP_W<TRACECTRL_SPEC, 9> {
-        TSTOP_W::new(self)
+    pub fn tstop(&mut self) -> TSTOP_W<TRACECTRL_SPEC> {
+        TSTOP_W::new(self, 9)
     }
-    #[doc = "Writes raw bits to the register."]
+    #[doc = r" Writes raw bits to the register."]
+    #[doc = r""]
+    #[doc = r" # Safety"]
+    #[doc = r""]
+    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
     #[inline(always)]
     pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
         self.bits = bits;
@@ -295,10 +299,10 @@ impl crate::RegisterSpec for TRACECTRL_SPEC {
 impl crate::Readable for TRACECTRL_SPEC {}
 #[doc = "`write(|w| ..)` method takes [`tracectrl::W`](W) writer structure"]
 impl crate::Writable for TRACECTRL_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets TRACECTRL to value 0"]
 impl crate::Resettable for TRACECTRL_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
+    const RESET_VALUE: u32 = 0;
 }
