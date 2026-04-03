@@ -10,7 +10,6 @@ use panic_halt as _;
 
 use efm32hg322_hal as hal;
 use efm32hg322_pac as pac;
-use embedded_hal::watchdog::WatchdogDisable;
 use hal::clocks::enable_gpio_clock;
 use hal::watchdog::WatchdogExt;
 use slstk3400a::display;

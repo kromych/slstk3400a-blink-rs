@@ -1,6 +1,6 @@
 use efm32hg322_hal as hal;
 
-use embedded_hal::digital::v2::OutputPin;
+use embedded_hal::digital::OutputPin;
 use hal::gpio::{
     pins::{PF4, PF5},
     Normal, Output, PushPull,

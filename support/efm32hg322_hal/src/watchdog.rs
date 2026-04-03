@@ -1,5 +1,4 @@
 use crate::pac::WDOG;
-use embedded_hal::watchdog;
 
 /// Our HAL struct for efm32's watchdog.
 /// Wrap WDOG struct from PAC so there's only 1 instance of watchdog.
@@ -12,21 +11,18 @@ pub trait WatchdogExt {
 }
 
 impl WatchdogExt for WDOG {
-    /// Constrain low level peripheral WDOG and expose higher level access
-    /// which implements embedded_hal's watchdog API.
+    /// Constrain low level peripheral WDOG and expose higher level access.
     fn constrain(self) -> Watchdog {
         Watchdog { wdog: self }
     }
 }
 
-impl watchdog::Watchdog for Watchdog {
-    fn feed(&mut self) {
+impl Watchdog {
+    pub fn feed(&mut self) {
         self.wdog.cmd().write(|w| w.clear().set_bit());
     }
-}
 
-impl watchdog::WatchdogDisable for Watchdog {
-    fn disable(&mut self) {
+    pub fn disable(&mut self) {
         self.wdog.ctrl().modify(|_, w| w.en().clear_bit());
     }
 }

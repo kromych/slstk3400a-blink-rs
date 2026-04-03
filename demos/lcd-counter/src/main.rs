@@ -14,7 +14,6 @@ use portable_atomic::{AtomicBool, AtomicU32, Ordering};
 use critical_section::Mutex;
 use efm32hg322_hal as hal;
 use efm32hg322_pac as pac;
-use embedded_hal::watchdog::WatchdogDisable;
 use hal::clocks::enable_gpio_clock;
 use hal::gpio::ExtInterruptEdge;
 use hal::gpio::GPIOExt;

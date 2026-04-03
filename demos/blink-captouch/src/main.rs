@@ -20,7 +20,6 @@ use panic_halt as _;
 use cortex_m::peripheral::syst::SystClkSource;
 use efm32hg322_hal as hal;
 use efm32hg322_pac as pac;
-use embedded_hal::watchdog::WatchdogDisable;
 use hal::clocks::enable_gpio_clock;
 use hal::clocks::get_clock_config;
 use hal::gpio::GPIOExt;
