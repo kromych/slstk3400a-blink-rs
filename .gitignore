@@ -4,3 +4,7 @@ target/
 *.bin
 *.hex
 *.elf
+.idea/.gitignore
+.idea/modules.xml
+.idea/slstk3400a-blink-rs.iml
+.idea/vcs.xml

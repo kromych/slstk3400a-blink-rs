@@ -6,6 +6,12 @@ members = [
     "demos/blink-systick",
     "demos/blink-rtc",
     "demos/blink-pb",
+    "demos/blink-captouch",
+    "demos/usb-device",
+    "demos/lcd-hello",
+    "demos/lcd-counter",
+    "demos/adc-temp",
+    "demos/pulse-counter",
     "support/efm32hg322_hal",
     "support/efm32hg322_pac",
     "support/slstk3400a"

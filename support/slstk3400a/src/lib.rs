@@ -7,6 +7,8 @@ use leds::LedTrait;
 use push_buttons::PushButtonTrait;
 use push_buttons::PushButtons;
 
+pub mod display;
+pub mod font8x8;
 pub mod leds;
 pub mod push_buttons;
 

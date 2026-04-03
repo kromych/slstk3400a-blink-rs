@@ -1,8 +1,8 @@
 [package]
 authors = ["kromych <kromych@users.noreply.github.con"]
 categories = ["embedded", "no-std", "efm32"]
-description = "SLSTK3400A blink on RTC interrupt"
-name = "blink-rtc"
+description = "SLSTK3400A pulse counter using PCNT0 and push buttons"
+name = "pulse-counter"
 keywords = ["arm", "cortex-m"]
 license = "MIT"
 version = "0.0.1"

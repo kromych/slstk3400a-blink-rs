@@ -18,10 +18,12 @@ use hal::clocks::enable_gpio_clock;
 use hal::gpio::GPIOExt;
 use hal::rtc::RTCExt;
 use hal::watchdog::WatchdogExt;
+use portable_atomic::{AtomicUsize, Ordering};
 use slstk3400a::SlStk3400a;
 
 static BOARD: Mutex<RefCell<Option<SlStk3400a>>> = Mutex::new(RefCell::new(None));
 static RTC: Mutex<RefCell<Option<hal::rtc::RTC>>> = Mutex::new(RefCell::new(None));
+static COUNT: AtomicUsize = AtomicUsize::new(0);
 
 #[cortex_m_rt::entry]
 fn main() -> ! {
@@ -81,16 +83,13 @@ fn main() -> ! {
 /// Interrupt handler for RTC events (comp0 match).
 #[interrupt]
 fn RTC() {
-    static mut COUNT: usize = 0;
+    let seconds = COUNT.fetch_add(1, Ordering::Relaxed).wrapping_add(1);
 
     critical_section::with(|lock| {
-        *COUNT = COUNT.wrapping_add(1);
-
         if let Some(rtc) = RTC.borrow(lock).borrow_mut().deref_mut() {
             // Clear interrupt.
             rtc.clear_all_interrupts();
             if let Some(board) = BOARD.borrow(lock).borrow_mut().deref_mut() {
-                let seconds = *COUNT;
                 let leds = board.leds_mut();
 
                 defmt::info!("Hello, world {}!", seconds);

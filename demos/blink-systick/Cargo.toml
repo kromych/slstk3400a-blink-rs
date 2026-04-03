@@ -14,6 +14,7 @@ panic-halt.workspace = true
 cortex-m.workspace = true
 cortex-m-rt.workspace = true
 critical-section.workspace = true
+portable-atomic.workspace = true
 defmt.workspace = true
 defmt-rtt.workspace = true
 

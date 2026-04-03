@@ -21,10 +21,12 @@ use hal::gpio::GPIOExt;
 use hal::systick::SystickExt;
 use hal::time_util::Hertz;
 use hal::watchdog::WatchdogExt;
+use portable_atomic::{AtomicUsize, Ordering};
 use rt::exception;
 use slstk3400a::SlStk3400a;
 
 static BOARD: Mutex<RefCell<Option<SlStk3400a>>> = Mutex::new(RefCell::new(None));
+static COUNT: AtomicUsize = AtomicUsize::new(0);
 
 #[cortex_m_rt::entry]
 fn main() -> ! {
@@ -56,16 +58,14 @@ fn main() -> ! {
 
 #[exception]
 fn SysTick() {
-    static mut COUNT: usize = 0;
+    let count = COUNT.fetch_add(1, Ordering::Relaxed).wrapping_add(1);
+    if !count.is_multiple_of(1000) {
+        return;
+    }
 
     critical_section::with(|lock| {
-        *COUNT = COUNT.wrapping_add(1);
-        if *COUNT % 1000 != 0 {
-            return;
-        }
-
         if let Some(board) = BOARD.borrow(lock).borrow_mut().deref_mut() {
-            let seconds = *COUNT / 1000;
+            let seconds = count / 1000;
             let leds = board.leds_mut();
 
             defmt::info!("Hello, world {}!", seconds);
