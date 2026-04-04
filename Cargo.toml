@@ -12,6 +12,7 @@ members = [
     "demos/lcd-counter",
     "demos/adc-temp",
     "demos/pulse-counter",
+    "demos/space-invaders",
     "support/efm32hg322_hal",
     "support/efm32hg322_pac",
     "support/slstk3400a"

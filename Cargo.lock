@@ -410,6 +410,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "space-invaders"
+version = "0.0.1"
+dependencies = [
+ "cortex-m",
+ "cortex-m-rt",
+ "critical-section",
+ "defmt",
+ "defmt-rtt",
+ "efm32hg322-hal",
+ "efm32hg322-pac",
+ "embedded-hal 1.0.0",
+ "panic-halt",
+ "portable-atomic",
+ "slstk3400a",
+]
+
+[[package]]
 name = "syn"
 version = "2.0.117"
 source = "registry+https://github.com/rust-lang/crates.io-index"
