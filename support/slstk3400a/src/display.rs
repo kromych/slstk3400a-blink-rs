@@ -1,13 +1,13 @@
 //! Driver for the Sharp Memory LCD (LS013B7DH03) on the SLSTK3400A board.
 //!
-//! The display is 128x128 monochrome, driven via USART1 in SPI mode.
+//! The display is 128x128 monochrome, driven via USART0 in SPI mode.
 //!
-//! Pin mapping (SLSTK3400A):
-//!   PD7  – USART1_TX  (SPI MOSI), location 1
-//!   PC15 – USART1_CLK (SPI SCK),  location 1
-//!   PA10 – LCD chip-select (active HIGH)
-//!   PA8  – LCD display-enable
-//!   PA9  – EXTCOMIN (VCOM inversion toggle)
+//! Pin mapping (SLSTK3400A, from SiLabs displayls013b7dh03config.h):
+//!   PE10 – USART0_TX  (SPI MOSI / SI),  location 0
+//!   PE12 – USART0_CLK (SPI SCK / SCLK), location 0
+//!   PA10 – LCD chip-select (SCS, active HIGH)
+//!   PA8  – LCD display-select (DISP_SEL)
+//!   PF3  – EXTCOMIN (VCOM inversion toggle)
 //!
 //! The framebuffer-less API writes individual text lines directly, avoiding a
 //! 2 KiB RAM allocation.
@@ -32,15 +32,17 @@ pub const TEXT_COLS: u8 = 16;
 
 /// GPIO port A DOUT bit positions used by the LCD.
 const PA_CS: u32 = 1 << 10;
-const PA_EN: u32 = 1 << 8;
-const PA_EXTCOMIN: u32 = 1 << 9;
+const PA_DISP_SEL: u32 = 1 << 8;
+
+/// GPIO port F DOUT bit position for EXTCOMIN.
+const PF_EXTCOMIN: u32 = 1 << 3;
 
 fn gpio() -> &'static pac::gpio::RegisterBlock {
     unsafe { &*pac::Gpio::ptr() }
 }
 
-fn usart1() -> &'static pac::usart1::RegisterBlock {
-    unsafe { &*pac::Usart1::ptr() }
+fn usart0() -> &'static pac::usart0::RegisterBlock {
+    unsafe { &*pac::Usart0::ptr() }
 }
 
 #[inline]
@@ -56,61 +58,93 @@ fn cs_low() {
 
 #[inline]
 fn spi_write(byte: u8) {
-    let u = usart1();
+    let u = usart0();
     while u.status().read().txbl().bit_is_clear() {}
     u.txdata().write(|w| unsafe { w.bits(byte as u32) });
 }
 
 fn spi_wait_done() {
-    while usart1().status().read().txc().bit_is_clear() {}
+    while usart0().status().read().txc().bit_is_clear() {}
+}
+
+/// Delay for at least `us` microseconds at 14 MHz HFRCO.
+#[inline]
+fn delay_us(us: u32) {
+    cortex_m::asm::delay(us * 14);
+}
+
+/// SCS setup time: 6 µs min (LS013B7DH03 datasheet).
+#[inline]
+fn scs_setup_delay() {
+    delay_us(6);
+}
+
+/// SCS hold time: 2 µs min (LS013B7DH03 datasheet).
+#[inline]
+fn scs_hold_delay() {
+    delay_us(2);
 }
 
 // ---------- public API ----------
 
-/// One-time initialisation: clocks, USART1 SPI mode, GPIO pins, display power.
+/// One-time initialisation: clocks, USART0 SPI mode, GPIO pins, display power.
 ///
 /// Call this once after disabling the watchdog and enabling the GPIO clock.
 /// The GPIO `Pins` struct must already have been split (or not yet consumed)
 /// so that the raw GPIO registers are accessible.
 pub fn init() {
     let cmu = unsafe { &*pac::Cmu::ptr() };
-    let u = usart1();
+    let u = usart0();
     let gpio = gpio();
 
-    // Enable USART1 peripheral clock.
+    // Enable USART0 peripheral clock.
     cmu.hfperclken0()
-        .modify(|_, w: &mut pac::cmu::hfperclken0::W| w.usart1().set_bit());
+        .modify(|_, w: &mut pac::cmu::hfperclken0::W| w.usart0().set_bit());
 
     // ---- Configure GPIO pins ----
-    // PA8 (DISP_EN), PA9 (EXTCOMIN), PA10 (CS) → push-pull (mode 4).
+    // PA8 (DISP_SEL), PA10 (CS) → push-pull (mode 4).
     // PA_MODEH covers pins 8-15, 4 bits each.
+    // Pin 8: bits 0-3, Pin 10: bits 8-11.
     gpio.pa_modeh().modify(|r, w| unsafe {
         let mut v = r.bits();
-        v &= !(0xFFF); // clear bits 0-11 (pins 8,9,10)
-        v |= 0x444; // mode 4 = push-pull for each
+        v &= !(0xF << 0);  // clear pin 8 (DISP_SEL)
+        v |= 4 << 0;       // push-pull
+        v &= !(0xF << 8);  // clear pin 10 (CS)
+        v |= 4 << 8;       // push-pull
         w.bits(v)
     });
 
-    // PD7 → push-pull (USART1_TX).  PD_MODEL covers pins 0-7; pin 7 = bits 28-31.
-    gpio.pd_model().modify(|r, w| unsafe {
+    // PE10 → push-pull (USART0_TX / MOSI).
+    // PE_MODEH covers pins 8-15; pin 10 = bits 8-11.
+    gpio.pe_modeh().modify(|r, w| unsafe {
         let mut v = r.bits();
-        v &= !(0xF << 28);
-        v |= 4 << 28; // push-pull
+        v &= !(0xF << 8);  // clear pin 10
+        v |= 4 << 8;       // push-pull
         w.bits(v)
     });
 
-    // PC15 → push-pull (USART1_CLK). PC_MODEH pin 15 = bits 28-31.
-    gpio.pc_modeh().modify(|r, w| unsafe {
+    // PE12 → push-pull (USART0_CLK / SCK).
+    // PE_MODEH pin 12 = bits 16-19.
+    gpio.pe_modeh().modify(|r, w| unsafe {
         let mut v = r.bits();
-        v &= !(0xF << 28);
-        v |= 4 << 28; // push-pull
+        v &= !(0xF << 16); // clear pin 12
+        v |= 4 << 16;      // push-pull
+        w.bits(v)
+    });
+
+    // PF3 → push-pull (EXTCOMIN).
+    // PF_MODEL covers pins 0-7; pin 3 = bits 12-15.
+    gpio.pf_model().modify(|r, w| unsafe {
+        let mut v = r.bits();
+        v &= !(0xF << 12); // clear pin 3
+        v |= 4 << 12;      // push-pull
         w.bits(v)
     });
 
     // CS low initially.
     gpio.pa_doutclr().write(|w| unsafe { w.bits(PA_CS) });
 
-    // ---- Configure USART1 as SPI master ----
+    // ---- Configure USART0 as SPI master ----
     // Synchronous mode, LSB first (MSBF=0), CPOL=0, CPHA=0.
     u.ctrl().write(|w| w.sync().set_bit());
     u.frame().write(|w| w.databits().eight());
@@ -119,16 +153,16 @@ pub fn init() {
     // DIV = 256 * (f_HFPER / (2 * f_SPI) - 1) = 256 * 6 = 1536
     u.clkdiv().write(|w| unsafe { w.bits(1536) });
 
-    // Route TX and CLK to Location 1 (PD7 / PC15).
+    // Route TX and CLK to Location 0 (PE10 / PE12).
     u.route()
-        .write(|w| w.txpen().set_bit().clkpen().set_bit().location().loc1());
+        .write(|w| w.txpen().set_bit().clkpen().set_bit().location().loc0());
 
     // Enable master mode and TX.
     u.cmd()
         .write(|w| w.masteren().set_bit().txen().set_bit().rxen().set_bit());
 
     // ---- Power on the display ----
-    gpio.pa_doutset().write(|w| unsafe { w.bits(PA_EN) });
+    gpio.pa_doutset().write(|w| unsafe { w.bits(PA_DISP_SEL) });
 
     // Small delay for display power-up.
     cortex_m::asm::delay(100_000);
@@ -140,16 +174,18 @@ pub fn clear(vcom: &mut bool) {
     *vcom = !*vcom;
 
     cs_high();
+    scs_setup_delay();
     spi_write(cmd);
     spi_write(0x00);
     spi_wait_done();
+    scs_hold_delay();
     cs_low();
 }
 
 /// Toggle EXTCOMIN pin (call at ~1 Hz to prevent DC bias damage).
 pub fn toggle_vcom() {
     let g = gpio();
-    g.pa_douttgl().write(|w| unsafe { w.bits(PA_EXTCOMIN) });
+    g.pf_douttgl().write(|w| unsafe { w.bits(PF_EXTCOMIN) });
 }
 
 /// Write a single pixel row (0-127) with 16 bytes of data.
@@ -160,6 +196,7 @@ pub fn write_row(row: u8, data: &[u8; BYTES_PER_ROW], vcom: &mut bool) {
     *vcom = !*vcom;
 
     cs_high();
+    scs_setup_delay();
     spi_write(cmd);
     spi_write(row + 1); // 1-indexed line address
     for &b in data.iter() {
@@ -168,6 +205,7 @@ pub fn write_row(row: u8, data: &[u8; BYTES_PER_ROW], vcom: &mut bool) {
     spi_write(0x00); // line trailer
     spi_write(0x00); // command trailer
     spi_wait_done();
+    scs_hold_delay();
     cs_low();
 }
 
@@ -180,6 +218,7 @@ pub fn write_rows(start_row: u8, rows: &[[u8; BYTES_PER_ROW]], vcom: &mut bool) 
     *vcom = !*vcom;
 
     cs_high();
+    scs_setup_delay();
     spi_write(cmd);
     for (i, row_data) in rows.iter().enumerate() {
         spi_write(start_row + i as u8 + 1);
@@ -190,6 +229,7 @@ pub fn write_rows(start_row: u8, rows: &[[u8; BYTES_PER_ROW]], vcom: &mut bool) 
     }
     spi_write(0x00); // final trailer
     spi_wait_done();
+    scs_hold_delay();
     cs_low();
 }
 
