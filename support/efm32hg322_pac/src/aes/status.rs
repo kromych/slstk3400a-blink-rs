@@ -1,22 +1,20 @@
 #[doc = "Register `STATUS` reader"]
-pub type R = crate::R<STATUS_SPEC>;
+pub type R = crate::R<StatusSpec>;
 #[doc = "Field `RUNNING` reader - AES Running"]
-pub type RUNNING_R = crate::BitReader;
+pub type RunningR = crate::BitReader;
 impl R {
     #[doc = "Bit 0 - AES Running"]
     #[inline(always)]
-    pub fn running(&self) -> RUNNING_R {
-        RUNNING_R::new((self.bits & 1) != 0)
+    pub fn running(&self) -> RunningR {
+        RunningR::new((self.bits & 1) != 0)
     }
 }
-#[doc = "Status Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`status::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
-pub struct STATUS_SPEC;
-impl crate::RegisterSpec for STATUS_SPEC {
+#[doc = "Status Register\n\nYou can [`read`](crate::Reg::read) this register and get [`status::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct StatusSpec;
+impl crate::RegisterSpec for StatusSpec {
     type Ux = u32;
 }
 #[doc = "`read()` method returns [`status::R`](R) reader structure"]
-impl crate::Readable for STATUS_SPEC {}
+impl crate::Readable for StatusSpec {}
 #[doc = "`reset()` method sets STATUS to value 0"]
-impl crate::Resettable for STATUS_SPEC {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for StatusSpec {}

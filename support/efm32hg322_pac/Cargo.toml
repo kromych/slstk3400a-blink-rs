@@ -18,5 +18,6 @@ portable-atomic.workspace = true
 
 [features]
 critical-section = []
+portable-atomics = []
 rt = []
-default = ["critical-section", "rt"]
+default = ["critical-section", "portable-atomics", "rt"]

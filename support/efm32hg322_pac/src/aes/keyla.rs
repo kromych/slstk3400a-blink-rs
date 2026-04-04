@@ -1,49 +1,35 @@
 #[doc = "Register `KEYLA` reader"]
-pub type R = crate::R<KEYLA_SPEC>;
+pub type R = crate::R<KeylaSpec>;
 #[doc = "Register `KEYLA` writer"]
-pub type W = crate::W<KEYLA_SPEC>;
+pub type W = crate::W<KeylaSpec>;
 #[doc = "Field `KEYLA` reader - Key Low Access A"]
-pub type KEYLA_R = crate::FieldReader<u32>;
+pub type KeylaR = crate::FieldReader<u32>;
 #[doc = "Field `KEYLA` writer - Key Low Access A"]
-pub type KEYLA_W<'a, REG> = crate::FieldWriter<'a, REG, 32, u32>;
+pub type KeylaW<'a, REG> = crate::FieldWriter<'a, REG, 32, u32>;
 impl R {
     #[doc = "Bits 0:31 - Key Low Access A"]
     #[inline(always)]
-    pub fn keyla(&self) -> KEYLA_R {
-        KEYLA_R::new(self.bits)
+    pub fn keyla(&self) -> KeylaR {
+        KeylaR::new(self.bits)
     }
 }
 impl W {
     #[doc = "Bits 0:31 - Key Low Access A"]
     #[inline(always)]
-    #[must_use]
-    pub fn keyla(&mut self) -> KEYLA_W<KEYLA_SPEC> {
-        KEYLA_W::new(self, 0)
-    }
-    #[doc = r" Writes raw bits to the register."]
-    #[doc = r""]
-    #[doc = r" # Safety"]
-    #[doc = r""]
-    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.bits = bits;
-        self
+    pub fn keyla(&mut self) -> KeylaW<'_, KeylaSpec> {
+        KeylaW::new(self, 0)
     }
 }
-#[doc = "KEY Low Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`keyla::R`](R). WARN: One or more dependent resources other than the current register are immediately affected by a read operation. You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`keyla::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
-pub struct KEYLA_SPEC;
-impl crate::RegisterSpec for KEYLA_SPEC {
+#[doc = "KEY Low Register\n\nYou can [`read`](crate::Reg::read) this register and get [`keyla::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`keyla::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\n<div class=\"warning\">One or more dependent resources other than the current register are immediately affected by a read operation.</div>"]
+pub struct KeylaSpec;
+impl crate::RegisterSpec for KeylaSpec {
     type Ux = u32;
 }
 #[doc = "`read()` method returns [`keyla::R`](R) reader structure"]
-impl crate::Readable for KEYLA_SPEC {}
+impl crate::Readable for KeylaSpec {}
 #[doc = "`write(|w| ..)` method takes [`keyla::W`](W) writer structure"]
-impl crate::Writable for KEYLA_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+impl crate::Writable for KeylaSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets KEYLA to value 0"]
-impl crate::Resettable for KEYLA_SPEC {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for KeylaSpec {}

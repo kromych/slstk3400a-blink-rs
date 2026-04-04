@@ -31,7 +31,7 @@ use crate::HfrcoBand;
 use defmt::Format;
 use efm32hg322_pac as pac;
 use pac::devinfo::RegisterBlock;
-use pac::msc::readctrl::MODE_A;
+use pac::msc::readctrl::Mode;
 
 /// The hgh frequency crystal on SLSTK3400A.
 pub const HFXO_FREQUENCY: Hertz = Hertz(24_000_000);
@@ -70,11 +70,11 @@ impl Format for ClockSource {
             ClockSource::LFXO => defmt::write!(fmt, "LFXO"),
             ClockSource::LFRCO => defmt::write!(fmt, "LFRCO"),
             ClockSource::HFRCO(band) => match band {
-                HfrcoBand::_1MHZ => defmt::write!(fmt, "HFRCO 1MHz"),
-                HfrcoBand::_7MHZ => defmt::write!(fmt, "HFRCO 7MHz"),
-                HfrcoBand::_11MHZ => defmt::write!(fmt, "HFRCO 11MHz"),
-                HfrcoBand::_14MHZ => defmt::write!(fmt, "HFRCO 14MHz"),
-                HfrcoBand::_21MHZ => defmt::write!(fmt, "HFRCO 21MHz"),
+                HfrcoBand::_1mhz => defmt::write!(fmt, "HFRCO 1MHz"),
+                HfrcoBand::_7mhz => defmt::write!(fmt, "HFRCO 7MHz"),
+                HfrcoBand::_11mhz => defmt::write!(fmt, "HFRCO 11MHz"),
+                HfrcoBand::_14mhz => defmt::write!(fmt, "HFRCO 14MHz"),
+                HfrcoBand::_21mhz => defmt::write!(fmt, "HFRCO 21MHz"),
             },
             ClockSource::HFXO => defmt::write!(fmt, "HFXO"),
         }
@@ -103,10 +103,10 @@ pub struct ClockSetup {
 impl Default for ClockSetup {
     fn default() -> Self {
         ClockSetup {
-            source: ClockSource::HFRCO(HfrcoBand::_14MHZ),
+            source: ClockSource::HFRCO(HfrcoBand::_14mhz),
             hfclkdiv: HfClkDiv::Div1,
-            hfcoreclkdiv: HfCoreClkDiv::HFCLK,
-            hfperclkdiv: HfPerClkDiv::HFCLK,
+            hfcoreclkdiv: HfCoreClkDiv::Hfclk,
+            hfperclkdiv: HfPerClkDiv::Hfclk,
             hfcoreclklediv: HfCoreClkLeDiv::Div2,
         }
     }
@@ -135,7 +135,7 @@ pub struct ClockConfiguration {
 
 /// Get the device information data.
 fn dev_info() -> &'static RegisterBlock {
-    unsafe { &*pac::DEVINFO::ptr() }
+    unsafe { &*pac::Devinfo::ptr() }
 }
 
 /// Get the Production Revision of the chip
@@ -148,33 +148,33 @@ fn get_prod_rev() -> u8 {
 pub fn get_clock_config() -> Result<ClockConfiguration, ClockError> {
     let source;
     let basefreq;
-    let cmu = unsafe { &*pac::CMU::ptr() };
+    let cmu = unsafe { &*pac::Cmu::ptr() };
     let status = cmu.status().read();
 
     if status.hfrcosel().bit() {
         if let Some(band) = cmu.hfrcoctrl().read().band().variant() {
             match band {
-                HfrcoBand::_1MHZ => {
+                HfrcoBand::_1mhz => {
                     if get_prod_rev() >= 19 {
                         basefreq = 1200000;
                     } else {
                         basefreq = 1000000;
                     }
                 }
-                HfrcoBand::_7MHZ => {
+                HfrcoBand::_7mhz => {
                     if get_prod_rev() >= 19 {
                         basefreq = 6600000;
                     } else {
                         basefreq = 7000000;
                     }
                 }
-                HfrcoBand::_11MHZ => {
+                HfrcoBand::_11mhz => {
                     basefreq = 11000000;
                 }
-                HfrcoBand::_14MHZ => {
+                HfrcoBand::_14mhz => {
                     basefreq = 14000000;
                 }
-                HfrcoBand::_21MHZ => {
+                HfrcoBand::_21mhz => {
                     basefreq = 21000000;
                 }
             }
@@ -216,10 +216,10 @@ pub fn get_clock_config() -> Result<ClockConfiguration, ClockError> {
 }
 
 pub fn setup_clocks(clock_setup: &ClockSetup) -> Result<ClockConfiguration, ClockError> {
-    let cmu = unsafe { &*pac::CMU::ptr() };
+    let cmu = unsafe { &*pac::Cmu::ptr() };
 
     // Set wait states for the worst case for the flash access time.
-    let msc = unsafe { &*pac::MSC::ptr() };
+    let msc = unsafe { &*pac::Msc::ptr() };
     let msc_read_ctrl = &msc.readctrl();
     // MSC_READCTL:
     //
@@ -237,15 +237,15 @@ pub fn setup_clocks(clock_setup: &ClockSetup) -> Result<ClockConfiguration, Cloc
     // 0     | WS0  | Zero wait-states inserted in fetch or read transfers.
     // 1     | WS1  | One wait-state inserted for each fetch or read transfer. This mode
     //       |      | is required for a core frequency above 16 MHz
-    msc_read_ctrl.write(|w| w.mode().variant(MODE_A::WS1));
+    msc_read_ctrl.write(|w: &mut pac::msc::readctrl::W| w.mode().variant(Mode::Ws1));
 
     // Set the clock divisors to 1.
     cmu.ctrl()
-        .write(|w| w.hfclkdiv().variant(HfClkDiv::Div1 as u8));
+        .write(|w: &mut pac::cmu::ctrl::W| unsafe { w.hfclkdiv().bits(HfClkDiv::Div1 as u8) });
     cmu.hfcoreclkdiv()
-        .write(|w| w.hfcoreclkdiv().variant(HfCoreClkDiv::HFCLK));
+        .write(|w: &mut pac::cmu::hfcoreclkdiv::W| w.hfcoreclkdiv().variant(HfCoreClkDiv::Hfclk));
     cmu.hfperclkdiv()
-        .write(|w| w.hfperclkdiv().variant(HfPerClkDiv::HFCLK));
+        .write(|w: &mut pac::cmu::hfperclkdiv::W| w.hfperclkdiv().variant(HfPerClkDiv::Hfclk));
 
     let change_freq_and_wait = || {
         match clock_setup.source {
@@ -253,67 +253,75 @@ pub fn setup_clocks(clock_setup: &ClockSetup) -> Result<ClockConfiguration, Cloc
                 // Configure band and tuning.
                 let di = dev_info();
                 let tuning = match band {
-                    HfrcoBand::_1MHZ => di.hfrcocal0().read().band1().bits(),
-                    HfrcoBand::_7MHZ => di.hfrcocal0().read().band7().bits(),
-                    HfrcoBand::_11MHZ => di.hfrcocal0().read().band11().bits(),
-                    HfrcoBand::_14MHZ => di.hfrcocal0().read().band14().bits(),
-                    HfrcoBand::_21MHZ => di.hfrcocal1().read().band21().bits(),
+                    HfrcoBand::_1mhz => di.hfrcocal0().read().band1().bits(),
+                    HfrcoBand::_7mhz => di.hfrcocal0().read().band7().bits(),
+                    HfrcoBand::_11mhz => di.hfrcocal0().read().band11().bits(),
+                    HfrcoBand::_14mhz => di.hfrcocal0().read().band14().bits(),
+                    HfrcoBand::_21mhz => di.hfrcocal1().read().band21().bits(),
                 };
-                cmu.hfrcoctrl().write(|w| {
+                cmu.hfrcoctrl().write(|w: &mut pac::cmu::hfrcoctrl::W| {
                     w.band().variant(band);
-                    w.tuning().variant(tuning)
+                    unsafe { w.tuning().bits(tuning) }
                 });
 
                 // Check if HFRCO is already enabled.
                 if !cmu.status().read().hfrcordy().bit() {
                     // Enable HFRCO and wait until it is stable.
-                    cmu.oscencmd().write(|w| w.hfrcoen().set_bit());
+                    cmu.oscencmd()
+                        .write(|w: &mut pac::cmu::oscencmd::W| w.hfrcoen().set_bit());
                     // Wait until ready.
                     while !cmu.status().read().hfrcoens().bit() {}
                     while !cmu.status().read().hfrcordy().bit() {}
                 }
 
                 // Select HFRCO as source for HFCLK.
-                cmu.cmd().write(|w| w.hfclksel().hfrco());
+                cmu.cmd()
+                    .write(|w: &mut pac::cmu::cmd::W| w.hfclksel().hfrco());
                 while !cmu.status().read().hfrcosel().bit() {}
             }
             ClockSource::HFXO => {
                 // Check if HFXO is already enabled.
                 if !cmu.status().read().hfxordy().bit() {
                     // Enable HFXO and wait until it is stable.
-                    cmu.oscencmd().write(|w| w.hfxoen().set_bit());
+                    cmu.oscencmd()
+                        .write(|w: &mut pac::cmu::oscencmd::W| w.hfxoen().set_bit());
                     while !cmu.status().read().hfxoens().bit() {}
                     while !cmu.status().read().hfxordy().bit() {}
                 }
 
                 // Select HFXO as source for HFCLK.
-                cmu.cmd().write(|w| w.hfclksel().hfxo());
+                cmu.cmd()
+                    .write(|w: &mut pac::cmu::cmd::W| w.hfclksel().hfxo());
                 while !cmu.status().read().hfxosel().bit() {}
             }
             ClockSource::LFRCO => {
                 // Check if LFRCO is already enabled.
                 if !cmu.status().read().lfrcordy().bit() {
                     // Enable LFRCO and wait until it is stable.
-                    cmu.oscencmd().write(|w| w.lfrcoen().set_bit());
+                    cmu.oscencmd()
+                        .write(|w: &mut pac::cmu::oscencmd::W| w.lfrcoen().set_bit());
                     while !cmu.status().read().lfrcoens().bit() {}
                     while !cmu.status().read().lfrcordy().bit() {}
                 }
 
                 // Select LFRCO as source for HFCLK.
-                cmu.cmd().write(|w| w.hfclksel().lfrco());
+                cmu.cmd()
+                    .write(|w: &mut pac::cmu::cmd::W| w.hfclksel().lfrco());
                 while !cmu.status().read().lfrcosel().bit() {}
             }
             ClockSource::LFXO => {
                 // Check if LFXO is already enabled.
                 if !cmu.status().read().lfxordy().bit() {
                     // Enable LFXO and wait until it is stable.
-                    cmu.oscencmd().write(|w| w.lfxoen().set_bit());
+                    cmu.oscencmd()
+                        .write(|w: &mut pac::cmu::oscencmd::W| w.lfxoen().set_bit());
                     while !cmu.status().read().lfxoens().bit() {}
                     while !cmu.status().read().lfxordy().bit() {}
                 }
 
                 // Select LFXO as source for HFCLK.
-                cmu.cmd().write(|w| w.hfclksel().lfxo());
+                cmu.cmd()
+                    .write(|w: &mut pac::cmu::cmd::W| w.hfclksel().lfxo());
                 while !cmu.status().read().lfxosel().bit() {}
             }
         }
@@ -325,25 +333,29 @@ pub fn setup_clocks(clock_setup: &ClockSetup) -> Result<ClockConfiguration, Cloc
     change_freq_and_wait()?;
 
     // Set the clock div, core clock and and the peripheral clock divisors
-    cmu.ctrl()
-        .write(|w| w.hfclkdiv().variant(clock_setup.hfclkdiv as u8));
+    cmu.ctrl().write(|w: &mut pac::cmu::ctrl::W| unsafe {
+        w.hfclkdiv().bits(clock_setup.hfclkdiv as u8)
+    });
     cmu.hfcoreclkdiv()
-        .write(|w| w.hfcoreclkdiv().variant(clock_setup.hfcoreclkdiv));
+        .write(|w: &mut pac::cmu::hfcoreclkdiv::W| {
+            w.hfcoreclkdiv().variant(clock_setup.hfcoreclkdiv)
+        });
     cmu.hfperclkdiv()
-        .write(|w| w.hfperclkdiv().variant(clock_setup.hfperclkdiv));
+        .write(|w: &mut pac::cmu::hfperclkdiv::W| w.hfperclkdiv().variant(clock_setup.hfperclkdiv));
 
     // Set the low-energy clock prescaler.
-    cmu.hfcoreclkdiv().write(|w| {
-        w.hfcoreclklediv()
-            .bit(clock_setup.hfcoreclklediv == HfCoreClkLeDiv::Div4)
-    });
+    cmu.hfcoreclkdiv()
+        .write(|w: &mut pac::cmu::hfcoreclkdiv::W| {
+            w.hfcoreclklediv()
+                .bit(clock_setup.hfcoreclklediv == HfCoreClkLeDiv::Div4)
+        });
 
     // TODO: assert on the configuration matching what was intended to have been set.
     let clock_config_ready = get_clock_config()?;
 
     // If the new frequency is below the threshold, no wait state is rwquired when reading the flash.
     if clock_config_ready.hclkfreq <= WAIT_STATE_1_THRESHOLD {
-        msc_read_ctrl.write(|w| w.mode().variant(MODE_A::WS0));
+        msc_read_ctrl.write(|w: &mut pac::msc::readctrl::W| w.mode().variant(Mode::Ws0));
     }
 
     Ok(clock_config_ready)
@@ -354,14 +366,15 @@ pub fn lock_clock_config() {
 }
 
 pub fn enable_gpio_clock() {
-    let cmu = unsafe { &*pac::CMU::ptr() };
-    cmu.hfperclken0().write(|w| {
+    let cmu = unsafe { &*pac::Cmu::ptr() };
+    cmu.hfperclken0().write(|w: &mut pac::cmu::hfperclken0::W| {
         w.gpio().set_bit();
         w
     });
 }
 
 pub fn disable_gpio_clock() {
-    let cmu = unsafe { &*pac::CMU::ptr() };
-    cmu.hfperclken0().write(|w| w.gpio().clear_bit());
+    let cmu = unsafe { &*pac::Cmu::ptr() };
+    cmu.hfperclken0()
+        .write(|w: &mut pac::cmu::hfperclken0::W| w.gpio().clear_bit());
 }

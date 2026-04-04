@@ -1,11 +1,9 @@
 #[doc = "Register `EM4WUCAUSE` reader"]
-pub type R = crate::R<EM4WUCAUSE_SPEC>;
-#[doc = "Field `EM4WUCAUSE` reader - EM4 wake-up cause"]
-pub type EM4WUCAUSE_R = crate::FieldReader<EM4WUCAUSE_A>;
+pub type R = crate::R<Em4wucauseSpec>;
 #[doc = "EM4 wake-up cause\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum EM4WUCAUSE_A {
+pub enum Em4wucause {
     #[doc = "1: This bit indicates an em4 wake-up request occurred on pin A0"]
     A0 = 1,
     #[doc = "4: This bit indicates an em4 wake-up request occurred on pin C9"]
@@ -19,75 +17,76 @@ pub enum EM4WUCAUSE_A {
     #[doc = "64: This bit indicates an em4 wake-up request occurred on pin C4"]
     C4 = 64,
 }
-impl From<EM4WUCAUSE_A> for u8 {
+impl From<Em4wucause> for u8 {
     #[inline(always)]
-    fn from(variant: EM4WUCAUSE_A) -> Self {
+    fn from(variant: Em4wucause) -> Self {
         variant as _
     }
 }
-impl crate::FieldSpec for EM4WUCAUSE_A {
+impl crate::FieldSpec for Em4wucause {
     type Ux = u8;
 }
-impl EM4WUCAUSE_R {
+impl crate::IsEnum for Em4wucause {}
+#[doc = "Field `EM4WUCAUSE` reader - EM4 wake-up cause"]
+pub type Em4wucauseR = crate::FieldReader<Em4wucause>;
+impl Em4wucauseR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub const fn variant(&self) -> Option<EM4WUCAUSE_A> {
+    pub const fn variant(&self) -> Option<Em4wucause> {
         match self.bits {
-            1 => Some(EM4WUCAUSE_A::A0),
-            4 => Some(EM4WUCAUSE_A::C9),
-            8 => Some(EM4WUCAUSE_A::F1),
-            16 => Some(EM4WUCAUSE_A::F2),
-            32 => Some(EM4WUCAUSE_A::E13),
-            64 => Some(EM4WUCAUSE_A::C4),
+            1 => Some(Em4wucause::A0),
+            4 => Some(Em4wucause::C9),
+            8 => Some(Em4wucause::F1),
+            16 => Some(Em4wucause::F2),
+            32 => Some(Em4wucause::E13),
+            64 => Some(Em4wucause::C4),
             _ => None,
         }
     }
     #[doc = "This bit indicates an em4 wake-up request occurred on pin A0"]
     #[inline(always)]
     pub fn is_a0(&self) -> bool {
-        *self == EM4WUCAUSE_A::A0
+        *self == Em4wucause::A0
     }
     #[doc = "This bit indicates an em4 wake-up request occurred on pin C9"]
     #[inline(always)]
     pub fn is_c9(&self) -> bool {
-        *self == EM4WUCAUSE_A::C9
+        *self == Em4wucause::C9
     }
     #[doc = "This bit indicates an em4 wake-up request occurred on pin F1"]
     #[inline(always)]
     pub fn is_f1(&self) -> bool {
-        *self == EM4WUCAUSE_A::F1
+        *self == Em4wucause::F1
     }
     #[doc = "This bit indicates an em4 wake-up request occurred on pin F2"]
     #[inline(always)]
     pub fn is_f2(&self) -> bool {
-        *self == EM4WUCAUSE_A::F2
+        *self == Em4wucause::F2
     }
     #[doc = "This bit indicates an em4 wake-up request occurred on pin E13"]
     #[inline(always)]
     pub fn is_e13(&self) -> bool {
-        *self == EM4WUCAUSE_A::E13
+        *self == Em4wucause::E13
     }
     #[doc = "This bit indicates an em4 wake-up request occurred on pin C4"]
     #[inline(always)]
     pub fn is_c4(&self) -> bool {
-        *self == EM4WUCAUSE_A::C4
+        *self == Em4wucause::C4
     }
 }
 impl R {
     #[doc = "Bits 0:6 - EM4 wake-up cause"]
     #[inline(always)]
-    pub fn em4wucause(&self) -> EM4WUCAUSE_R {
-        EM4WUCAUSE_R::new((self.bits & 0x7f) as u8)
+    pub fn em4wucause(&self) -> Em4wucauseR {
+        Em4wucauseR::new((self.bits & 0x7f) as u8)
     }
 }
-#[doc = "EM4 Wake-up Cause Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`em4wucause::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
-pub struct EM4WUCAUSE_SPEC;
-impl crate::RegisterSpec for EM4WUCAUSE_SPEC {
+#[doc = "EM4 Wake-up Cause Register\n\nYou can [`read`](crate::Reg::read) this register and get [`em4wucause::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct Em4wucauseSpec;
+impl crate::RegisterSpec for Em4wucauseSpec {
     type Ux = u32;
 }
 #[doc = "`read()` method returns [`em4wucause::R`](R) reader structure"]
-impl crate::Readable for EM4WUCAUSE_SPEC {}
+impl crate::Readable for Em4wucauseSpec {}
 #[doc = "`reset()` method sets EM4WUCAUSE to value 0"]
-impl crate::Resettable for EM4WUCAUSE_SPEC {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Em4wucauseSpec {}

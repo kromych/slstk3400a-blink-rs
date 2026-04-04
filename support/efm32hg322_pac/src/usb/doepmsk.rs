@@ -1,184 +1,161 @@
 #[doc = "Register `DOEPMSK` reader"]
-pub type R = crate::R<DOEPMSK_SPEC>;
+pub type R = crate::R<DoepmskSpec>;
 #[doc = "Register `DOEPMSK` writer"]
-pub type W = crate::W<DOEPMSK_SPEC>;
+pub type W = crate::W<DoepmskSpec>;
 #[doc = "Field `XFERCOMPLMSK` reader - Transfer Completed Interrupt Mask"]
-pub type XFERCOMPLMSK_R = crate::BitReader;
+pub type XfercomplmskR = crate::BitReader;
 #[doc = "Field `XFERCOMPLMSK` writer - Transfer Completed Interrupt Mask"]
-pub type XFERCOMPLMSK_W<'a, REG> = crate::BitWriter<'a, REG>;
+pub type XfercomplmskW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `EPDISBLDMSK` reader - Endpoint Disabled Interrupt Mask"]
-pub type EPDISBLDMSK_R = crate::BitReader;
+pub type EpdisbldmskR = crate::BitReader;
 #[doc = "Field `EPDISBLDMSK` writer - Endpoint Disabled Interrupt Mask"]
-pub type EPDISBLDMSK_W<'a, REG> = crate::BitWriter<'a, REG>;
+pub type EpdisbldmskW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `AHBERRMSK` reader - AHB Error"]
-pub type AHBERRMSK_R = crate::BitReader;
+pub type AhberrmskR = crate::BitReader;
 #[doc = "Field `AHBERRMSK` writer - AHB Error"]
-pub type AHBERRMSK_W<'a, REG> = crate::BitWriter<'a, REG>;
+pub type AhberrmskW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SETUPMSK` reader - SETUP Phase Done Mask"]
-pub type SETUPMSK_R = crate::BitReader;
+pub type SetupmskR = crate::BitReader;
 #[doc = "Field `SETUPMSK` writer - SETUP Phase Done Mask"]
-pub type SETUPMSK_W<'a, REG> = crate::BitWriter<'a, REG>;
+pub type SetupmskW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `OUTTKNEPDISMSK` reader - OUT Token Received when Endpoint Disabled Mask"]
-pub type OUTTKNEPDISMSK_R = crate::BitReader;
+pub type OuttknepdismskR = crate::BitReader;
 #[doc = "Field `OUTTKNEPDISMSK` writer - OUT Token Received when Endpoint Disabled Mask"]
-pub type OUTTKNEPDISMSK_W<'a, REG> = crate::BitWriter<'a, REG>;
+pub type OuttknepdismskW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `STSPHSERCVDMSK` reader - Status Phase Received Mask"]
-pub type STSPHSERCVDMSK_R = crate::BitReader;
+pub type StsphsercvdmskR = crate::BitReader;
 #[doc = "Field `STSPHSERCVDMSK` writer - Status Phase Received Mask"]
-pub type STSPHSERCVDMSK_W<'a, REG> = crate::BitWriter<'a, REG>;
+pub type StsphsercvdmskW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `BACK2BACKSETUP` reader - Back-to-Back SETUP Packets Received Mask"]
-pub type BACK2BACKSETUP_R = crate::BitReader;
+pub type Back2backsetupR = crate::BitReader;
 #[doc = "Field `BACK2BACKSETUP` writer - Back-to-Back SETUP Packets Received Mask"]
-pub type BACK2BACKSETUP_W<'a, REG> = crate::BitWriter<'a, REG>;
+pub type Back2backsetupW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `OUTPKTERRMSK` reader - OUT Packet Error Mask"]
-pub type OUTPKTERRMSK_R = crate::BitReader;
+pub type OutpkterrmskR = crate::BitReader;
 #[doc = "Field `OUTPKTERRMSK` writer - OUT Packet Error Mask"]
-pub type OUTPKTERRMSK_W<'a, REG> = crate::BitWriter<'a, REG>;
+pub type OutpkterrmskW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `BBLEERRMSK` reader - Babble Error interrupt Mask"]
-pub type BBLEERRMSK_R = crate::BitReader;
+pub type BbleerrmskR = crate::BitReader;
 #[doc = "Field `BBLEERRMSK` writer - Babble Error interrupt Mask"]
-pub type BBLEERRMSK_W<'a, REG> = crate::BitWriter<'a, REG>;
+pub type BbleerrmskW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `NAKMSK` reader - NAK interrupt Mask"]
-pub type NAKMSK_R = crate::BitReader;
+pub type NakmskR = crate::BitReader;
 #[doc = "Field `NAKMSK` writer - NAK interrupt Mask"]
-pub type NAKMSK_W<'a, REG> = crate::BitWriter<'a, REG>;
+pub type NakmskW<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bit 0 - Transfer Completed Interrupt Mask"]
     #[inline(always)]
-    pub fn xfercomplmsk(&self) -> XFERCOMPLMSK_R {
-        XFERCOMPLMSK_R::new((self.bits & 1) != 0)
+    pub fn xfercomplmsk(&self) -> XfercomplmskR {
+        XfercomplmskR::new((self.bits & 1) != 0)
     }
     #[doc = "Bit 1 - Endpoint Disabled Interrupt Mask"]
     #[inline(always)]
-    pub fn epdisbldmsk(&self) -> EPDISBLDMSK_R {
-        EPDISBLDMSK_R::new(((self.bits >> 1) & 1) != 0)
+    pub fn epdisbldmsk(&self) -> EpdisbldmskR {
+        EpdisbldmskR::new(((self.bits >> 1) & 1) != 0)
     }
     #[doc = "Bit 2 - AHB Error"]
     #[inline(always)]
-    pub fn ahberrmsk(&self) -> AHBERRMSK_R {
-        AHBERRMSK_R::new(((self.bits >> 2) & 1) != 0)
+    pub fn ahberrmsk(&self) -> AhberrmskR {
+        AhberrmskR::new(((self.bits >> 2) & 1) != 0)
     }
     #[doc = "Bit 3 - SETUP Phase Done Mask"]
     #[inline(always)]
-    pub fn setupmsk(&self) -> SETUPMSK_R {
-        SETUPMSK_R::new(((self.bits >> 3) & 1) != 0)
+    pub fn setupmsk(&self) -> SetupmskR {
+        SetupmskR::new(((self.bits >> 3) & 1) != 0)
     }
     #[doc = "Bit 4 - OUT Token Received when Endpoint Disabled Mask"]
     #[inline(always)]
-    pub fn outtknepdismsk(&self) -> OUTTKNEPDISMSK_R {
-        OUTTKNEPDISMSK_R::new(((self.bits >> 4) & 1) != 0)
+    pub fn outtknepdismsk(&self) -> OuttknepdismskR {
+        OuttknepdismskR::new(((self.bits >> 4) & 1) != 0)
     }
     #[doc = "Bit 5 - Status Phase Received Mask"]
     #[inline(always)]
-    pub fn stsphsercvdmsk(&self) -> STSPHSERCVDMSK_R {
-        STSPHSERCVDMSK_R::new(((self.bits >> 5) & 1) != 0)
+    pub fn stsphsercvdmsk(&self) -> StsphsercvdmskR {
+        StsphsercvdmskR::new(((self.bits >> 5) & 1) != 0)
     }
     #[doc = "Bit 6 - Back-to-Back SETUP Packets Received Mask"]
     #[inline(always)]
-    pub fn back2backsetup(&self) -> BACK2BACKSETUP_R {
-        BACK2BACKSETUP_R::new(((self.bits >> 6) & 1) != 0)
+    pub fn back2backsetup(&self) -> Back2backsetupR {
+        Back2backsetupR::new(((self.bits >> 6) & 1) != 0)
     }
     #[doc = "Bit 8 - OUT Packet Error Mask"]
     #[inline(always)]
-    pub fn outpkterrmsk(&self) -> OUTPKTERRMSK_R {
-        OUTPKTERRMSK_R::new(((self.bits >> 8) & 1) != 0)
+    pub fn outpkterrmsk(&self) -> OutpkterrmskR {
+        OutpkterrmskR::new(((self.bits >> 8) & 1) != 0)
     }
     #[doc = "Bit 12 - Babble Error interrupt Mask"]
     #[inline(always)]
-    pub fn bbleerrmsk(&self) -> BBLEERRMSK_R {
-        BBLEERRMSK_R::new(((self.bits >> 12) & 1) != 0)
+    pub fn bbleerrmsk(&self) -> BbleerrmskR {
+        BbleerrmskR::new(((self.bits >> 12) & 1) != 0)
     }
     #[doc = "Bit 13 - NAK interrupt Mask"]
     #[inline(always)]
-    pub fn nakmsk(&self) -> NAKMSK_R {
-        NAKMSK_R::new(((self.bits >> 13) & 1) != 0)
+    pub fn nakmsk(&self) -> NakmskR {
+        NakmskR::new(((self.bits >> 13) & 1) != 0)
     }
 }
 impl W {
     #[doc = "Bit 0 - Transfer Completed Interrupt Mask"]
     #[inline(always)]
-    #[must_use]
-    pub fn xfercomplmsk(&mut self) -> XFERCOMPLMSK_W<DOEPMSK_SPEC> {
-        XFERCOMPLMSK_W::new(self, 0)
+    pub fn xfercomplmsk(&mut self) -> XfercomplmskW<'_, DoepmskSpec> {
+        XfercomplmskW::new(self, 0)
     }
     #[doc = "Bit 1 - Endpoint Disabled Interrupt Mask"]
     #[inline(always)]
-    #[must_use]
-    pub fn epdisbldmsk(&mut self) -> EPDISBLDMSK_W<DOEPMSK_SPEC> {
-        EPDISBLDMSK_W::new(self, 1)
+    pub fn epdisbldmsk(&mut self) -> EpdisbldmskW<'_, DoepmskSpec> {
+        EpdisbldmskW::new(self, 1)
     }
     #[doc = "Bit 2 - AHB Error"]
     #[inline(always)]
-    #[must_use]
-    pub fn ahberrmsk(&mut self) -> AHBERRMSK_W<DOEPMSK_SPEC> {
-        AHBERRMSK_W::new(self, 2)
+    pub fn ahberrmsk(&mut self) -> AhberrmskW<'_, DoepmskSpec> {
+        AhberrmskW::new(self, 2)
     }
     #[doc = "Bit 3 - SETUP Phase Done Mask"]
     #[inline(always)]
-    #[must_use]
-    pub fn setupmsk(&mut self) -> SETUPMSK_W<DOEPMSK_SPEC> {
-        SETUPMSK_W::new(self, 3)
+    pub fn setupmsk(&mut self) -> SetupmskW<'_, DoepmskSpec> {
+        SetupmskW::new(self, 3)
     }
     #[doc = "Bit 4 - OUT Token Received when Endpoint Disabled Mask"]
     #[inline(always)]
-    #[must_use]
-    pub fn outtknepdismsk(&mut self) -> OUTTKNEPDISMSK_W<DOEPMSK_SPEC> {
-        OUTTKNEPDISMSK_W::new(self, 4)
+    pub fn outtknepdismsk(&mut self) -> OuttknepdismskW<'_, DoepmskSpec> {
+        OuttknepdismskW::new(self, 4)
     }
     #[doc = "Bit 5 - Status Phase Received Mask"]
     #[inline(always)]
-    #[must_use]
-    pub fn stsphsercvdmsk(&mut self) -> STSPHSERCVDMSK_W<DOEPMSK_SPEC> {
-        STSPHSERCVDMSK_W::new(self, 5)
+    pub fn stsphsercvdmsk(&mut self) -> StsphsercvdmskW<'_, DoepmskSpec> {
+        StsphsercvdmskW::new(self, 5)
     }
     #[doc = "Bit 6 - Back-to-Back SETUP Packets Received Mask"]
     #[inline(always)]
-    #[must_use]
-    pub fn back2backsetup(&mut self) -> BACK2BACKSETUP_W<DOEPMSK_SPEC> {
-        BACK2BACKSETUP_W::new(self, 6)
+    pub fn back2backsetup(&mut self) -> Back2backsetupW<'_, DoepmskSpec> {
+        Back2backsetupW::new(self, 6)
     }
     #[doc = "Bit 8 - OUT Packet Error Mask"]
     #[inline(always)]
-    #[must_use]
-    pub fn outpkterrmsk(&mut self) -> OUTPKTERRMSK_W<DOEPMSK_SPEC> {
-        OUTPKTERRMSK_W::new(self, 8)
+    pub fn outpkterrmsk(&mut self) -> OutpkterrmskW<'_, DoepmskSpec> {
+        OutpkterrmskW::new(self, 8)
     }
     #[doc = "Bit 12 - Babble Error interrupt Mask"]
     #[inline(always)]
-    #[must_use]
-    pub fn bbleerrmsk(&mut self) -> BBLEERRMSK_W<DOEPMSK_SPEC> {
-        BBLEERRMSK_W::new(self, 12)
+    pub fn bbleerrmsk(&mut self) -> BbleerrmskW<'_, DoepmskSpec> {
+        BbleerrmskW::new(self, 12)
     }
     #[doc = "Bit 13 - NAK interrupt Mask"]
     #[inline(always)]
-    #[must_use]
-    pub fn nakmsk(&mut self) -> NAKMSK_W<DOEPMSK_SPEC> {
-        NAKMSK_W::new(self, 13)
-    }
-    #[doc = r" Writes raw bits to the register."]
-    #[doc = r""]
-    #[doc = r" # Safety"]
-    #[doc = r""]
-    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.bits = bits;
-        self
+    pub fn nakmsk(&mut self) -> NakmskW<'_, DoepmskSpec> {
+        NakmskW::new(self, 13)
     }
 }
-#[doc = "Device OUT Endpoint Common Interrupt Mask Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`doepmsk::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`doepmsk::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
-pub struct DOEPMSK_SPEC;
-impl crate::RegisterSpec for DOEPMSK_SPEC {
+#[doc = "Device OUT Endpoint Common Interrupt Mask Register\n\nYou can [`read`](crate::Reg::read) this register and get [`doepmsk::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`doepmsk::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct DoepmskSpec;
+impl crate::RegisterSpec for DoepmskSpec {
     type Ux = u32;
 }
 #[doc = "`read()` method returns [`doepmsk::R`](R) reader structure"]
-impl crate::Readable for DOEPMSK_SPEC {}
+impl crate::Readable for DoepmskSpec {}
 #[doc = "`write(|w| ..)` method takes [`doepmsk::W`](W) writer structure"]
-impl crate::Writable for DOEPMSK_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+impl crate::Writable for DoepmskSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets DOEPMSK to value 0"]
-impl crate::Resettable for DOEPMSK_SPEC {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for DoepmskSpec {}

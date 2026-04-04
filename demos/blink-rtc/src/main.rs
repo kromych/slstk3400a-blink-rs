@@ -29,21 +29,29 @@ fn main() -> ! {
     let p = pac::Peripherals::take().unwrap();
 
     // If the Watchdog is not reset/disabled, the board will reboot.
-    p.WDOG.constrain().disable();
+    p.wdog.constrain().disable();
 
     // Configure clock to RTC:
     //  * LFRCO ticks at 32768 Hz
     //  * No clock divider
-    p.CMU.hfcoreclken0().write(|w| w.le().set_bit());
-    p.CMU.oscencmd().write(|w| w.lfrcoen().set_bit());
-    p.CMU.lfapresc0().reset();
-    p.CMU.lfclksel().write(|w| w.lfa().lfrco());
+    p.cmu
+        .hfcoreclken0()
+        .write(|w: &mut pac::cmu::hfcoreclken0::W| w.le().set_bit());
+    p.cmu
+        .oscencmd()
+        .write(|w: &mut pac::cmu::oscencmd::W| w.lfrcoen().set_bit());
+    p.cmu.lfapresc0().reset();
+    p.cmu
+        .lfclksel()
+        .write(|w: &mut pac::cmu::lfclksel::W| w.lfa().lfrco());
 
     // Enable clock to RTC, ticking at 32 KiHz.
-    p.CMU.lfaclken0().write(|w| w.rtc().set_bit());
+    p.cmu
+        .lfaclken0()
+        .write(|w: &mut pac::cmu::lfaclken0::W| w.rtc().set_bit());
 
     // Reset RTC
-    let mut rtc = p.RTC.constrain();
+    let mut rtc = p.rtc.constrain();
     rtc.reset();
 
     // Interrupt when matching custom compare value:
@@ -68,7 +76,7 @@ fn main() -> ! {
     enable_gpio_clock();
 
     // Board and GPIO.
-    let gpio = p.GPIO.constrain().split();
+    let gpio = p.gpio.constrain().split();
     let board = SlStk3400a::new(gpio).unwrap();
     critical_section::with(|lock| {
         BOARD.borrow(lock).replace(Some(board));

@@ -51,27 +51,32 @@ fn cal_adc_value() -> i32 {
 }
 
 /// Initialise ADC0 for single-conversion reads from the temperature sensor.
-fn adc_init(cmu: &pac::CMU, adc: &pac::ADC0) {
+fn adc_init(cmu: &pac::Cmu, adc: &pac::Adc0) {
     // Enable ADC0 clock.
-    cmu.hfperclken0().modify(|_, w| w.adc0().set_bit());
+    cmu.hfperclken0()
+        .modify(|_, w: &mut pac::cmu::hfperclken0::W| w.adc0().set_bit());
 
     // Warm-up mode: keep ADC reference warm between conversions.
-    adc.ctrl().write(|w| {
-        w.warmupmode().keepadcwarm().timebase().variant(14).presc().nodivision()
+    adc.ctrl().write(|w: &mut pac::adc0::ctrl::W| unsafe {
+        w.warmupmode()
+            .keepadcwarm()
+            .timebase()
+            .bits(14)
+            .presc()
+            .nodivision()
     });
 
     // Single conversion: input = TEMP (channel 8), reference = 1.25V, 12-bit.
-    adc.singlectrl().write(|w| {
-        w.inputsel().variant(8) // TEMP
-            .ref_()._1v25()
-            .res()._12bit()
-            .adj().clear_bit()
+    adc.singlectrl().write(|w: &mut pac::adc0::singlectrl::W| {
+        unsafe { w.inputsel().bits(8) }; // TEMP
+        w.ref_()._1v25().res()._12bit().adj().clear_bit()
     });
 }
 
 /// Trigger a single ADC conversion and return the 12-bit result.
-fn adc_read(adc: &pac::ADC0) -> u16 {
-    adc.cmd().write(|w| w.singlestart().set_bit());
+fn adc_read(adc: &pac::Adc0) -> u16 {
+    adc.cmd()
+        .write(|w: &mut pac::adc0::cmd::W| w.singlestart().set_bit());
     while adc.status().read().singledv().bit_is_clear() {}
     adc.singledata().read().data().bits() as u16
 }
@@ -99,12 +104,12 @@ fn adc_to_temp_x10(raw: u16) -> i32 {
 fn main() -> ! {
     let p = pac::Peripherals::take().unwrap();
 
-    p.WDOG.constrain().disable();
+    p.wdog.constrain().disable();
     enable_gpio_clock();
 
     // Initialise display and ADC.
     display::init();
-    adc_init(&p.CMU, &p.ADC0);
+    adc_init(&p.cmu, &p.adc0);
 
     let mut vcom = false;
     display::clear(&mut vcom);
@@ -117,7 +122,7 @@ fn main() -> ! {
     defmt::info!("ADC temperature demo started");
 
     loop {
-        let raw = adc_read(&p.ADC0);
+        let raw = adc_read(&p.adc0);
         let temp_x10 = adc_to_temp_x10(raw);
 
         // Format raw ADC value.

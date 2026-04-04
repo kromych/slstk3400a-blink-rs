@@ -1,151 +1,152 @@
 #[doc = "Register `CH1_CTRL` reader"]
-pub type R = crate::R<CH1_CTRL_SPEC>;
+pub type R = crate::R<Ch1CtrlSpec>;
 #[doc = "Register `CH1_CTRL` writer"]
-pub type W = crate::W<CH1_CTRL_SPEC>;
+pub type W = crate::W<Ch1CtrlSpec>;
 #[doc = "Field `SIGSEL` reader - Signal Select"]
-pub type SIGSEL_R = crate::FieldReader;
+pub type SigselR = crate::FieldReader;
 #[doc = "Field `SIGSEL` writer - Signal Select"]
-pub type SIGSEL_W<'a, REG> = crate::FieldWriter<'a, REG, 3>;
-#[doc = "Field `SOURCESEL` reader - Source Select"]
-pub type SOURCESEL_R = crate::FieldReader<SOURCESEL_A>;
+pub type SigselW<'a, REG> = crate::FieldWriter<'a, REG, 3>;
 #[doc = "Source Select\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum SOURCESEL_A {
+pub enum Sourcesel {
     #[doc = "0: No source selected"]
-    NONE = 0,
+    None = 0,
     #[doc = "1: Voltage Comparator"]
-    VCMP = 1,
+    Vcmp = 1,
     #[doc = "2: Analog Comparator 0"]
-    ACMP0 = 2,
+    Acmp0 = 2,
     #[doc = "8: Analog to Digital Converter 0"]
-    ADC0 = 8,
+    Adc0 = 8,
     #[doc = "16: Universal Synchronous/Asynchronous Receiver/Transmitter 0"]
-    USART0 = 16,
+    Usart0 = 16,
     #[doc = "17: Universal Synchronous/Asynchronous Receiver/Transmitter 1"]
-    USART1 = 17,
+    Usart1 = 17,
     #[doc = "28: Timer 0"]
-    TIMER0 = 28,
+    Timer0 = 28,
     #[doc = "29: Timer 1"]
-    TIMER1 = 29,
+    Timer1 = 29,
     #[doc = "30: Timer 2"]
-    TIMER2 = 30,
+    Timer2 = 30,
     #[doc = "36: Universal Serial Bus Interface"]
-    USB = 36,
+    Usb = 36,
     #[doc = "40: Real-Time Counter"]
-    RTC = 40,
+    Rtc = 40,
     #[doc = "48: General purpose Input/Output"]
-    GPIOL = 48,
+    Gpiol = 48,
     #[doc = "49: General purpose Input/Output"]
-    GPIOH = 49,
+    Gpioh = 49,
     #[doc = "54: Pulse Counter 0"]
-    PCNT0 = 54,
+    Pcnt0 = 54,
 }
-impl From<SOURCESEL_A> for u8 {
+impl From<Sourcesel> for u8 {
     #[inline(always)]
-    fn from(variant: SOURCESEL_A) -> Self {
+    fn from(variant: Sourcesel) -> Self {
         variant as _
     }
 }
-impl crate::FieldSpec for SOURCESEL_A {
+impl crate::FieldSpec for Sourcesel {
     type Ux = u8;
 }
-impl SOURCESEL_R {
+impl crate::IsEnum for Sourcesel {}
+#[doc = "Field `SOURCESEL` reader - Source Select"]
+pub type SourceselR = crate::FieldReader<Sourcesel>;
+impl SourceselR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub const fn variant(&self) -> Option<SOURCESEL_A> {
+    pub const fn variant(&self) -> Option<Sourcesel> {
         match self.bits {
-            0 => Some(SOURCESEL_A::NONE),
-            1 => Some(SOURCESEL_A::VCMP),
-            2 => Some(SOURCESEL_A::ACMP0),
-            8 => Some(SOURCESEL_A::ADC0),
-            16 => Some(SOURCESEL_A::USART0),
-            17 => Some(SOURCESEL_A::USART1),
-            28 => Some(SOURCESEL_A::TIMER0),
-            29 => Some(SOURCESEL_A::TIMER1),
-            30 => Some(SOURCESEL_A::TIMER2),
-            36 => Some(SOURCESEL_A::USB),
-            40 => Some(SOURCESEL_A::RTC),
-            48 => Some(SOURCESEL_A::GPIOL),
-            49 => Some(SOURCESEL_A::GPIOH),
-            54 => Some(SOURCESEL_A::PCNT0),
+            0 => Some(Sourcesel::None),
+            1 => Some(Sourcesel::Vcmp),
+            2 => Some(Sourcesel::Acmp0),
+            8 => Some(Sourcesel::Adc0),
+            16 => Some(Sourcesel::Usart0),
+            17 => Some(Sourcesel::Usart1),
+            28 => Some(Sourcesel::Timer0),
+            29 => Some(Sourcesel::Timer1),
+            30 => Some(Sourcesel::Timer2),
+            36 => Some(Sourcesel::Usb),
+            40 => Some(Sourcesel::Rtc),
+            48 => Some(Sourcesel::Gpiol),
+            49 => Some(Sourcesel::Gpioh),
+            54 => Some(Sourcesel::Pcnt0),
             _ => None,
         }
     }
     #[doc = "No source selected"]
     #[inline(always)]
     pub fn is_none(&self) -> bool {
-        *self == SOURCESEL_A::NONE
+        *self == Sourcesel::None
     }
     #[doc = "Voltage Comparator"]
     #[inline(always)]
     pub fn is_vcmp(&self) -> bool {
-        *self == SOURCESEL_A::VCMP
+        *self == Sourcesel::Vcmp
     }
     #[doc = "Analog Comparator 0"]
     #[inline(always)]
     pub fn is_acmp0(&self) -> bool {
-        *self == SOURCESEL_A::ACMP0
+        *self == Sourcesel::Acmp0
     }
     #[doc = "Analog to Digital Converter 0"]
     #[inline(always)]
     pub fn is_adc0(&self) -> bool {
-        *self == SOURCESEL_A::ADC0
+        *self == Sourcesel::Adc0
     }
     #[doc = "Universal Synchronous/Asynchronous Receiver/Transmitter 0"]
     #[inline(always)]
     pub fn is_usart0(&self) -> bool {
-        *self == SOURCESEL_A::USART0
+        *self == Sourcesel::Usart0
     }
     #[doc = "Universal Synchronous/Asynchronous Receiver/Transmitter 1"]
     #[inline(always)]
     pub fn is_usart1(&self) -> bool {
-        *self == SOURCESEL_A::USART1
+        *self == Sourcesel::Usart1
     }
     #[doc = "Timer 0"]
     #[inline(always)]
     pub fn is_timer0(&self) -> bool {
-        *self == SOURCESEL_A::TIMER0
+        *self == Sourcesel::Timer0
     }
     #[doc = "Timer 1"]
     #[inline(always)]
     pub fn is_timer1(&self) -> bool {
-        *self == SOURCESEL_A::TIMER1
+        *self == Sourcesel::Timer1
     }
     #[doc = "Timer 2"]
     #[inline(always)]
     pub fn is_timer2(&self) -> bool {
-        *self == SOURCESEL_A::TIMER2
+        *self == Sourcesel::Timer2
     }
     #[doc = "Universal Serial Bus Interface"]
     #[inline(always)]
     pub fn is_usb(&self) -> bool {
-        *self == SOURCESEL_A::USB
+        *self == Sourcesel::Usb
     }
     #[doc = "Real-Time Counter"]
     #[inline(always)]
     pub fn is_rtc(&self) -> bool {
-        *self == SOURCESEL_A::RTC
+        *self == Sourcesel::Rtc
     }
     #[doc = "General purpose Input/Output"]
     #[inline(always)]
     pub fn is_gpiol(&self) -> bool {
-        *self == SOURCESEL_A::GPIOL
+        *self == Sourcesel::Gpiol
     }
     #[doc = "General purpose Input/Output"]
     #[inline(always)]
     pub fn is_gpioh(&self) -> bool {
-        *self == SOURCESEL_A::GPIOH
+        *self == Sourcesel::Gpioh
     }
     #[doc = "Pulse Counter 0"]
     #[inline(always)]
     pub fn is_pcnt0(&self) -> bool {
-        *self == SOURCESEL_A::PCNT0
+        *self == Sourcesel::Pcnt0
     }
 }
 #[doc = "Field `SOURCESEL` writer - Source Select"]
-pub type SOURCESEL_W<'a, REG> = crate::FieldWriter<'a, REG, 6, SOURCESEL_A>;
-impl<'a, REG> SOURCESEL_W<'a, REG>
+pub type SourceselW<'a, REG> = crate::FieldWriter<'a, REG, 6, Sourcesel>;
+impl<'a, REG> SourceselW<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -153,134 +154,135 @@ where
     #[doc = "No source selected"]
     #[inline(always)]
     pub fn none(self) -> &'a mut crate::W<REG> {
-        self.variant(SOURCESEL_A::NONE)
+        self.variant(Sourcesel::None)
     }
     #[doc = "Voltage Comparator"]
     #[inline(always)]
     pub fn vcmp(self) -> &'a mut crate::W<REG> {
-        self.variant(SOURCESEL_A::VCMP)
+        self.variant(Sourcesel::Vcmp)
     }
     #[doc = "Analog Comparator 0"]
     #[inline(always)]
     pub fn acmp0(self) -> &'a mut crate::W<REG> {
-        self.variant(SOURCESEL_A::ACMP0)
+        self.variant(Sourcesel::Acmp0)
     }
     #[doc = "Analog to Digital Converter 0"]
     #[inline(always)]
     pub fn adc0(self) -> &'a mut crate::W<REG> {
-        self.variant(SOURCESEL_A::ADC0)
+        self.variant(Sourcesel::Adc0)
     }
     #[doc = "Universal Synchronous/Asynchronous Receiver/Transmitter 0"]
     #[inline(always)]
     pub fn usart0(self) -> &'a mut crate::W<REG> {
-        self.variant(SOURCESEL_A::USART0)
+        self.variant(Sourcesel::Usart0)
     }
     #[doc = "Universal Synchronous/Asynchronous Receiver/Transmitter 1"]
     #[inline(always)]
     pub fn usart1(self) -> &'a mut crate::W<REG> {
-        self.variant(SOURCESEL_A::USART1)
+        self.variant(Sourcesel::Usart1)
     }
     #[doc = "Timer 0"]
     #[inline(always)]
     pub fn timer0(self) -> &'a mut crate::W<REG> {
-        self.variant(SOURCESEL_A::TIMER0)
+        self.variant(Sourcesel::Timer0)
     }
     #[doc = "Timer 1"]
     #[inline(always)]
     pub fn timer1(self) -> &'a mut crate::W<REG> {
-        self.variant(SOURCESEL_A::TIMER1)
+        self.variant(Sourcesel::Timer1)
     }
     #[doc = "Timer 2"]
     #[inline(always)]
     pub fn timer2(self) -> &'a mut crate::W<REG> {
-        self.variant(SOURCESEL_A::TIMER2)
+        self.variant(Sourcesel::Timer2)
     }
     #[doc = "Universal Serial Bus Interface"]
     #[inline(always)]
     pub fn usb(self) -> &'a mut crate::W<REG> {
-        self.variant(SOURCESEL_A::USB)
+        self.variant(Sourcesel::Usb)
     }
     #[doc = "Real-Time Counter"]
     #[inline(always)]
     pub fn rtc(self) -> &'a mut crate::W<REG> {
-        self.variant(SOURCESEL_A::RTC)
+        self.variant(Sourcesel::Rtc)
     }
     #[doc = "General purpose Input/Output"]
     #[inline(always)]
     pub fn gpiol(self) -> &'a mut crate::W<REG> {
-        self.variant(SOURCESEL_A::GPIOL)
+        self.variant(Sourcesel::Gpiol)
     }
     #[doc = "General purpose Input/Output"]
     #[inline(always)]
     pub fn gpioh(self) -> &'a mut crate::W<REG> {
-        self.variant(SOURCESEL_A::GPIOH)
+        self.variant(Sourcesel::Gpioh)
     }
     #[doc = "Pulse Counter 0"]
     #[inline(always)]
     pub fn pcnt0(self) -> &'a mut crate::W<REG> {
-        self.variant(SOURCESEL_A::PCNT0)
+        self.variant(Sourcesel::Pcnt0)
     }
 }
-#[doc = "Field `EDSEL` reader - Edge Detect Select"]
-pub type EDSEL_R = crate::FieldReader<EDSEL_A>;
 #[doc = "Edge Detect Select\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum EDSEL_A {
+pub enum Edsel {
     #[doc = "0: Signal is left as it is"]
-    OFF = 0,
+    Off = 0,
     #[doc = "1: A one HFPERCLK cycle pulse is generated for every positive edge of the incoming signal"]
-    POSEDGE = 1,
+    Posedge = 1,
     #[doc = "2: A one HFPERCLK clock cycle pulse is generated for every negative edge of the incoming signal"]
-    NEGEDGE = 2,
+    Negedge = 2,
     #[doc = "3: A one HFPERCLK clock cycle pulse is generated for every edge of the incoming signal"]
-    BOTHEDGES = 3,
+    Bothedges = 3,
 }
-impl From<EDSEL_A> for u8 {
+impl From<Edsel> for u8 {
     #[inline(always)]
-    fn from(variant: EDSEL_A) -> Self {
+    fn from(variant: Edsel) -> Self {
         variant as _
     }
 }
-impl crate::FieldSpec for EDSEL_A {
+impl crate::FieldSpec for Edsel {
     type Ux = u8;
 }
-impl EDSEL_R {
+impl crate::IsEnum for Edsel {}
+#[doc = "Field `EDSEL` reader - Edge Detect Select"]
+pub type EdselR = crate::FieldReader<Edsel>;
+impl EdselR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub const fn variant(&self) -> EDSEL_A {
+    pub const fn variant(&self) -> Edsel {
         match self.bits {
-            0 => EDSEL_A::OFF,
-            1 => EDSEL_A::POSEDGE,
-            2 => EDSEL_A::NEGEDGE,
-            3 => EDSEL_A::BOTHEDGES,
+            0 => Edsel::Off,
+            1 => Edsel::Posedge,
+            2 => Edsel::Negedge,
+            3 => Edsel::Bothedges,
             _ => unreachable!(),
         }
     }
     #[doc = "Signal is left as it is"]
     #[inline(always)]
     pub fn is_off(&self) -> bool {
-        *self == EDSEL_A::OFF
+        *self == Edsel::Off
     }
     #[doc = "A one HFPERCLK cycle pulse is generated for every positive edge of the incoming signal"]
     #[inline(always)]
     pub fn is_posedge(&self) -> bool {
-        *self == EDSEL_A::POSEDGE
+        *self == Edsel::Posedge
     }
     #[doc = "A one HFPERCLK clock cycle pulse is generated for every negative edge of the incoming signal"]
     #[inline(always)]
     pub fn is_negedge(&self) -> bool {
-        *self == EDSEL_A::NEGEDGE
+        *self == Edsel::Negedge
     }
     #[doc = "A one HFPERCLK clock cycle pulse is generated for every edge of the incoming signal"]
     #[inline(always)]
     pub fn is_bothedges(&self) -> bool {
-        *self == EDSEL_A::BOTHEDGES
+        *self == Edsel::Bothedges
     }
 }
 #[doc = "Field `EDSEL` writer - Edge Detect Select"]
-pub type EDSEL_W<'a, REG> = crate::FieldWriterSafe<'a, REG, 2, EDSEL_A>;
-impl<'a, REG> EDSEL_W<'a, REG>
+pub type EdselW<'a, REG> = crate::FieldWriter<'a, REG, 2, Edsel, crate::Safe>;
+impl<'a, REG> EdselW<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -288,99 +290,82 @@ where
     #[doc = "Signal is left as it is"]
     #[inline(always)]
     pub fn off(self) -> &'a mut crate::W<REG> {
-        self.variant(EDSEL_A::OFF)
+        self.variant(Edsel::Off)
     }
     #[doc = "A one HFPERCLK cycle pulse is generated for every positive edge of the incoming signal"]
     #[inline(always)]
     pub fn posedge(self) -> &'a mut crate::W<REG> {
-        self.variant(EDSEL_A::POSEDGE)
+        self.variant(Edsel::Posedge)
     }
     #[doc = "A one HFPERCLK clock cycle pulse is generated for every negative edge of the incoming signal"]
     #[inline(always)]
     pub fn negedge(self) -> &'a mut crate::W<REG> {
-        self.variant(EDSEL_A::NEGEDGE)
+        self.variant(Edsel::Negedge)
     }
     #[doc = "A one HFPERCLK clock cycle pulse is generated for every edge of the incoming signal"]
     #[inline(always)]
     pub fn bothedges(self) -> &'a mut crate::W<REG> {
-        self.variant(EDSEL_A::BOTHEDGES)
+        self.variant(Edsel::Bothedges)
     }
 }
 #[doc = "Field `ASYNC` reader - Asynchronous reflex"]
-pub type ASYNC_R = crate::BitReader;
+pub type AsyncR = crate::BitReader;
 #[doc = "Field `ASYNC` writer - Asynchronous reflex"]
-pub type ASYNC_W<'a, REG> = crate::BitWriter<'a, REG>;
+pub type AsyncW<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bits 0:2 - Signal Select"]
     #[inline(always)]
-    pub fn sigsel(&self) -> SIGSEL_R {
-        SIGSEL_R::new((self.bits & 7) as u8)
+    pub fn sigsel(&self) -> SigselR {
+        SigselR::new((self.bits & 7) as u8)
     }
     #[doc = "Bits 16:21 - Source Select"]
     #[inline(always)]
-    pub fn sourcesel(&self) -> SOURCESEL_R {
-        SOURCESEL_R::new(((self.bits >> 16) & 0x3f) as u8)
+    pub fn sourcesel(&self) -> SourceselR {
+        SourceselR::new(((self.bits >> 16) & 0x3f) as u8)
     }
     #[doc = "Bits 24:25 - Edge Detect Select"]
     #[inline(always)]
-    pub fn edsel(&self) -> EDSEL_R {
-        EDSEL_R::new(((self.bits >> 24) & 3) as u8)
+    pub fn edsel(&self) -> EdselR {
+        EdselR::new(((self.bits >> 24) & 3) as u8)
     }
     #[doc = "Bit 28 - Asynchronous reflex"]
     #[inline(always)]
-    pub fn async_(&self) -> ASYNC_R {
-        ASYNC_R::new(((self.bits >> 28) & 1) != 0)
+    pub fn async_(&self) -> AsyncR {
+        AsyncR::new(((self.bits >> 28) & 1) != 0)
     }
 }
 impl W {
     #[doc = "Bits 0:2 - Signal Select"]
     #[inline(always)]
-    #[must_use]
-    pub fn sigsel(&mut self) -> SIGSEL_W<CH1_CTRL_SPEC> {
-        SIGSEL_W::new(self, 0)
+    pub fn sigsel(&mut self) -> SigselW<'_, Ch1CtrlSpec> {
+        SigselW::new(self, 0)
     }
     #[doc = "Bits 16:21 - Source Select"]
     #[inline(always)]
-    #[must_use]
-    pub fn sourcesel(&mut self) -> SOURCESEL_W<CH1_CTRL_SPEC> {
-        SOURCESEL_W::new(self, 16)
+    pub fn sourcesel(&mut self) -> SourceselW<'_, Ch1CtrlSpec> {
+        SourceselW::new(self, 16)
     }
     #[doc = "Bits 24:25 - Edge Detect Select"]
     #[inline(always)]
-    #[must_use]
-    pub fn edsel(&mut self) -> EDSEL_W<CH1_CTRL_SPEC> {
-        EDSEL_W::new(self, 24)
+    pub fn edsel(&mut self) -> EdselW<'_, Ch1CtrlSpec> {
+        EdselW::new(self, 24)
     }
     #[doc = "Bit 28 - Asynchronous reflex"]
     #[inline(always)]
-    #[must_use]
-    pub fn async_(&mut self) -> ASYNC_W<CH1_CTRL_SPEC> {
-        ASYNC_W::new(self, 28)
-    }
-    #[doc = r" Writes raw bits to the register."]
-    #[doc = r""]
-    #[doc = r" # Safety"]
-    #[doc = r""]
-    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.bits = bits;
-        self
+    pub fn async_(&mut self) -> AsyncW<'_, Ch1CtrlSpec> {
+        AsyncW::new(self, 28)
     }
 }
-#[doc = "Channel Control Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`ch1_ctrl::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`ch1_ctrl::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
-pub struct CH1_CTRL_SPEC;
-impl crate::RegisterSpec for CH1_CTRL_SPEC {
+#[doc = "Channel Control Register\n\nYou can [`read`](crate::Reg::read) this register and get [`ch1_ctrl::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ch1_ctrl::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct Ch1CtrlSpec;
+impl crate::RegisterSpec for Ch1CtrlSpec {
     type Ux = u32;
 }
 #[doc = "`read()` method returns [`ch1_ctrl::R`](R) reader structure"]
-impl crate::Readable for CH1_CTRL_SPEC {}
+impl crate::Readable for Ch1CtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`ch1_ctrl::W`](W) writer structure"]
-impl crate::Writable for CH1_CTRL_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+impl crate::Writable for Ch1CtrlSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets CH1_CTRL to value 0"]
-impl crate::Resettable for CH1_CTRL_SPEC {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Ch1CtrlSpec {}

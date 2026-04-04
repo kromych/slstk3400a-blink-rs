@@ -1,50 +1,48 @@
 #[doc = "Register `SYNCBUSY` reader"]
-pub type R = crate::R<SYNCBUSY_SPEC>;
+pub type R = crate::R<SyncbusySpec>;
 #[doc = "Field `LFACLKEN0` reader - Low Frequency A Clock Enable 0 Busy"]
-pub type LFACLKEN0_R = crate::BitReader;
+pub type Lfaclken0R = crate::BitReader;
 #[doc = "Field `LFAPRESC0` reader - Low Frequency A Prescaler 0 Busy"]
-pub type LFAPRESC0_R = crate::BitReader;
+pub type Lfapresc0R = crate::BitReader;
 #[doc = "Field `LFBCLKEN0` reader - Low Frequency B Clock Enable 0 Busy"]
-pub type LFBCLKEN0_R = crate::BitReader;
+pub type Lfbclken0R = crate::BitReader;
 #[doc = "Field `LFBPRESC0` reader - Low Frequency B Prescaler 0 Busy"]
-pub type LFBPRESC0_R = crate::BitReader;
+pub type Lfbpresc0R = crate::BitReader;
 #[doc = "Field `LFCCLKEN0` reader - Low Frequency C Clock Enable 0 Busy"]
-pub type LFCCLKEN0_R = crate::BitReader;
+pub type Lfcclken0R = crate::BitReader;
 impl R {
     #[doc = "Bit 0 - Low Frequency A Clock Enable 0 Busy"]
     #[inline(always)]
-    pub fn lfaclken0(&self) -> LFACLKEN0_R {
-        LFACLKEN0_R::new((self.bits & 1) != 0)
+    pub fn lfaclken0(&self) -> Lfaclken0R {
+        Lfaclken0R::new((self.bits & 1) != 0)
     }
     #[doc = "Bit 2 - Low Frequency A Prescaler 0 Busy"]
     #[inline(always)]
-    pub fn lfapresc0(&self) -> LFAPRESC0_R {
-        LFAPRESC0_R::new(((self.bits >> 2) & 1) != 0)
+    pub fn lfapresc0(&self) -> Lfapresc0R {
+        Lfapresc0R::new(((self.bits >> 2) & 1) != 0)
     }
     #[doc = "Bit 4 - Low Frequency B Clock Enable 0 Busy"]
     #[inline(always)]
-    pub fn lfbclken0(&self) -> LFBCLKEN0_R {
-        LFBCLKEN0_R::new(((self.bits >> 4) & 1) != 0)
+    pub fn lfbclken0(&self) -> Lfbclken0R {
+        Lfbclken0R::new(((self.bits >> 4) & 1) != 0)
     }
     #[doc = "Bit 6 - Low Frequency B Prescaler 0 Busy"]
     #[inline(always)]
-    pub fn lfbpresc0(&self) -> LFBPRESC0_R {
-        LFBPRESC0_R::new(((self.bits >> 6) & 1) != 0)
+    pub fn lfbpresc0(&self) -> Lfbpresc0R {
+        Lfbpresc0R::new(((self.bits >> 6) & 1) != 0)
     }
     #[doc = "Bit 8 - Low Frequency C Clock Enable 0 Busy"]
     #[inline(always)]
-    pub fn lfcclken0(&self) -> LFCCLKEN0_R {
-        LFCCLKEN0_R::new(((self.bits >> 8) & 1) != 0)
+    pub fn lfcclken0(&self) -> Lfcclken0R {
+        Lfcclken0R::new(((self.bits >> 8) & 1) != 0)
     }
 }
-#[doc = "Synchronization Busy Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`syncbusy::R`](R).  See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
-pub struct SYNCBUSY_SPEC;
-impl crate::RegisterSpec for SYNCBUSY_SPEC {
+#[doc = "Synchronization Busy Register\n\nYou can [`read`](crate::Reg::read) this register and get [`syncbusy::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct SyncbusySpec;
+impl crate::RegisterSpec for SyncbusySpec {
     type Ux = u32;
 }
 #[doc = "`read()` method returns [`syncbusy::R`](R) reader structure"]
-impl crate::Readable for SYNCBUSY_SPEC {}
+impl crate::Readable for SyncbusySpec {}
 #[doc = "`reset()` method sets SYNCBUSY to value 0"]
-impl crate::Resettable for SYNCBUSY_SPEC {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for SyncbusySpec {}

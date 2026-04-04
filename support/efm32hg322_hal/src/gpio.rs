@@ -8,7 +8,7 @@
 
 use super::pac;
 use core::marker::PhantomData;
-use pac::gpio::pa_ctrl::DRIVEMODE_A as DriveMode;
+use pac::gpio::pa_ctrl::Drivemode as DriveMode;
 
 /// State type for pin with disabled input.
 /// In disabled state output pin can be in either
@@ -102,7 +102,7 @@ pub trait GpioInterruptExt {
 }
 
 fn sneak_into_gpio() -> &'static pac::gpio::RegisterBlock {
-    unsafe { &*pac::GPIO::ptr() }
+    unsafe { &*pac::Gpio::ptr() }
 }
 
 #[macro_export]
@@ -586,7 +586,7 @@ macro_rules! gpio {
             $(
                 pub fn $pX_drive(self, mode: DriveMode) -> Self {
                     let gpio = sneak_into_gpio();
-                    gpio.$pX_ctrl().write(|w| w.drivemode().bits(mode.into()));
+                    gpio.$pX_ctrl().write(|w| unsafe { w.drivemode().bits(mode as u8) });
                     self
                 }
             )+
@@ -620,7 +620,7 @@ macro_rules! gpio {
             fn constrain(self) -> Parts;
         }
 
-        impl GPIOExt for pac::GPIO {
+        impl GPIOExt for pac::Gpio {
             fn constrain(self) -> Parts {
                 let _consumed = self;
 

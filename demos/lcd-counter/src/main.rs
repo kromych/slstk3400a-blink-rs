@@ -10,7 +10,6 @@ use panic_halt as _;
 
 use crate::pac::interrupt;
 use core::cell::RefCell;
-use portable_atomic::{AtomicBool, AtomicU32, Ordering};
 use critical_section::Mutex;
 use efm32hg322_hal as hal;
 use efm32hg322_pac as pac;
@@ -20,6 +19,7 @@ use hal::gpio::GPIOExt;
 use hal::gpio::GpioInterruptExt;
 use hal::rtc::RTCExt;
 use hal::watchdog::WatchdogExt;
+use portable_atomic::{AtomicBool, AtomicU32, Ordering};
 use slstk3400a::display;
 
 static RTC: Mutex<RefCell<Option<hal::rtc::RTC>>> = Mutex::new(RefCell::new(None));
@@ -30,7 +30,7 @@ static RESET_REQ: AtomicBool = AtomicBool::new(false);
 fn main() -> ! {
     let p = pac::Peripherals::take().unwrap();
 
-    p.WDOG.constrain().disable();
+    p.wdog.constrain().disable();
     enable_gpio_clock();
 
     // Initialise the LCD.
@@ -43,7 +43,7 @@ fn main() -> ! {
     display::draw_text(6, 0, "BTN0 = reset", &mut vcom);
 
     // Configure push button 0 (PC9) for interrupt on press.
-    let gpio = p.GPIO.constrain().split();
+    let gpio = p.gpio.constrain().split();
     let mut btn0 = gpio.pc9.into_input_pulled_up();
     btn0.enable_interrupt(ExtInterruptEdge::Fall);
 
@@ -51,13 +51,21 @@ fn main() -> ! {
     unsafe { pac::NVIC::unmask(pac::Interrupt::GPIO_ODD) };
 
     // Configure RTC: LFRCO 32768 Hz, compare at 32768 → 1-second tick.
-    p.CMU.hfcoreclken0().write(|w| w.le().set_bit());
-    p.CMU.oscencmd().write(|w| w.lfrcoen().set_bit());
-    p.CMU.lfapresc0().reset();
-    p.CMU.lfclksel().write(|w| w.lfa().lfrco());
-    p.CMU.lfaclken0().write(|w| w.rtc().set_bit());
+    p.cmu
+        .hfcoreclken0()
+        .write(|w: &mut pac::cmu::hfcoreclken0::W| w.le().set_bit());
+    p.cmu
+        .oscencmd()
+        .write(|w: &mut pac::cmu::oscencmd::W| w.lfrcoen().set_bit());
+    p.cmu.lfapresc0().reset();
+    p.cmu
+        .lfclksel()
+        .write(|w: &mut pac::cmu::lfclksel::W| w.lfa().lfrco());
+    p.cmu
+        .lfaclken0()
+        .write(|w: &mut pac::cmu::lfaclken0::W| w.rtc().set_bit());
 
-    let mut rtc = p.RTC.constrain();
+    let mut rtc = p.rtc.constrain();
     rtc.reset();
     rtc.cap_counter(32_768, true);
 
@@ -119,8 +127,9 @@ fn RTC() {
 #[interrupt]
 fn GPIO_ODD() {
     // Clear PC9 interrupt flag.
-    let gpio = unsafe { &*pac::GPIO::ptr() };
-    gpio.ifc().write(|w| unsafe { w.bits(1 << 9) });
+    let gpio = unsafe { &*pac::Gpio::ptr() };
+    gpio.ifc()
+        .write(|w: &mut pac::gpio::ifc::W| unsafe { w.bits(1 << 9) });
 
     RESET_REQ.store(true, Ordering::Relaxed);
     cortex_m::asm::sev();

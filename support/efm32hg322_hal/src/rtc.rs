@@ -2,14 +2,14 @@ use crate::pac;
 
 /// HAL wrapper for EFM32 Real Time Clock.
 pub struct RTC {
-    rtc: pac::RTC,
+    rtc: pac::Rtc,
 }
 
 pub trait RTCExt {
     fn constrain(self) -> RTC;
 }
 
-impl RTCExt for pac::RTC {
+impl RTCExt for pac::Rtc {
     /// Expose higher level access to peripheral.
     fn constrain(self) -> RTC {
         RTC { rtc: self }
@@ -33,27 +33,39 @@ impl RTC {
     /// This can optionally enable an interrupt when the maximum is reached.
     pub fn cap_counter(&mut self, value: u32, interrupt: bool) {
         let val = value.min(0x00FF_FFFF);
-        self.rtc.comp0().write(|w| unsafe { w.comp0().bits(val) });
-        self.rtc.ctrl().modify(|_, w| w.comp0top().set_bit());
+        self.rtc
+            .comp0()
+            .write(|w: &mut pac::rtc::comp0::W| unsafe { w.comp0().bits(val) });
+        self.rtc
+            .ctrl()
+            .modify(|_, w: &mut pac::rtc::ctrl::W| w.comp0top().set_bit());
         if interrupt {
-            self.rtc.ien().modify(|_, w| w.comp0().set_bit());
+            self.rtc
+                .ien()
+                .modify(|_, w: &mut pac::rtc::ien::W| w.comp0().set_bit());
         }
     }
 
     /// Start the RTC.
     pub fn start(&mut self) {
-        self.rtc.ctrl().modify(|_, w| w.en().set_bit());
+        self.rtc
+            .ctrl()
+            .modify(|_, w: &mut pac::rtc::ctrl::W| w.en().set_bit());
     }
 
     /// Stop the RTC.
     pub fn stop(&mut self) {
-        self.rtc.ctrl().modify(|_, w| w.en().clear_bit());
+        self.rtc
+            .ctrl()
+            .modify(|_, w: &mut pac::rtc::ctrl::W| w.en().clear_bit());
     }
 
     /// Set RTC counter value (max: 0x00FFFFFF).
     pub fn set_counter(&mut self, value: u32) {
         let val = value.min(0x00FF_FFFF);
-        self.rtc.cnt().write(|w| unsafe { w.cnt().bits(val) });
+        self.rtc
+            .cnt()
+            .write(|w: &mut pac::rtc::cnt::W| unsafe { w.cnt().bits(val) });
     }
 
     /// Read RTC counter value.
@@ -66,6 +78,6 @@ impl RTC {
     pub fn clear_all_interrupts(&mut self) {
         self.rtc
             .ifc()
-            .write(|w| w.comp0().set_bit().comp1().set_bit().of().set_bit());
+            .write(|w: &mut pac::rtc::ifc::W| w.comp0().set_bit().comp1().set_bit().of().set_bit());
     }
 }

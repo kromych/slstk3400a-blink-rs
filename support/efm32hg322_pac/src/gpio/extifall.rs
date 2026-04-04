@@ -1,49 +1,35 @@
 #[doc = "Register `EXTIFALL` reader"]
-pub type R = crate::R<EXTIFALL_SPEC>;
+pub type R = crate::R<ExtifallSpec>;
 #[doc = "Register `EXTIFALL` writer"]
-pub type W = crate::W<EXTIFALL_SPEC>;
+pub type W = crate::W<ExtifallSpec>;
 #[doc = "Field `EXTIFALL` reader - External Interrupt n Falling Edge Trigger Enable"]
-pub type EXTIFALL_R = crate::FieldReader<u16>;
+pub type ExtifallR = crate::FieldReader<u16>;
 #[doc = "Field `EXTIFALL` writer - External Interrupt n Falling Edge Trigger Enable"]
-pub type EXTIFALL_W<'a, REG> = crate::FieldWriter<'a, REG, 16, u16>;
+pub type ExtifallW<'a, REG> = crate::FieldWriter<'a, REG, 16, u16>;
 impl R {
     #[doc = "Bits 0:15 - External Interrupt n Falling Edge Trigger Enable"]
     #[inline(always)]
-    pub fn extifall(&self) -> EXTIFALL_R {
-        EXTIFALL_R::new((self.bits & 0xffff) as u16)
+    pub fn extifall(&self) -> ExtifallR {
+        ExtifallR::new((self.bits & 0xffff) as u16)
     }
 }
 impl W {
     #[doc = "Bits 0:15 - External Interrupt n Falling Edge Trigger Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn extifall(&mut self) -> EXTIFALL_W<EXTIFALL_SPEC> {
-        EXTIFALL_W::new(self, 0)
-    }
-    #[doc = r" Writes raw bits to the register."]
-    #[doc = r""]
-    #[doc = r" # Safety"]
-    #[doc = r""]
-    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.bits = bits;
-        self
+    pub fn extifall(&mut self) -> ExtifallW<'_, ExtifallSpec> {
+        ExtifallW::new(self, 0)
     }
 }
-#[doc = "External Interrupt Falling Edge Trigger Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`extifall::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`extifall::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
-pub struct EXTIFALL_SPEC;
-impl crate::RegisterSpec for EXTIFALL_SPEC {
+#[doc = "External Interrupt Falling Edge Trigger Register\n\nYou can [`read`](crate::Reg::read) this register and get [`extifall::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`extifall::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct ExtifallSpec;
+impl crate::RegisterSpec for ExtifallSpec {
     type Ux = u32;
 }
 #[doc = "`read()` method returns [`extifall::R`](R) reader structure"]
-impl crate::Readable for EXTIFALL_SPEC {}
+impl crate::Readable for ExtifallSpec {}
 #[doc = "`write(|w| ..)` method takes [`extifall::W`](W) writer structure"]
-impl crate::Writable for EXTIFALL_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+impl crate::Writable for ExtifallSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets EXTIFALL to value 0"]
-impl crate::Resettable for EXTIFALL_SPEC {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ExtifallSpec {}

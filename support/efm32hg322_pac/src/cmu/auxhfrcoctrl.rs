@@ -1,79 +1,80 @@
 #[doc = "Register `AUXHFRCOCTRL` reader"]
-pub type R = crate::R<AUXHFRCOCTRL_SPEC>;
+pub type R = crate::R<AuxhfrcoctrlSpec>;
 #[doc = "Register `AUXHFRCOCTRL` writer"]
-pub type W = crate::W<AUXHFRCOCTRL_SPEC>;
+pub type W = crate::W<AuxhfrcoctrlSpec>;
 #[doc = "Field `TUNING` reader - AUXHFRCO Tuning Value"]
-pub type TUNING_R = crate::FieldReader;
+pub type TuningR = crate::FieldReader;
 #[doc = "Field `TUNING` writer - AUXHFRCO Tuning Value"]
-pub type TUNING_W<'a, REG> = crate::FieldWriter<'a, REG, 8>;
-#[doc = "Field `BAND` reader - AUXHFRCO Band Select"]
-pub type BAND_R = crate::FieldReader<BAND_A>;
+pub type TuningW<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 #[doc = "AUXHFRCO Band Select\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum BAND_A {
+pub enum Band {
     #[doc = "0: 14 MHz band. NOTE: Also set the TUNING value (bits 7:0) when changing band."]
-    _14MHZ = 0,
+    _14mhz = 0,
     #[doc = "1: 11 MHz band. NOTE: Also set the TUNING value (bits 7:0) when changing band."]
-    _11MHZ = 1,
+    _11mhz = 1,
     #[doc = "2: 7 MHz band. NOTE: Also set the TUNING value (bits 7:0) when changing band."]
-    _7MHZ = 2,
+    _7mhz = 2,
     #[doc = "3: 1 MHz band. NOTE: Also set the TUNING value (bits 7:0) when changing band."]
-    _1MHZ = 3,
+    _1mhz = 3,
     #[doc = "7: 21 MHz band. NOTE: Also set the TUNING value (bits 7:0) when changing band."]
-    _21MHZ = 7,
+    _21mhz = 7,
 }
-impl From<BAND_A> for u8 {
+impl From<Band> for u8 {
     #[inline(always)]
-    fn from(variant: BAND_A) -> Self {
+    fn from(variant: Band) -> Self {
         variant as _
     }
 }
-impl crate::FieldSpec for BAND_A {
+impl crate::FieldSpec for Band {
     type Ux = u8;
 }
-impl BAND_R {
+impl crate::IsEnum for Band {}
+#[doc = "Field `BAND` reader - AUXHFRCO Band Select"]
+pub type BandR = crate::FieldReader<Band>;
+impl BandR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub const fn variant(&self) -> Option<BAND_A> {
+    pub const fn variant(&self) -> Option<Band> {
         match self.bits {
-            0 => Some(BAND_A::_14MHZ),
-            1 => Some(BAND_A::_11MHZ),
-            2 => Some(BAND_A::_7MHZ),
-            3 => Some(BAND_A::_1MHZ),
-            7 => Some(BAND_A::_21MHZ),
+            0 => Some(Band::_14mhz),
+            1 => Some(Band::_11mhz),
+            2 => Some(Band::_7mhz),
+            3 => Some(Band::_1mhz),
+            7 => Some(Band::_21mhz),
             _ => None,
         }
     }
     #[doc = "14 MHz band. NOTE: Also set the TUNING value (bits 7:0) when changing band."]
     #[inline(always)]
     pub fn is_14mhz(&self) -> bool {
-        *self == BAND_A::_14MHZ
+        *self == Band::_14mhz
     }
     #[doc = "11 MHz band. NOTE: Also set the TUNING value (bits 7:0) when changing band."]
     #[inline(always)]
     pub fn is_11mhz(&self) -> bool {
-        *self == BAND_A::_11MHZ
+        *self == Band::_11mhz
     }
     #[doc = "7 MHz band. NOTE: Also set the TUNING value (bits 7:0) when changing band."]
     #[inline(always)]
     pub fn is_7mhz(&self) -> bool {
-        *self == BAND_A::_7MHZ
+        *self == Band::_7mhz
     }
     #[doc = "1 MHz band. NOTE: Also set the TUNING value (bits 7:0) when changing band."]
     #[inline(always)]
     pub fn is_1mhz(&self) -> bool {
-        *self == BAND_A::_1MHZ
+        *self == Band::_1mhz
     }
     #[doc = "21 MHz band. NOTE: Also set the TUNING value (bits 7:0) when changing band."]
     #[inline(always)]
     pub fn is_21mhz(&self) -> bool {
-        *self == BAND_A::_21MHZ
+        *self == Band::_21mhz
     }
 }
 #[doc = "Field `BAND` writer - AUXHFRCO Band Select"]
-pub type BAND_W<'a, REG> = crate::FieldWriter<'a, REG, 3, BAND_A>;
-impl<'a, REG> BAND_W<'a, REG>
+pub type BandW<'a, REG> = crate::FieldWriter<'a, REG, 3, Band>;
+impl<'a, REG> BandW<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -81,78 +82,65 @@ where
     #[doc = "14 MHz band. NOTE: Also set the TUNING value (bits 7:0) when changing band."]
     #[inline(always)]
     pub fn _14mhz(self) -> &'a mut crate::W<REG> {
-        self.variant(BAND_A::_14MHZ)
+        self.variant(Band::_14mhz)
     }
     #[doc = "11 MHz band. NOTE: Also set the TUNING value (bits 7:0) when changing band."]
     #[inline(always)]
     pub fn _11mhz(self) -> &'a mut crate::W<REG> {
-        self.variant(BAND_A::_11MHZ)
+        self.variant(Band::_11mhz)
     }
     #[doc = "7 MHz band. NOTE: Also set the TUNING value (bits 7:0) when changing band."]
     #[inline(always)]
     pub fn _7mhz(self) -> &'a mut crate::W<REG> {
-        self.variant(BAND_A::_7MHZ)
+        self.variant(Band::_7mhz)
     }
     #[doc = "1 MHz band. NOTE: Also set the TUNING value (bits 7:0) when changing band."]
     #[inline(always)]
     pub fn _1mhz(self) -> &'a mut crate::W<REG> {
-        self.variant(BAND_A::_1MHZ)
+        self.variant(Band::_1mhz)
     }
     #[doc = "21 MHz band. NOTE: Also set the TUNING value (bits 7:0) when changing band."]
     #[inline(always)]
     pub fn _21mhz(self) -> &'a mut crate::W<REG> {
-        self.variant(BAND_A::_21MHZ)
+        self.variant(Band::_21mhz)
     }
 }
 impl R {
     #[doc = "Bits 0:7 - AUXHFRCO Tuning Value"]
     #[inline(always)]
-    pub fn tuning(&self) -> TUNING_R {
-        TUNING_R::new((self.bits & 0xff) as u8)
+    pub fn tuning(&self) -> TuningR {
+        TuningR::new((self.bits & 0xff) as u8)
     }
     #[doc = "Bits 8:10 - AUXHFRCO Band Select"]
     #[inline(always)]
-    pub fn band(&self) -> BAND_R {
-        BAND_R::new(((self.bits >> 8) & 7) as u8)
+    pub fn band(&self) -> BandR {
+        BandR::new(((self.bits >> 8) & 7) as u8)
     }
 }
 impl W {
     #[doc = "Bits 0:7 - AUXHFRCO Tuning Value"]
     #[inline(always)]
-    #[must_use]
-    pub fn tuning(&mut self) -> TUNING_W<AUXHFRCOCTRL_SPEC> {
-        TUNING_W::new(self, 0)
+    pub fn tuning(&mut self) -> TuningW<'_, AuxhfrcoctrlSpec> {
+        TuningW::new(self, 0)
     }
     #[doc = "Bits 8:10 - AUXHFRCO Band Select"]
     #[inline(always)]
-    #[must_use]
-    pub fn band(&mut self) -> BAND_W<AUXHFRCOCTRL_SPEC> {
-        BAND_W::new(self, 8)
-    }
-    #[doc = r" Writes raw bits to the register."]
-    #[doc = r""]
-    #[doc = r" # Safety"]
-    #[doc = r""]
-    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.bits = bits;
-        self
+    pub fn band(&mut self) -> BandW<'_, AuxhfrcoctrlSpec> {
+        BandW::new(self, 8)
     }
 }
-#[doc = "AUXHFRCO Control Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`auxhfrcoctrl::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`auxhfrcoctrl::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
-pub struct AUXHFRCOCTRL_SPEC;
-impl crate::RegisterSpec for AUXHFRCOCTRL_SPEC {
+#[doc = "AUXHFRCO Control Register\n\nYou can [`read`](crate::Reg::read) this register and get [`auxhfrcoctrl::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`auxhfrcoctrl::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct AuxhfrcoctrlSpec;
+impl crate::RegisterSpec for AuxhfrcoctrlSpec {
     type Ux = u32;
 }
 #[doc = "`read()` method returns [`auxhfrcoctrl::R`](R) reader structure"]
-impl crate::Readable for AUXHFRCOCTRL_SPEC {}
+impl crate::Readable for AuxhfrcoctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`auxhfrcoctrl::W`](W) writer structure"]
-impl crate::Writable for AUXHFRCOCTRL_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+impl crate::Writable for AuxhfrcoctrlSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets AUXHFRCOCTRL to value 0x80"]
-impl crate::Resettable for AUXHFRCOCTRL_SPEC {
+impl crate::Resettable for AuxhfrcoctrlSpec {
     const RESET_VALUE: u32 = 0x80;
 }

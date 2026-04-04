@@ -26,13 +26,15 @@ macro_rules! timer {
             pub fn set_top(&mut self, top: u16) {
                 self.register
                     .top()
-                    .modify(|_, w| unsafe { w.top().bits(top) });
+                    .modify(|_, w: &mut pac::$timerN::top::W| unsafe { w.top().bits(top) });
             }
 
             pub fn interrupt_enable(&mut self, interrupt: InterruptFlag) {
-                self.register
-                    .ien()
-                    .modify(|r, w| unsafe { w.bits(interrupt.bits() | r.bits()) });
+                self.register.ien().modify(
+                    |r: &pac::$timerN::ien::R, w: &mut pac::$timerN::ien::W| unsafe {
+                        w.bits(interrupt.bits() | r.bits())
+                    },
+                );
             }
 
             pub fn interrupt_is_pending(interrupt: InterruptFlag) -> bool {
@@ -43,12 +45,15 @@ macro_rules! timer {
             pub fn interrupt_unpend(interrupt: InterruptFlag) {
                 unsafe {
                     let reg = &*pac::$TIMERn::ptr();
-                    reg.ifc().write(|w| w.bits(interrupt.bits()));
+                    reg.ifc()
+                        .write(|w: &mut pac::$timerN::ifc::W| w.bits(interrupt.bits()));
                 }
             }
 
             pub fn start(&mut self) {
-                self.register.cmd().write(|w| w.start().bit(true));
+                self.register
+                    .cmd()
+                    .write(|w: &mut pac::$timerN::cmd::W| w.start().bit(true));
             }
         }
     };
@@ -89,6 +94,6 @@ impl InterruptFlag {
     }
 }
 
-timer!(TIMER0, TIMER0Enabled, Timer0, timer0);
-timer!(TIMER1, TIMER1Enabled, Timer1, timer1);
-timer!(TIMER2, TIMER2Enabled, Timer2, timer2);
+timer!(Timer0, TIMER0Enabled, Timer0, timer0);
+timer!(Timer1, TIMER1Enabled, Timer1, timer1);
+timer!(Timer2, TIMER2Enabled, Timer2, timer2);

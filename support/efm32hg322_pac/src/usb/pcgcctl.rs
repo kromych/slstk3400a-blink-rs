@@ -1,101 +1,84 @@
 #[doc = "Register `PCGCCTL` reader"]
-pub type R = crate::R<PCGCCTL_SPEC>;
+pub type R = crate::R<PcgcctlSpec>;
 #[doc = "Register `PCGCCTL` writer"]
-pub type W = crate::W<PCGCCTL_SPEC>;
+pub type W = crate::W<PcgcctlSpec>;
 #[doc = "Field `STOPPCLK` reader - Stop PHY clock"]
-pub type STOPPCLK_R = crate::BitReader;
+pub type StoppclkR = crate::BitReader;
 #[doc = "Field `STOPPCLK` writer - Stop PHY clock"]
-pub type STOPPCLK_W<'a, REG> = crate::BitWriter<'a, REG>;
+pub type StoppclkW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `GATEHCLK` reader - Gate HCLK"]
-pub type GATEHCLK_R = crate::BitReader;
+pub type GatehclkR = crate::BitReader;
 #[doc = "Field `GATEHCLK` writer - Gate HCLK"]
-pub type GATEHCLK_W<'a, REG> = crate::BitWriter<'a, REG>;
+pub type GatehclkW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `PWRCLMP` reader - Power Clamp"]
-pub type PWRCLMP_R = crate::BitReader;
+pub type PwrclmpR = crate::BitReader;
 #[doc = "Field `PWRCLMP` writer - Power Clamp"]
-pub type PWRCLMP_W<'a, REG> = crate::BitWriter<'a, REG>;
+pub type PwrclmpW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `RSTPDWNMODULE` reader - Reset Power-Down Modules"]
-pub type RSTPDWNMODULE_R = crate::BitReader;
+pub type RstpdwnmoduleR = crate::BitReader;
 #[doc = "Field `RSTPDWNMODULE` writer - Reset Power-Down Modules"]
-pub type RSTPDWNMODULE_W<'a, REG> = crate::BitWriter<'a, REG>;
+pub type RstpdwnmoduleW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `PHYSLEEP` reader - PHY In Sleep"]
-pub type PHYSLEEP_R = crate::BitReader;
+pub type PhysleepR = crate::BitReader;
 impl R {
     #[doc = "Bit 0 - Stop PHY clock"]
     #[inline(always)]
-    pub fn stoppclk(&self) -> STOPPCLK_R {
-        STOPPCLK_R::new((self.bits & 1) != 0)
+    pub fn stoppclk(&self) -> StoppclkR {
+        StoppclkR::new((self.bits & 1) != 0)
     }
     #[doc = "Bit 1 - Gate HCLK"]
     #[inline(always)]
-    pub fn gatehclk(&self) -> GATEHCLK_R {
-        GATEHCLK_R::new(((self.bits >> 1) & 1) != 0)
+    pub fn gatehclk(&self) -> GatehclkR {
+        GatehclkR::new(((self.bits >> 1) & 1) != 0)
     }
     #[doc = "Bit 2 - Power Clamp"]
     #[inline(always)]
-    pub fn pwrclmp(&self) -> PWRCLMP_R {
-        PWRCLMP_R::new(((self.bits >> 2) & 1) != 0)
+    pub fn pwrclmp(&self) -> PwrclmpR {
+        PwrclmpR::new(((self.bits >> 2) & 1) != 0)
     }
     #[doc = "Bit 3 - Reset Power-Down Modules"]
     #[inline(always)]
-    pub fn rstpdwnmodule(&self) -> RSTPDWNMODULE_R {
-        RSTPDWNMODULE_R::new(((self.bits >> 3) & 1) != 0)
+    pub fn rstpdwnmodule(&self) -> RstpdwnmoduleR {
+        RstpdwnmoduleR::new(((self.bits >> 3) & 1) != 0)
     }
     #[doc = "Bit 6 - PHY In Sleep"]
     #[inline(always)]
-    pub fn physleep(&self) -> PHYSLEEP_R {
-        PHYSLEEP_R::new(((self.bits >> 6) & 1) != 0)
+    pub fn physleep(&self) -> PhysleepR {
+        PhysleepR::new(((self.bits >> 6) & 1) != 0)
     }
 }
 impl W {
     #[doc = "Bit 0 - Stop PHY clock"]
     #[inline(always)]
-    #[must_use]
-    pub fn stoppclk(&mut self) -> STOPPCLK_W<PCGCCTL_SPEC> {
-        STOPPCLK_W::new(self, 0)
+    pub fn stoppclk(&mut self) -> StoppclkW<'_, PcgcctlSpec> {
+        StoppclkW::new(self, 0)
     }
     #[doc = "Bit 1 - Gate HCLK"]
     #[inline(always)]
-    #[must_use]
-    pub fn gatehclk(&mut self) -> GATEHCLK_W<PCGCCTL_SPEC> {
-        GATEHCLK_W::new(self, 1)
+    pub fn gatehclk(&mut self) -> GatehclkW<'_, PcgcctlSpec> {
+        GatehclkW::new(self, 1)
     }
     #[doc = "Bit 2 - Power Clamp"]
     #[inline(always)]
-    #[must_use]
-    pub fn pwrclmp(&mut self) -> PWRCLMP_W<PCGCCTL_SPEC> {
-        PWRCLMP_W::new(self, 2)
+    pub fn pwrclmp(&mut self) -> PwrclmpW<'_, PcgcctlSpec> {
+        PwrclmpW::new(self, 2)
     }
     #[doc = "Bit 3 - Reset Power-Down Modules"]
     #[inline(always)]
-    #[must_use]
-    pub fn rstpdwnmodule(&mut self) -> RSTPDWNMODULE_W<PCGCCTL_SPEC> {
-        RSTPDWNMODULE_W::new(self, 3)
-    }
-    #[doc = r" Writes raw bits to the register."]
-    #[doc = r""]
-    #[doc = r" # Safety"]
-    #[doc = r""]
-    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.bits = bits;
-        self
+    pub fn rstpdwnmodule(&mut self) -> RstpdwnmoduleW<'_, PcgcctlSpec> {
+        RstpdwnmoduleW::new(self, 3)
     }
 }
-#[doc = "Power and Clock Gating Control Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`pcgcctl::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`pcgcctl::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
-pub struct PCGCCTL_SPEC;
-impl crate::RegisterSpec for PCGCCTL_SPEC {
+#[doc = "Power and Clock Gating Control Register\n\nYou can [`read`](crate::Reg::read) this register and get [`pcgcctl::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`pcgcctl::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct PcgcctlSpec;
+impl crate::RegisterSpec for PcgcctlSpec {
     type Ux = u32;
 }
 #[doc = "`read()` method returns [`pcgcctl::R`](R) reader structure"]
-impl crate::Readable for PCGCCTL_SPEC {}
+impl crate::Readable for PcgcctlSpec {}
 #[doc = "`write(|w| ..)` method takes [`pcgcctl::W`](W) writer structure"]
-impl crate::Writable for PCGCCTL_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+impl crate::Writable for PcgcctlSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets PCGCCTL to value 0"]
-impl crate::Resettable for PCGCCTL_SPEC {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for PcgcctlSpec {}

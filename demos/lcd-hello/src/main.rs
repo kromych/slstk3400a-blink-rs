@@ -18,7 +18,7 @@ use slstk3400a::display;
 fn main() -> ! {
     let p = pac::Peripherals::take().unwrap();
 
-    p.WDOG.constrain().disable();
+    p.wdog.constrain().disable();
     enable_gpio_clock();
 
     // Initialise the Sharp Memory LCD (USART1 SPI + GPIO).

@@ -28,7 +28,7 @@ impl_atomics!(u32, portable_atomic::AtomicU32);
 impl_atomics!(u64, portable_atomic::AtomicU64);
 impl<REG: Readable + Writable> Reg<REG>
 where
-    REG::Ux: AtomicOperations + Default + core::ops::Not<Output = REG::Ux>,
+    REG::Ux: AtomicOperations,
 {
     #[doc = " Set high every bit in the register that was set in the write proxy. Leave other bits"]
     #[doc = " untouched. The write is done in a single atomic instruction."]
@@ -42,7 +42,7 @@ where
         F: FnOnce(&mut W<REG>) -> &mut W<REG>,
     {
         let bits = f(&mut W {
-            bits: Default::default(),
+            bits: REG::Ux::ZERO,
             _reg: marker::PhantomData,
         })
         .bits;
@@ -60,7 +60,7 @@ where
         F: FnOnce(&mut W<REG>) -> &mut W<REG>,
     {
         let bits = f(&mut W {
-            bits: !REG::Ux::default(),
+            bits: !REG::Ux::ZERO,
             _reg: marker::PhantomData,
         })
         .bits;
@@ -78,7 +78,7 @@ where
         F: FnOnce(&mut W<REG>) -> &mut W<REG>,
     {
         let bits = f(&mut W {
-            bits: Default::default(),
+            bits: REG::Ux::ZERO,
             _reg: marker::PhantomData,
         })
         .bits;

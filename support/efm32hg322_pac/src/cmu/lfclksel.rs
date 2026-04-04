@@ -1,67 +1,68 @@
 #[doc = "Register `LFCLKSEL` reader"]
-pub type R = crate::R<LFCLKSEL_SPEC>;
+pub type R = crate::R<LfclkselSpec>;
 #[doc = "Register `LFCLKSEL` writer"]
-pub type W = crate::W<LFCLKSEL_SPEC>;
-#[doc = "Field `LFA` reader - Clock Select for LFA"]
-pub type LFA_R = crate::FieldReader<LFA_A>;
+pub type W = crate::W<LfclkselSpec>;
 #[doc = "Clock Select for LFA\n\nValue on reset: 1"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum LFA_A {
+pub enum Lfa {
     #[doc = "0: LFACLK is disabled"]
-    DISABLED = 0,
+    Disabled = 0,
     #[doc = "1: LFRCO selected as LFACLK"]
-    LFRCO = 1,
+    Lfrco = 1,
     #[doc = "2: LFXO selected as LFACLK"]
-    LFXO = 2,
+    Lfxo = 2,
     #[doc = "3: HFCORECLKLE divided by two or four is selected as LFACLK. The division factor is determined by CMU_CTRL_HFLE and CMU_HFCORECLKDIV_HFCORECLKLEDIV."]
-    HFCORECLKLEDIV2 = 3,
+    Hfcoreclklediv2 = 3,
 }
-impl From<LFA_A> for u8 {
+impl From<Lfa> for u8 {
     #[inline(always)]
-    fn from(variant: LFA_A) -> Self {
+    fn from(variant: Lfa) -> Self {
         variant as _
     }
 }
-impl crate::FieldSpec for LFA_A {
+impl crate::FieldSpec for Lfa {
     type Ux = u8;
 }
-impl LFA_R {
+impl crate::IsEnum for Lfa {}
+#[doc = "Field `LFA` reader - Clock Select for LFA"]
+pub type LfaR = crate::FieldReader<Lfa>;
+impl LfaR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub const fn variant(&self) -> LFA_A {
+    pub const fn variant(&self) -> Lfa {
         match self.bits {
-            0 => LFA_A::DISABLED,
-            1 => LFA_A::LFRCO,
-            2 => LFA_A::LFXO,
-            3 => LFA_A::HFCORECLKLEDIV2,
+            0 => Lfa::Disabled,
+            1 => Lfa::Lfrco,
+            2 => Lfa::Lfxo,
+            3 => Lfa::Hfcoreclklediv2,
             _ => unreachable!(),
         }
     }
     #[doc = "LFACLK is disabled"]
     #[inline(always)]
     pub fn is_disabled(&self) -> bool {
-        *self == LFA_A::DISABLED
+        *self == Lfa::Disabled
     }
     #[doc = "LFRCO selected as LFACLK"]
     #[inline(always)]
     pub fn is_lfrco(&self) -> bool {
-        *self == LFA_A::LFRCO
+        *self == Lfa::Lfrco
     }
     #[doc = "LFXO selected as LFACLK"]
     #[inline(always)]
     pub fn is_lfxo(&self) -> bool {
-        *self == LFA_A::LFXO
+        *self == Lfa::Lfxo
     }
     #[doc = "HFCORECLKLE divided by two or four is selected as LFACLK. The division factor is determined by CMU_CTRL_HFLE and CMU_HFCORECLKDIV_HFCORECLKLEDIV."]
     #[inline(always)]
     pub fn is_hfcoreclklediv2(&self) -> bool {
-        *self == LFA_A::HFCORECLKLEDIV2
+        *self == Lfa::Hfcoreclklediv2
     }
 }
 #[doc = "Field `LFA` writer - Clock Select for LFA"]
-pub type LFA_W<'a, REG> = crate::FieldWriterSafe<'a, REG, 2, LFA_A>;
-impl<'a, REG> LFA_W<'a, REG>
+pub type LfaW<'a, REG> = crate::FieldWriter<'a, REG, 2, Lfa, crate::Safe>;
+impl<'a, REG> LfaW<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -69,84 +70,85 @@ where
     #[doc = "LFACLK is disabled"]
     #[inline(always)]
     pub fn disabled(self) -> &'a mut crate::W<REG> {
-        self.variant(LFA_A::DISABLED)
+        self.variant(Lfa::Disabled)
     }
     #[doc = "LFRCO selected as LFACLK"]
     #[inline(always)]
     pub fn lfrco(self) -> &'a mut crate::W<REG> {
-        self.variant(LFA_A::LFRCO)
+        self.variant(Lfa::Lfrco)
     }
     #[doc = "LFXO selected as LFACLK"]
     #[inline(always)]
     pub fn lfxo(self) -> &'a mut crate::W<REG> {
-        self.variant(LFA_A::LFXO)
+        self.variant(Lfa::Lfxo)
     }
     #[doc = "HFCORECLKLE divided by two or four is selected as LFACLK. The division factor is determined by CMU_CTRL_HFLE and CMU_HFCORECLKDIV_HFCORECLKLEDIV."]
     #[inline(always)]
     pub fn hfcoreclklediv2(self) -> &'a mut crate::W<REG> {
-        self.variant(LFA_A::HFCORECLKLEDIV2)
+        self.variant(Lfa::Hfcoreclklediv2)
     }
 }
-#[doc = "Field `LFB` reader - Clock Select for LFB"]
-pub type LFB_R = crate::FieldReader<LFB_A>;
 #[doc = "Clock Select for LFB\n\nValue on reset: 1"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum LFB_A {
+pub enum Lfb {
     #[doc = "0: LFBCLK is disabled"]
-    DISABLED = 0,
+    Disabled = 0,
     #[doc = "1: LFRCO selected as LFBCLK"]
-    LFRCO = 1,
+    Lfrco = 1,
     #[doc = "2: LFXO selected as LFBCLK"]
-    LFXO = 2,
+    Lfxo = 2,
     #[doc = "3: HFCORECLKLE divided by two or four is selected as LFACLK. The division factor is determined by CMU_CTRL_HFLE and CMU_HFCORECLKDIV_HFCORECLKLEDIV."]
-    HFCORECLKLEDIV2 = 3,
+    Hfcoreclklediv2 = 3,
 }
-impl From<LFB_A> for u8 {
+impl From<Lfb> for u8 {
     #[inline(always)]
-    fn from(variant: LFB_A) -> Self {
+    fn from(variant: Lfb) -> Self {
         variant as _
     }
 }
-impl crate::FieldSpec for LFB_A {
+impl crate::FieldSpec for Lfb {
     type Ux = u8;
 }
-impl LFB_R {
+impl crate::IsEnum for Lfb {}
+#[doc = "Field `LFB` reader - Clock Select for LFB"]
+pub type LfbR = crate::FieldReader<Lfb>;
+impl LfbR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub const fn variant(&self) -> LFB_A {
+    pub const fn variant(&self) -> Lfb {
         match self.bits {
-            0 => LFB_A::DISABLED,
-            1 => LFB_A::LFRCO,
-            2 => LFB_A::LFXO,
-            3 => LFB_A::HFCORECLKLEDIV2,
+            0 => Lfb::Disabled,
+            1 => Lfb::Lfrco,
+            2 => Lfb::Lfxo,
+            3 => Lfb::Hfcoreclklediv2,
             _ => unreachable!(),
         }
     }
     #[doc = "LFBCLK is disabled"]
     #[inline(always)]
     pub fn is_disabled(&self) -> bool {
-        *self == LFB_A::DISABLED
+        *self == Lfb::Disabled
     }
     #[doc = "LFRCO selected as LFBCLK"]
     #[inline(always)]
     pub fn is_lfrco(&self) -> bool {
-        *self == LFB_A::LFRCO
+        *self == Lfb::Lfrco
     }
     #[doc = "LFXO selected as LFBCLK"]
     #[inline(always)]
     pub fn is_lfxo(&self) -> bool {
-        *self == LFB_A::LFXO
+        *self == Lfb::Lfxo
     }
     #[doc = "HFCORECLKLE divided by two or four is selected as LFACLK. The division factor is determined by CMU_CTRL_HFLE and CMU_HFCORECLKDIV_HFCORECLKLEDIV."]
     #[inline(always)]
     pub fn is_hfcoreclklediv2(&self) -> bool {
-        *self == LFB_A::HFCORECLKLEDIV2
+        *self == Lfb::Hfcoreclklediv2
     }
 }
 #[doc = "Field `LFB` writer - Clock Select for LFB"]
-pub type LFB_W<'a, REG> = crate::FieldWriterSafe<'a, REG, 2, LFB_A>;
-impl<'a, REG> LFB_W<'a, REG>
+pub type LfbW<'a, REG> = crate::FieldWriter<'a, REG, 2, Lfb, crate::Safe>;
+impl<'a, REG> LfbW<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -154,76 +156,77 @@ where
     #[doc = "LFBCLK is disabled"]
     #[inline(always)]
     pub fn disabled(self) -> &'a mut crate::W<REG> {
-        self.variant(LFB_A::DISABLED)
+        self.variant(Lfb::Disabled)
     }
     #[doc = "LFRCO selected as LFBCLK"]
     #[inline(always)]
     pub fn lfrco(self) -> &'a mut crate::W<REG> {
-        self.variant(LFB_A::LFRCO)
+        self.variant(Lfb::Lfrco)
     }
     #[doc = "LFXO selected as LFBCLK"]
     #[inline(always)]
     pub fn lfxo(self) -> &'a mut crate::W<REG> {
-        self.variant(LFB_A::LFXO)
+        self.variant(Lfb::Lfxo)
     }
     #[doc = "HFCORECLKLE divided by two or four is selected as LFACLK. The division factor is determined by CMU_CTRL_HFLE and CMU_HFCORECLKDIV_HFCORECLKLEDIV."]
     #[inline(always)]
     pub fn hfcoreclklediv2(self) -> &'a mut crate::W<REG> {
-        self.variant(LFB_A::HFCORECLKLEDIV2)
+        self.variant(Lfb::Hfcoreclklediv2)
     }
 }
-#[doc = "Field `LFC` reader - Clock Select for LFC"]
-pub type LFC_R = crate::FieldReader<LFC_A>;
 #[doc = "Clock Select for LFC\n\nValue on reset: 1"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum LFC_A {
+pub enum Lfc {
     #[doc = "0: LFCCLK clock disabled."]
-    DISABLED = 0,
+    Disabled = 0,
     #[doc = "1: LFRCO selected as LFCCLK clock"]
-    LFRCO = 1,
+    Lfrco = 1,
     #[doc = "2: LFXO selected as LFCCLK clock"]
-    LFXO = 2,
+    Lfxo = 2,
 }
-impl From<LFC_A> for u8 {
+impl From<Lfc> for u8 {
     #[inline(always)]
-    fn from(variant: LFC_A) -> Self {
+    fn from(variant: Lfc) -> Self {
         variant as _
     }
 }
-impl crate::FieldSpec for LFC_A {
+impl crate::FieldSpec for Lfc {
     type Ux = u8;
 }
-impl LFC_R {
+impl crate::IsEnum for Lfc {}
+#[doc = "Field `LFC` reader - Clock Select for LFC"]
+pub type LfcR = crate::FieldReader<Lfc>;
+impl LfcR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub const fn variant(&self) -> Option<LFC_A> {
+    pub const fn variant(&self) -> Option<Lfc> {
         match self.bits {
-            0 => Some(LFC_A::DISABLED),
-            1 => Some(LFC_A::LFRCO),
-            2 => Some(LFC_A::LFXO),
+            0 => Some(Lfc::Disabled),
+            1 => Some(Lfc::Lfrco),
+            2 => Some(Lfc::Lfxo),
             _ => None,
         }
     }
     #[doc = "LFCCLK clock disabled."]
     #[inline(always)]
     pub fn is_disabled(&self) -> bool {
-        *self == LFC_A::DISABLED
+        *self == Lfc::Disabled
     }
     #[doc = "LFRCO selected as LFCCLK clock"]
     #[inline(always)]
     pub fn is_lfrco(&self) -> bool {
-        *self == LFC_A::LFRCO
+        *self == Lfc::Lfrco
     }
     #[doc = "LFXO selected as LFCCLK clock"]
     #[inline(always)]
     pub fn is_lfxo(&self) -> bool {
-        *self == LFC_A::LFXO
+        *self == Lfc::Lfxo
     }
 }
 #[doc = "Field `LFC` writer - Clock Select for LFC"]
-pub type LFC_W<'a, REG> = crate::FieldWriter<'a, REG, 2, LFC_A>;
-impl<'a, REG> LFC_W<'a, REG>
+pub type LfcW<'a, REG> = crate::FieldWriter<'a, REG, 2, Lfc>;
+impl<'a, REG> LfcW<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -231,109 +234,93 @@ where
     #[doc = "LFCCLK clock disabled."]
     #[inline(always)]
     pub fn disabled(self) -> &'a mut crate::W<REG> {
-        self.variant(LFC_A::DISABLED)
+        self.variant(Lfc::Disabled)
     }
     #[doc = "LFRCO selected as LFCCLK clock"]
     #[inline(always)]
     pub fn lfrco(self) -> &'a mut crate::W<REG> {
-        self.variant(LFC_A::LFRCO)
+        self.variant(Lfc::Lfrco)
     }
     #[doc = "LFXO selected as LFCCLK clock"]
     #[inline(always)]
     pub fn lfxo(self) -> &'a mut crate::W<REG> {
-        self.variant(LFC_A::LFXO)
+        self.variant(Lfc::Lfxo)
     }
 }
 #[doc = "Field `LFAE` reader - Clock Select for LFA Extended"]
-pub type LFAE_R = crate::BitReader;
+pub type LfaeR = crate::BitReader;
 #[doc = "Field `LFAE` writer - Clock Select for LFA Extended"]
-pub type LFAE_W<'a, REG> = crate::BitWriter<'a, REG>;
+pub type LfaeW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `LFBE` reader - Clock Select for LFB Extended"]
-pub type LFBE_R = crate::BitReader;
+pub type LfbeR = crate::BitReader;
 #[doc = "Field `LFBE` writer - Clock Select for LFB Extended"]
-pub type LFBE_W<'a, REG> = crate::BitWriter<'a, REG>;
+pub type LfbeW<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bits 0:1 - Clock Select for LFA"]
     #[inline(always)]
-    pub fn lfa(&self) -> LFA_R {
-        LFA_R::new((self.bits & 3) as u8)
+    pub fn lfa(&self) -> LfaR {
+        LfaR::new((self.bits & 3) as u8)
     }
     #[doc = "Bits 2:3 - Clock Select for LFB"]
     #[inline(always)]
-    pub fn lfb(&self) -> LFB_R {
-        LFB_R::new(((self.bits >> 2) & 3) as u8)
+    pub fn lfb(&self) -> LfbR {
+        LfbR::new(((self.bits >> 2) & 3) as u8)
     }
     #[doc = "Bits 4:5 - Clock Select for LFC"]
     #[inline(always)]
-    pub fn lfc(&self) -> LFC_R {
-        LFC_R::new(((self.bits >> 4) & 3) as u8)
+    pub fn lfc(&self) -> LfcR {
+        LfcR::new(((self.bits >> 4) & 3) as u8)
     }
     #[doc = "Bit 16 - Clock Select for LFA Extended"]
     #[inline(always)]
-    pub fn lfae(&self) -> LFAE_R {
-        LFAE_R::new(((self.bits >> 16) & 1) != 0)
+    pub fn lfae(&self) -> LfaeR {
+        LfaeR::new(((self.bits >> 16) & 1) != 0)
     }
     #[doc = "Bit 20 - Clock Select for LFB Extended"]
     #[inline(always)]
-    pub fn lfbe(&self) -> LFBE_R {
-        LFBE_R::new(((self.bits >> 20) & 1) != 0)
+    pub fn lfbe(&self) -> LfbeR {
+        LfbeR::new(((self.bits >> 20) & 1) != 0)
     }
 }
 impl W {
     #[doc = "Bits 0:1 - Clock Select for LFA"]
     #[inline(always)]
-    #[must_use]
-    pub fn lfa(&mut self) -> LFA_W<LFCLKSEL_SPEC> {
-        LFA_W::new(self, 0)
+    pub fn lfa(&mut self) -> LfaW<'_, LfclkselSpec> {
+        LfaW::new(self, 0)
     }
     #[doc = "Bits 2:3 - Clock Select for LFB"]
     #[inline(always)]
-    #[must_use]
-    pub fn lfb(&mut self) -> LFB_W<LFCLKSEL_SPEC> {
-        LFB_W::new(self, 2)
+    pub fn lfb(&mut self) -> LfbW<'_, LfclkselSpec> {
+        LfbW::new(self, 2)
     }
     #[doc = "Bits 4:5 - Clock Select for LFC"]
     #[inline(always)]
-    #[must_use]
-    pub fn lfc(&mut self) -> LFC_W<LFCLKSEL_SPEC> {
-        LFC_W::new(self, 4)
+    pub fn lfc(&mut self) -> LfcW<'_, LfclkselSpec> {
+        LfcW::new(self, 4)
     }
     #[doc = "Bit 16 - Clock Select for LFA Extended"]
     #[inline(always)]
-    #[must_use]
-    pub fn lfae(&mut self) -> LFAE_W<LFCLKSEL_SPEC> {
-        LFAE_W::new(self, 16)
+    pub fn lfae(&mut self) -> LfaeW<'_, LfclkselSpec> {
+        LfaeW::new(self, 16)
     }
     #[doc = "Bit 20 - Clock Select for LFB Extended"]
     #[inline(always)]
-    #[must_use]
-    pub fn lfbe(&mut self) -> LFBE_W<LFCLKSEL_SPEC> {
-        LFBE_W::new(self, 20)
-    }
-    #[doc = r" Writes raw bits to the register."]
-    #[doc = r""]
-    #[doc = r" # Safety"]
-    #[doc = r""]
-    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.bits = bits;
-        self
+    pub fn lfbe(&mut self) -> LfbeW<'_, LfclkselSpec> {
+        LfbeW::new(self, 20)
     }
 }
-#[doc = "Low Frequency Clock Select Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`lfclksel::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`lfclksel::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
-pub struct LFCLKSEL_SPEC;
-impl crate::RegisterSpec for LFCLKSEL_SPEC {
+#[doc = "Low Frequency Clock Select Register\n\nYou can [`read`](crate::Reg::read) this register and get [`lfclksel::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`lfclksel::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct LfclkselSpec;
+impl crate::RegisterSpec for LfclkselSpec {
     type Ux = u32;
 }
 #[doc = "`read()` method returns [`lfclksel::R`](R) reader structure"]
-impl crate::Readable for LFCLKSEL_SPEC {}
+impl crate::Readable for LfclkselSpec {}
 #[doc = "`write(|w| ..)` method takes [`lfclksel::W`](W) writer structure"]
-impl crate::Writable for LFCLKSEL_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+impl crate::Writable for LfclkselSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets LFCLKSEL to value 0x15"]
-impl crate::Resettable for LFCLKSEL_SPEC {
+impl crate::Resettable for LfclkselSpec {
     const RESET_VALUE: u32 = 0x15;
 }

@@ -1,51 +1,52 @@
 #[doc = "Register `DTLOCK` reader"]
-pub type R = crate::R<DTLOCK_SPEC>;
+pub type R = crate::R<DtlockSpec>;
 #[doc = "Register `DTLOCK` writer"]
-pub type W = crate::W<DTLOCK_SPEC>;
-#[doc = "Field `LOCKKEY` reader - DTI Lock Key"]
-pub type LOCKKEY_R = crate::FieldReader<LOCKKEY_A>;
+pub type W = crate::W<DtlockSpec>;
 #[doc = "DTI Lock Key\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u16)]
-pub enum LOCKKEY_A {
+pub enum Lockkey {
     #[doc = "0: `0`"]
-    UNLOCKED = 0,
+    Unlocked = 0,
     #[doc = "1: `1`"]
-    LOCKED = 1,
+    Locked = 1,
 }
-impl From<LOCKKEY_A> for u16 {
+impl From<Lockkey> for u16 {
     #[inline(always)]
-    fn from(variant: LOCKKEY_A) -> Self {
+    fn from(variant: Lockkey) -> Self {
         variant as _
     }
 }
-impl crate::FieldSpec for LOCKKEY_A {
+impl crate::FieldSpec for Lockkey {
     type Ux = u16;
 }
-impl LOCKKEY_R {
+impl crate::IsEnum for Lockkey {}
+#[doc = "Field `LOCKKEY` reader - DTI Lock Key"]
+pub type LockkeyR = crate::FieldReader<Lockkey>;
+impl LockkeyR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub const fn variant(&self) -> Option<LOCKKEY_A> {
+    pub const fn variant(&self) -> Option<Lockkey> {
         match self.bits {
-            0 => Some(LOCKKEY_A::UNLOCKED),
-            1 => Some(LOCKKEY_A::LOCKED),
+            0 => Some(Lockkey::Unlocked),
+            1 => Some(Lockkey::Locked),
             _ => None,
         }
     }
     #[doc = "`0`"]
     #[inline(always)]
     pub fn is_unlocked(&self) -> bool {
-        *self == LOCKKEY_A::UNLOCKED
+        *self == Lockkey::Unlocked
     }
     #[doc = "`1`"]
     #[inline(always)]
     pub fn is_locked(&self) -> bool {
-        *self == LOCKKEY_A::LOCKED
+        *self == Lockkey::Locked
     }
 }
 #[doc = "Field `LOCKKEY` writer - DTI Lock Key"]
-pub type LOCKKEY_W<'a, REG> = crate::FieldWriter<'a, REG, 16, LOCKKEY_A>;
-impl<'a, REG> LOCKKEY_W<'a, REG>
+pub type LockkeyW<'a, REG> = crate::FieldWriter<'a, REG, 16, Lockkey>;
+impl<'a, REG> LockkeyW<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u16>,
@@ -53,52 +54,38 @@ where
     #[doc = "`0`"]
     #[inline(always)]
     pub fn unlocked(self) -> &'a mut crate::W<REG> {
-        self.variant(LOCKKEY_A::UNLOCKED)
+        self.variant(Lockkey::Unlocked)
     }
     #[doc = "`1`"]
     #[inline(always)]
     pub fn locked(self) -> &'a mut crate::W<REG> {
-        self.variant(LOCKKEY_A::LOCKED)
+        self.variant(Lockkey::Locked)
     }
 }
 impl R {
     #[doc = "Bits 0:15 - DTI Lock Key"]
     #[inline(always)]
-    pub fn lockkey(&self) -> LOCKKEY_R {
-        LOCKKEY_R::new((self.bits & 0xffff) as u16)
+    pub fn lockkey(&self) -> LockkeyR {
+        LockkeyR::new((self.bits & 0xffff) as u16)
     }
 }
 impl W {
     #[doc = "Bits 0:15 - DTI Lock Key"]
     #[inline(always)]
-    #[must_use]
-    pub fn lockkey(&mut self) -> LOCKKEY_W<DTLOCK_SPEC> {
-        LOCKKEY_W::new(self, 0)
-    }
-    #[doc = r" Writes raw bits to the register."]
-    #[doc = r""]
-    #[doc = r" # Safety"]
-    #[doc = r""]
-    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.bits = bits;
-        self
+    pub fn lockkey(&mut self) -> LockkeyW<'_, DtlockSpec> {
+        LockkeyW::new(self, 0)
     }
 }
-#[doc = "DTI Configuration Lock Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`dtlock::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`dtlock::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
-pub struct DTLOCK_SPEC;
-impl crate::RegisterSpec for DTLOCK_SPEC {
+#[doc = "DTI Configuration Lock Register\n\nYou can [`read`](crate::Reg::read) this register and get [`dtlock::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dtlock::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct DtlockSpec;
+impl crate::RegisterSpec for DtlockSpec {
     type Ux = u32;
 }
 #[doc = "`read()` method returns [`dtlock::R`](R) reader structure"]
-impl crate::Readable for DTLOCK_SPEC {}
+impl crate::Readable for DtlockSpec {}
 #[doc = "`write(|w| ..)` method takes [`dtlock::W`](W) writer structure"]
-impl crate::Writable for DTLOCK_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+impl crate::Writable for DtlockSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets DTLOCK to value 0"]
-impl crate::Resettable for DTLOCK_SPEC {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for DtlockSpec {}

@@ -1,8 +1,8 @@
 #![no_std]
 
-pub use pac::cmu::hfcoreclkdiv::HFCORECLKDIV_A as HfCoreClkDiv;
-pub use pac::cmu::hfperclkdiv::HFPERCLKDIV_A as HfPerClkDiv;
-pub use pac::cmu::hfrcoctrl::BAND_A as HfrcoBand;
+pub use pac::cmu::hfcoreclkdiv::Hfcoreclkdiv as HfCoreClkDiv;
+pub use pac::cmu::hfperclkdiv::Hfperclkdiv as HfPerClkDiv;
+pub use pac::cmu::hfrcoctrl::Band as HfrcoBand;
 
 #[repr(u8)]
 #[derive(Clone, Copy, Debug, PartialEq)]

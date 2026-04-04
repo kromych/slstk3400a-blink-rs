@@ -27,10 +27,10 @@ static COUNT: AtomicU32 = AtomicU32::new(0);
 fn main() -> ! {
     let p = pac::Peripherals::take().unwrap();
 
-    p.WDOG.constrain().disable();
+    p.wdog.constrain().disable();
     enable_gpio_clock();
 
-    let gpio = p.GPIO.constrain().split();
+    let gpio = p.gpio.constrain().split();
 
     // LEDs.
     let mut led0 = gpio.pf4.into_pushpull();
@@ -71,8 +71,9 @@ fn main() -> ! {
 #[interrupt]
 fn GPIO_ODD() {
     // Clear PC9 interrupt flag via the PAC.
-    let gpio = unsafe { &*pac::GPIO::ptr() };
-    gpio.ifc().write(|w| unsafe { w.bits(1 << 9) });
+    let gpio = unsafe { &*pac::Gpio::ptr() };
+    gpio.ifc()
+        .write(|w: &mut pac::gpio::ifc::W| unsafe { w.bits(1 << 9) });
 
     COUNT.fetch_add(1, Ordering::Relaxed);
     cortex_m::asm::sev();

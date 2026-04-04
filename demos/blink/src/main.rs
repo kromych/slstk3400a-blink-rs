@@ -27,12 +27,12 @@ fn main() -> ! {
     let cp = pac::CorePeripherals::take().unwrap();
 
     // If the Watchdog is not reset/disabled, the board will reboot.
-    p.WDOG.constrain().disable();
+    p.wdog.constrain().disable();
 
     // Enable GPIO clock to enable GPIO as outputs.
     enable_gpio_clock();
 
-    let gpio = p.GPIO.constrain().split();
+    let gpio = p.gpio.constrain().split();
     let mut board = SlStk3400a::new(gpio).unwrap();
     let leds = board.leds_mut();
 
@@ -45,7 +45,7 @@ fn main() -> ! {
     defmt::flush();
 
     let clock_setup = ClockSetup {
-        source: ClockSource::HFRCO(HfrcoBand::_1MHZ),
+        source: ClockSource::HFRCO(HfrcoBand::_1mhz),
         hfclkdiv: HfClkDiv::Div128,
         ..Default::default()
     };

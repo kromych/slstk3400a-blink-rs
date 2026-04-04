@@ -1,49 +1,35 @@
 #[doc = "Register `SIGFRAME` reader"]
-pub type R = crate::R<SIGFRAME_SPEC>;
+pub type R = crate::R<SigframeSpec>;
 #[doc = "Register `SIGFRAME` writer"]
-pub type W = crate::W<SIGFRAME_SPEC>;
+pub type W = crate::W<SigframeSpec>;
 #[doc = "Field `SIGFRAME` reader - Signal Frame"]
-pub type SIGFRAME_R = crate::FieldReader<u16>;
+pub type SigframeR = crate::FieldReader<u16>;
 #[doc = "Field `SIGFRAME` writer - Signal Frame"]
-pub type SIGFRAME_W<'a, REG> = crate::FieldWriter<'a, REG, 9, u16>;
+pub type SigframeW<'a, REG> = crate::FieldWriter<'a, REG, 9, u16>;
 impl R {
     #[doc = "Bits 0:8 - Signal Frame"]
     #[inline(always)]
-    pub fn sigframe(&self) -> SIGFRAME_R {
-        SIGFRAME_R::new((self.bits & 0x01ff) as u16)
+    pub fn sigframe(&self) -> SigframeR {
+        SigframeR::new((self.bits & 0x01ff) as u16)
     }
 }
 impl W {
     #[doc = "Bits 0:8 - Signal Frame"]
     #[inline(always)]
-    #[must_use]
-    pub fn sigframe(&mut self) -> SIGFRAME_W<SIGFRAME_SPEC> {
-        SIGFRAME_W::new(self, 0)
-    }
-    #[doc = r" Writes raw bits to the register."]
-    #[doc = r""]
-    #[doc = r" # Safety"]
-    #[doc = r""]
-    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.bits = bits;
-        self
+    pub fn sigframe(&mut self) -> SigframeW<'_, SigframeSpec> {
+        SigframeW::new(self, 0)
     }
 }
-#[doc = "Signal Frame Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`sigframe::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`sigframe::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
-pub struct SIGFRAME_SPEC;
-impl crate::RegisterSpec for SIGFRAME_SPEC {
+#[doc = "Signal Frame Register\n\nYou can [`read`](crate::Reg::read) this register and get [`sigframe::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`sigframe::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct SigframeSpec;
+impl crate::RegisterSpec for SigframeSpec {
     type Ux = u32;
 }
 #[doc = "`read()` method returns [`sigframe::R`](R) reader structure"]
-impl crate::Readable for SIGFRAME_SPEC {}
+impl crate::Readable for SigframeSpec {}
 #[doc = "`write(|w| ..)` method takes [`sigframe::W`](W) writer structure"]
-impl crate::Writable for SIGFRAME_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+impl crate::Writable for SigframeSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets SIGFRAME to value 0"]
-impl crate::Resettable for SIGFRAME_SPEC {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for SigframeSpec {}

@@ -36,11 +36,11 @@ const PA_EN: u32 = 1 << 8;
 const PA_EXTCOMIN: u32 = 1 << 9;
 
 fn gpio() -> &'static pac::gpio::RegisterBlock {
-    unsafe { &*pac::GPIO::ptr() }
+    unsafe { &*pac::Gpio::ptr() }
 }
 
 fn usart1() -> &'static pac::usart1::RegisterBlock {
-    unsafe { &*pac::USART1::ptr() }
+    unsafe { &*pac::Usart1::ptr() }
 }
 
 #[inline]
@@ -73,12 +73,13 @@ fn spi_wait_done() {
 /// The GPIO `Pins` struct must already have been split (or not yet consumed)
 /// so that the raw GPIO registers are accessible.
 pub fn init() {
-    let cmu = unsafe { &*pac::CMU::ptr() };
+    let cmu = unsafe { &*pac::Cmu::ptr() };
     let u = usart1();
     let gpio = gpio();
 
     // Enable USART1 peripheral clock.
-    cmu.hfperclken0().modify(|_, w| w.usart1().set_bit());
+    cmu.hfperclken0()
+        .modify(|_, w: &mut pac::cmu::hfperclken0::W| w.usart1().set_bit());
 
     // ---- Configure GPIO pins ----
     // PA8 (DISP_EN), PA9 (EXTCOMIN), PA10 (CS) → push-pull (mode 4).

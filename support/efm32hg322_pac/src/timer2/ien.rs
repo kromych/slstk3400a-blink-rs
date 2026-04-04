@@ -1,154 +1,133 @@
 #[doc = "Register `IEN` reader"]
-pub type R = crate::R<IEN_SPEC>;
+pub type R = crate::R<IenSpec>;
 #[doc = "Register `IEN` writer"]
-pub type W = crate::W<IEN_SPEC>;
+pub type W = crate::W<IenSpec>;
 #[doc = "Field `OF` reader - Overflow Interrupt Enable"]
-pub type OF_R = crate::BitReader;
+pub type OfR = crate::BitReader;
 #[doc = "Field `OF` writer - Overflow Interrupt Enable"]
-pub type OF_W<'a, REG> = crate::BitWriter<'a, REG>;
+pub type OfW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `UF` reader - Underflow Interrupt Enable"]
-pub type UF_R = crate::BitReader;
+pub type UfR = crate::BitReader;
 #[doc = "Field `UF` writer - Underflow Interrupt Enable"]
-pub type UF_W<'a, REG> = crate::BitWriter<'a, REG>;
+pub type UfW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `CC0` reader - CC Channel 0 Interrupt Enable"]
-pub type CC0_R = crate::BitReader;
+pub type Cc0R = crate::BitReader;
 #[doc = "Field `CC0` writer - CC Channel 0 Interrupt Enable"]
-pub type CC0_W<'a, REG> = crate::BitWriter<'a, REG>;
+pub type Cc0W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `CC1` reader - CC Channel 1 Interrupt Enable"]
-pub type CC1_R = crate::BitReader;
+pub type Cc1R = crate::BitReader;
 #[doc = "Field `CC1` writer - CC Channel 1 Interrupt Enable"]
-pub type CC1_W<'a, REG> = crate::BitWriter<'a, REG>;
+pub type Cc1W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `CC2` reader - CC Channel 2 Interrupt Enable"]
-pub type CC2_R = crate::BitReader;
+pub type Cc2R = crate::BitReader;
 #[doc = "Field `CC2` writer - CC Channel 2 Interrupt Enable"]
-pub type CC2_W<'a, REG> = crate::BitWriter<'a, REG>;
+pub type Cc2W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `ICBOF0` reader - CC Channel 0 Input Capture Buffer Overflow Interrupt Enable"]
-pub type ICBOF0_R = crate::BitReader;
+pub type Icbof0R = crate::BitReader;
 #[doc = "Field `ICBOF0` writer - CC Channel 0 Input Capture Buffer Overflow Interrupt Enable"]
-pub type ICBOF0_W<'a, REG> = crate::BitWriter<'a, REG>;
+pub type Icbof0W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `ICBOF1` reader - CC Channel 1 Input Capture Buffer Overflow Interrupt Enable"]
-pub type ICBOF1_R = crate::BitReader;
+pub type Icbof1R = crate::BitReader;
 #[doc = "Field `ICBOF1` writer - CC Channel 1 Input Capture Buffer Overflow Interrupt Enable"]
-pub type ICBOF1_W<'a, REG> = crate::BitWriter<'a, REG>;
+pub type Icbof1W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `ICBOF2` reader - CC Channel 2 Input Capture Buffer Overflow Interrupt Enable"]
-pub type ICBOF2_R = crate::BitReader;
+pub type Icbof2R = crate::BitReader;
 #[doc = "Field `ICBOF2` writer - CC Channel 2 Input Capture Buffer Overflow Interrupt Enable"]
-pub type ICBOF2_W<'a, REG> = crate::BitWriter<'a, REG>;
+pub type Icbof2W<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bit 0 - Overflow Interrupt Enable"]
     #[inline(always)]
-    pub fn of(&self) -> OF_R {
-        OF_R::new((self.bits & 1) != 0)
+    pub fn of(&self) -> OfR {
+        OfR::new((self.bits & 1) != 0)
     }
     #[doc = "Bit 1 - Underflow Interrupt Enable"]
     #[inline(always)]
-    pub fn uf(&self) -> UF_R {
-        UF_R::new(((self.bits >> 1) & 1) != 0)
+    pub fn uf(&self) -> UfR {
+        UfR::new(((self.bits >> 1) & 1) != 0)
     }
     #[doc = "Bit 4 - CC Channel 0 Interrupt Enable"]
     #[inline(always)]
-    pub fn cc0(&self) -> CC0_R {
-        CC0_R::new(((self.bits >> 4) & 1) != 0)
+    pub fn cc0(&self) -> Cc0R {
+        Cc0R::new(((self.bits >> 4) & 1) != 0)
     }
     #[doc = "Bit 5 - CC Channel 1 Interrupt Enable"]
     #[inline(always)]
-    pub fn cc1(&self) -> CC1_R {
-        CC1_R::new(((self.bits >> 5) & 1) != 0)
+    pub fn cc1(&self) -> Cc1R {
+        Cc1R::new(((self.bits >> 5) & 1) != 0)
     }
     #[doc = "Bit 6 - CC Channel 2 Interrupt Enable"]
     #[inline(always)]
-    pub fn cc2(&self) -> CC2_R {
-        CC2_R::new(((self.bits >> 6) & 1) != 0)
+    pub fn cc2(&self) -> Cc2R {
+        Cc2R::new(((self.bits >> 6) & 1) != 0)
     }
     #[doc = "Bit 8 - CC Channel 0 Input Capture Buffer Overflow Interrupt Enable"]
     #[inline(always)]
-    pub fn icbof0(&self) -> ICBOF0_R {
-        ICBOF0_R::new(((self.bits >> 8) & 1) != 0)
+    pub fn icbof0(&self) -> Icbof0R {
+        Icbof0R::new(((self.bits >> 8) & 1) != 0)
     }
     #[doc = "Bit 9 - CC Channel 1 Input Capture Buffer Overflow Interrupt Enable"]
     #[inline(always)]
-    pub fn icbof1(&self) -> ICBOF1_R {
-        ICBOF1_R::new(((self.bits >> 9) & 1) != 0)
+    pub fn icbof1(&self) -> Icbof1R {
+        Icbof1R::new(((self.bits >> 9) & 1) != 0)
     }
     #[doc = "Bit 10 - CC Channel 2 Input Capture Buffer Overflow Interrupt Enable"]
     #[inline(always)]
-    pub fn icbof2(&self) -> ICBOF2_R {
-        ICBOF2_R::new(((self.bits >> 10) & 1) != 0)
+    pub fn icbof2(&self) -> Icbof2R {
+        Icbof2R::new(((self.bits >> 10) & 1) != 0)
     }
 }
 impl W {
     #[doc = "Bit 0 - Overflow Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn of(&mut self) -> OF_W<IEN_SPEC> {
-        OF_W::new(self, 0)
+    pub fn of(&mut self) -> OfW<'_, IenSpec> {
+        OfW::new(self, 0)
     }
     #[doc = "Bit 1 - Underflow Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn uf(&mut self) -> UF_W<IEN_SPEC> {
-        UF_W::new(self, 1)
+    pub fn uf(&mut self) -> UfW<'_, IenSpec> {
+        UfW::new(self, 1)
     }
     #[doc = "Bit 4 - CC Channel 0 Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn cc0(&mut self) -> CC0_W<IEN_SPEC> {
-        CC0_W::new(self, 4)
+    pub fn cc0(&mut self) -> Cc0W<'_, IenSpec> {
+        Cc0W::new(self, 4)
     }
     #[doc = "Bit 5 - CC Channel 1 Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn cc1(&mut self) -> CC1_W<IEN_SPEC> {
-        CC1_W::new(self, 5)
+    pub fn cc1(&mut self) -> Cc1W<'_, IenSpec> {
+        Cc1W::new(self, 5)
     }
     #[doc = "Bit 6 - CC Channel 2 Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn cc2(&mut self) -> CC2_W<IEN_SPEC> {
-        CC2_W::new(self, 6)
+    pub fn cc2(&mut self) -> Cc2W<'_, IenSpec> {
+        Cc2W::new(self, 6)
     }
     #[doc = "Bit 8 - CC Channel 0 Input Capture Buffer Overflow Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn icbof0(&mut self) -> ICBOF0_W<IEN_SPEC> {
-        ICBOF0_W::new(self, 8)
+    pub fn icbof0(&mut self) -> Icbof0W<'_, IenSpec> {
+        Icbof0W::new(self, 8)
     }
     #[doc = "Bit 9 - CC Channel 1 Input Capture Buffer Overflow Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn icbof1(&mut self) -> ICBOF1_W<IEN_SPEC> {
-        ICBOF1_W::new(self, 9)
+    pub fn icbof1(&mut self) -> Icbof1W<'_, IenSpec> {
+        Icbof1W::new(self, 9)
     }
     #[doc = "Bit 10 - CC Channel 2 Input Capture Buffer Overflow Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn icbof2(&mut self) -> ICBOF2_W<IEN_SPEC> {
-        ICBOF2_W::new(self, 10)
-    }
-    #[doc = r" Writes raw bits to the register."]
-    #[doc = r""]
-    #[doc = r" # Safety"]
-    #[doc = r""]
-    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.bits = bits;
-        self
+    pub fn icbof2(&mut self) -> Icbof2W<'_, IenSpec> {
+        Icbof2W::new(self, 10)
     }
 }
-#[doc = "Interrupt Enable Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`ien::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`ien::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
-pub struct IEN_SPEC;
-impl crate::RegisterSpec for IEN_SPEC {
+#[doc = "Interrupt Enable Register\n\nYou can [`read`](crate::Reg::read) this register and get [`ien::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ien::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct IenSpec;
+impl crate::RegisterSpec for IenSpec {
     type Ux = u32;
 }
 #[doc = "`read()` method returns [`ien::R`](R) reader structure"]
-impl crate::Readable for IEN_SPEC {}
+impl crate::Readable for IenSpec {}
 #[doc = "`write(|w| ..)` method takes [`ien::W`](W) writer structure"]
-impl crate::Writable for IEN_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+impl crate::Writable for IenSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets IEN to value 0"]
-impl crate::Resettable for IEN_SPEC {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IenSpec {}

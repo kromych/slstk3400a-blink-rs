@@ -1,83 +1,84 @@
 #[doc = "Register `EXTIPSELL` reader"]
-pub type R = crate::R<EXTIPSELL_SPEC>;
+pub type R = crate::R<ExtipsellSpec>;
 #[doc = "Register `EXTIPSELL` writer"]
-pub type W = crate::W<EXTIPSELL_SPEC>;
-#[doc = "Field `EXTIPSEL0` reader - External Interrupt 0 Port Select"]
-pub type EXTIPSEL0_R = crate::FieldReader<EXTIPSEL0_A>;
+pub type W = crate::W<ExtipsellSpec>;
 #[doc = "External Interrupt 0 Port Select\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum EXTIPSEL0_A {
+pub enum Extipsel0 {
     #[doc = "0: Port A pin 0 selected for external interrupt 0"]
-    PORTA = 0,
+    Porta = 0,
     #[doc = "1: Port B pin 0 selected for external interrupt 0"]
-    PORTB = 1,
+    Portb = 1,
     #[doc = "2: Port C pin 0 selected for external interrupt 0"]
-    PORTC = 2,
+    Portc = 2,
     #[doc = "3: Port D pin 0 selected for external interrupt 0"]
-    PORTD = 3,
+    Portd = 3,
     #[doc = "4: Port E pin 0 selected for external interrupt 0"]
-    PORTE = 4,
+    Porte = 4,
     #[doc = "5: Port F pin 0 selected for external interrupt 0"]
-    PORTF = 5,
+    Portf = 5,
 }
-impl From<EXTIPSEL0_A> for u8 {
+impl From<Extipsel0> for u8 {
     #[inline(always)]
-    fn from(variant: EXTIPSEL0_A) -> Self {
+    fn from(variant: Extipsel0) -> Self {
         variant as _
     }
 }
-impl crate::FieldSpec for EXTIPSEL0_A {
+impl crate::FieldSpec for Extipsel0 {
     type Ux = u8;
 }
-impl EXTIPSEL0_R {
+impl crate::IsEnum for Extipsel0 {}
+#[doc = "Field `EXTIPSEL0` reader - External Interrupt 0 Port Select"]
+pub type Extipsel0R = crate::FieldReader<Extipsel0>;
+impl Extipsel0R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub const fn variant(&self) -> Option<EXTIPSEL0_A> {
+    pub const fn variant(&self) -> Option<Extipsel0> {
         match self.bits {
-            0 => Some(EXTIPSEL0_A::PORTA),
-            1 => Some(EXTIPSEL0_A::PORTB),
-            2 => Some(EXTIPSEL0_A::PORTC),
-            3 => Some(EXTIPSEL0_A::PORTD),
-            4 => Some(EXTIPSEL0_A::PORTE),
-            5 => Some(EXTIPSEL0_A::PORTF),
+            0 => Some(Extipsel0::Porta),
+            1 => Some(Extipsel0::Portb),
+            2 => Some(Extipsel0::Portc),
+            3 => Some(Extipsel0::Portd),
+            4 => Some(Extipsel0::Porte),
+            5 => Some(Extipsel0::Portf),
             _ => None,
         }
     }
     #[doc = "Port A pin 0 selected for external interrupt 0"]
     #[inline(always)]
     pub fn is_porta(&self) -> bool {
-        *self == EXTIPSEL0_A::PORTA
+        *self == Extipsel0::Porta
     }
     #[doc = "Port B pin 0 selected for external interrupt 0"]
     #[inline(always)]
     pub fn is_portb(&self) -> bool {
-        *self == EXTIPSEL0_A::PORTB
+        *self == Extipsel0::Portb
     }
     #[doc = "Port C pin 0 selected for external interrupt 0"]
     #[inline(always)]
     pub fn is_portc(&self) -> bool {
-        *self == EXTIPSEL0_A::PORTC
+        *self == Extipsel0::Portc
     }
     #[doc = "Port D pin 0 selected for external interrupt 0"]
     #[inline(always)]
     pub fn is_portd(&self) -> bool {
-        *self == EXTIPSEL0_A::PORTD
+        *self == Extipsel0::Portd
     }
     #[doc = "Port E pin 0 selected for external interrupt 0"]
     #[inline(always)]
     pub fn is_porte(&self) -> bool {
-        *self == EXTIPSEL0_A::PORTE
+        *self == Extipsel0::Porte
     }
     #[doc = "Port F pin 0 selected for external interrupt 0"]
     #[inline(always)]
     pub fn is_portf(&self) -> bool {
-        *self == EXTIPSEL0_A::PORTF
+        *self == Extipsel0::Portf
     }
 }
 #[doc = "Field `EXTIPSEL0` writer - External Interrupt 0 Port Select"]
-pub type EXTIPSEL0_W<'a, REG> = crate::FieldWriter<'a, REG, 3, EXTIPSEL0_A>;
-impl<'a, REG> EXTIPSEL0_W<'a, REG>
+pub type Extipsel0W<'a, REG> = crate::FieldWriter<'a, REG, 3, Extipsel0>;
+impl<'a, REG> Extipsel0W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -85,110 +86,111 @@ where
     #[doc = "Port A pin 0 selected for external interrupt 0"]
     #[inline(always)]
     pub fn porta(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL0_A::PORTA)
+        self.variant(Extipsel0::Porta)
     }
     #[doc = "Port B pin 0 selected for external interrupt 0"]
     #[inline(always)]
     pub fn portb(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL0_A::PORTB)
+        self.variant(Extipsel0::Portb)
     }
     #[doc = "Port C pin 0 selected for external interrupt 0"]
     #[inline(always)]
     pub fn portc(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL0_A::PORTC)
+        self.variant(Extipsel0::Portc)
     }
     #[doc = "Port D pin 0 selected for external interrupt 0"]
     #[inline(always)]
     pub fn portd(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL0_A::PORTD)
+        self.variant(Extipsel0::Portd)
     }
     #[doc = "Port E pin 0 selected for external interrupt 0"]
     #[inline(always)]
     pub fn porte(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL0_A::PORTE)
+        self.variant(Extipsel0::Porte)
     }
     #[doc = "Port F pin 0 selected for external interrupt 0"]
     #[inline(always)]
     pub fn portf(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL0_A::PORTF)
+        self.variant(Extipsel0::Portf)
     }
 }
-#[doc = "Field `EXTIPSEL1` reader - External Interrupt 1 Port Select"]
-pub type EXTIPSEL1_R = crate::FieldReader<EXTIPSEL1_A>;
 #[doc = "External Interrupt 1 Port Select\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum EXTIPSEL1_A {
+pub enum Extipsel1 {
     #[doc = "0: Port A pin 1 selected for external interrupt 1"]
-    PORTA = 0,
+    Porta = 0,
     #[doc = "1: Port B pin 1 selected for external interrupt 1"]
-    PORTB = 1,
+    Portb = 1,
     #[doc = "2: Port C pin 1 selected for external interrupt 1"]
-    PORTC = 2,
+    Portc = 2,
     #[doc = "3: Port D pin 1 selected for external interrupt 1"]
-    PORTD = 3,
+    Portd = 3,
     #[doc = "4: Port E pin 1 selected for external interrupt 1"]
-    PORTE = 4,
+    Porte = 4,
     #[doc = "5: Port F pin 1 selected for external interrupt 1"]
-    PORTF = 5,
+    Portf = 5,
 }
-impl From<EXTIPSEL1_A> for u8 {
+impl From<Extipsel1> for u8 {
     #[inline(always)]
-    fn from(variant: EXTIPSEL1_A) -> Self {
+    fn from(variant: Extipsel1) -> Self {
         variant as _
     }
 }
-impl crate::FieldSpec for EXTIPSEL1_A {
+impl crate::FieldSpec for Extipsel1 {
     type Ux = u8;
 }
-impl EXTIPSEL1_R {
+impl crate::IsEnum for Extipsel1 {}
+#[doc = "Field `EXTIPSEL1` reader - External Interrupt 1 Port Select"]
+pub type Extipsel1R = crate::FieldReader<Extipsel1>;
+impl Extipsel1R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub const fn variant(&self) -> Option<EXTIPSEL1_A> {
+    pub const fn variant(&self) -> Option<Extipsel1> {
         match self.bits {
-            0 => Some(EXTIPSEL1_A::PORTA),
-            1 => Some(EXTIPSEL1_A::PORTB),
-            2 => Some(EXTIPSEL1_A::PORTC),
-            3 => Some(EXTIPSEL1_A::PORTD),
-            4 => Some(EXTIPSEL1_A::PORTE),
-            5 => Some(EXTIPSEL1_A::PORTF),
+            0 => Some(Extipsel1::Porta),
+            1 => Some(Extipsel1::Portb),
+            2 => Some(Extipsel1::Portc),
+            3 => Some(Extipsel1::Portd),
+            4 => Some(Extipsel1::Porte),
+            5 => Some(Extipsel1::Portf),
             _ => None,
         }
     }
     #[doc = "Port A pin 1 selected for external interrupt 1"]
     #[inline(always)]
     pub fn is_porta(&self) -> bool {
-        *self == EXTIPSEL1_A::PORTA
+        *self == Extipsel1::Porta
     }
     #[doc = "Port B pin 1 selected for external interrupt 1"]
     #[inline(always)]
     pub fn is_portb(&self) -> bool {
-        *self == EXTIPSEL1_A::PORTB
+        *self == Extipsel1::Portb
     }
     #[doc = "Port C pin 1 selected for external interrupt 1"]
     #[inline(always)]
     pub fn is_portc(&self) -> bool {
-        *self == EXTIPSEL1_A::PORTC
+        *self == Extipsel1::Portc
     }
     #[doc = "Port D pin 1 selected for external interrupt 1"]
     #[inline(always)]
     pub fn is_portd(&self) -> bool {
-        *self == EXTIPSEL1_A::PORTD
+        *self == Extipsel1::Portd
     }
     #[doc = "Port E pin 1 selected for external interrupt 1"]
     #[inline(always)]
     pub fn is_porte(&self) -> bool {
-        *self == EXTIPSEL1_A::PORTE
+        *self == Extipsel1::Porte
     }
     #[doc = "Port F pin 1 selected for external interrupt 1"]
     #[inline(always)]
     pub fn is_portf(&self) -> bool {
-        *self == EXTIPSEL1_A::PORTF
+        *self == Extipsel1::Portf
     }
 }
 #[doc = "Field `EXTIPSEL1` writer - External Interrupt 1 Port Select"]
-pub type EXTIPSEL1_W<'a, REG> = crate::FieldWriter<'a, REG, 3, EXTIPSEL1_A>;
-impl<'a, REG> EXTIPSEL1_W<'a, REG>
+pub type Extipsel1W<'a, REG> = crate::FieldWriter<'a, REG, 3, Extipsel1>;
+impl<'a, REG> Extipsel1W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -196,110 +198,111 @@ where
     #[doc = "Port A pin 1 selected for external interrupt 1"]
     #[inline(always)]
     pub fn porta(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL1_A::PORTA)
+        self.variant(Extipsel1::Porta)
     }
     #[doc = "Port B pin 1 selected for external interrupt 1"]
     #[inline(always)]
     pub fn portb(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL1_A::PORTB)
+        self.variant(Extipsel1::Portb)
     }
     #[doc = "Port C pin 1 selected for external interrupt 1"]
     #[inline(always)]
     pub fn portc(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL1_A::PORTC)
+        self.variant(Extipsel1::Portc)
     }
     #[doc = "Port D pin 1 selected for external interrupt 1"]
     #[inline(always)]
     pub fn portd(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL1_A::PORTD)
+        self.variant(Extipsel1::Portd)
     }
     #[doc = "Port E pin 1 selected for external interrupt 1"]
     #[inline(always)]
     pub fn porte(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL1_A::PORTE)
+        self.variant(Extipsel1::Porte)
     }
     #[doc = "Port F pin 1 selected for external interrupt 1"]
     #[inline(always)]
     pub fn portf(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL1_A::PORTF)
+        self.variant(Extipsel1::Portf)
     }
 }
-#[doc = "Field `EXTIPSEL2` reader - External Interrupt 2 Port Select"]
-pub type EXTIPSEL2_R = crate::FieldReader<EXTIPSEL2_A>;
 #[doc = "External Interrupt 2 Port Select\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum EXTIPSEL2_A {
+pub enum Extipsel2 {
     #[doc = "0: Port A pin 2 selected for external interrupt 2"]
-    PORTA = 0,
+    Porta = 0,
     #[doc = "1: Port B pin 2 selected for external interrupt 2"]
-    PORTB = 1,
+    Portb = 1,
     #[doc = "2: Port C pin 2 selected for external interrupt 2"]
-    PORTC = 2,
+    Portc = 2,
     #[doc = "3: Port D pin 2 selected for external interrupt 2"]
-    PORTD = 3,
+    Portd = 3,
     #[doc = "4: Port E pin 2 selected for external interrupt 2"]
-    PORTE = 4,
+    Porte = 4,
     #[doc = "5: Port F pin 2 selected for external interrupt 2"]
-    PORTF = 5,
+    Portf = 5,
 }
-impl From<EXTIPSEL2_A> for u8 {
+impl From<Extipsel2> for u8 {
     #[inline(always)]
-    fn from(variant: EXTIPSEL2_A) -> Self {
+    fn from(variant: Extipsel2) -> Self {
         variant as _
     }
 }
-impl crate::FieldSpec for EXTIPSEL2_A {
+impl crate::FieldSpec for Extipsel2 {
     type Ux = u8;
 }
-impl EXTIPSEL2_R {
+impl crate::IsEnum for Extipsel2 {}
+#[doc = "Field `EXTIPSEL2` reader - External Interrupt 2 Port Select"]
+pub type Extipsel2R = crate::FieldReader<Extipsel2>;
+impl Extipsel2R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub const fn variant(&self) -> Option<EXTIPSEL2_A> {
+    pub const fn variant(&self) -> Option<Extipsel2> {
         match self.bits {
-            0 => Some(EXTIPSEL2_A::PORTA),
-            1 => Some(EXTIPSEL2_A::PORTB),
-            2 => Some(EXTIPSEL2_A::PORTC),
-            3 => Some(EXTIPSEL2_A::PORTD),
-            4 => Some(EXTIPSEL2_A::PORTE),
-            5 => Some(EXTIPSEL2_A::PORTF),
+            0 => Some(Extipsel2::Porta),
+            1 => Some(Extipsel2::Portb),
+            2 => Some(Extipsel2::Portc),
+            3 => Some(Extipsel2::Portd),
+            4 => Some(Extipsel2::Porte),
+            5 => Some(Extipsel2::Portf),
             _ => None,
         }
     }
     #[doc = "Port A pin 2 selected for external interrupt 2"]
     #[inline(always)]
     pub fn is_porta(&self) -> bool {
-        *self == EXTIPSEL2_A::PORTA
+        *self == Extipsel2::Porta
     }
     #[doc = "Port B pin 2 selected for external interrupt 2"]
     #[inline(always)]
     pub fn is_portb(&self) -> bool {
-        *self == EXTIPSEL2_A::PORTB
+        *self == Extipsel2::Portb
     }
     #[doc = "Port C pin 2 selected for external interrupt 2"]
     #[inline(always)]
     pub fn is_portc(&self) -> bool {
-        *self == EXTIPSEL2_A::PORTC
+        *self == Extipsel2::Portc
     }
     #[doc = "Port D pin 2 selected for external interrupt 2"]
     #[inline(always)]
     pub fn is_portd(&self) -> bool {
-        *self == EXTIPSEL2_A::PORTD
+        *self == Extipsel2::Portd
     }
     #[doc = "Port E pin 2 selected for external interrupt 2"]
     #[inline(always)]
     pub fn is_porte(&self) -> bool {
-        *self == EXTIPSEL2_A::PORTE
+        *self == Extipsel2::Porte
     }
     #[doc = "Port F pin 2 selected for external interrupt 2"]
     #[inline(always)]
     pub fn is_portf(&self) -> bool {
-        *self == EXTIPSEL2_A::PORTF
+        *self == Extipsel2::Portf
     }
 }
 #[doc = "Field `EXTIPSEL2` writer - External Interrupt 2 Port Select"]
-pub type EXTIPSEL2_W<'a, REG> = crate::FieldWriter<'a, REG, 3, EXTIPSEL2_A>;
-impl<'a, REG> EXTIPSEL2_W<'a, REG>
+pub type Extipsel2W<'a, REG> = crate::FieldWriter<'a, REG, 3, Extipsel2>;
+impl<'a, REG> Extipsel2W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -307,110 +310,111 @@ where
     #[doc = "Port A pin 2 selected for external interrupt 2"]
     #[inline(always)]
     pub fn porta(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL2_A::PORTA)
+        self.variant(Extipsel2::Porta)
     }
     #[doc = "Port B pin 2 selected for external interrupt 2"]
     #[inline(always)]
     pub fn portb(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL2_A::PORTB)
+        self.variant(Extipsel2::Portb)
     }
     #[doc = "Port C pin 2 selected for external interrupt 2"]
     #[inline(always)]
     pub fn portc(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL2_A::PORTC)
+        self.variant(Extipsel2::Portc)
     }
     #[doc = "Port D pin 2 selected for external interrupt 2"]
     #[inline(always)]
     pub fn portd(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL2_A::PORTD)
+        self.variant(Extipsel2::Portd)
     }
     #[doc = "Port E pin 2 selected for external interrupt 2"]
     #[inline(always)]
     pub fn porte(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL2_A::PORTE)
+        self.variant(Extipsel2::Porte)
     }
     #[doc = "Port F pin 2 selected for external interrupt 2"]
     #[inline(always)]
     pub fn portf(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL2_A::PORTF)
+        self.variant(Extipsel2::Portf)
     }
 }
-#[doc = "Field `EXTIPSEL3` reader - External Interrupt 3 Port Select"]
-pub type EXTIPSEL3_R = crate::FieldReader<EXTIPSEL3_A>;
 #[doc = "External Interrupt 3 Port Select\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum EXTIPSEL3_A {
+pub enum Extipsel3 {
     #[doc = "0: Port A pin 3 selected for external interrupt 3"]
-    PORTA = 0,
+    Porta = 0,
     #[doc = "1: Port B pin 3 selected for external interrupt 3"]
-    PORTB = 1,
+    Portb = 1,
     #[doc = "2: Port C pin 3 selected for external interrupt 3"]
-    PORTC = 2,
+    Portc = 2,
     #[doc = "3: Port D pin 3 selected for external interrupt 3"]
-    PORTD = 3,
+    Portd = 3,
     #[doc = "4: Port E pin 3 selected for external interrupt 3"]
-    PORTE = 4,
+    Porte = 4,
     #[doc = "5: Port F pin 3 selected for external interrupt 3"]
-    PORTF = 5,
+    Portf = 5,
 }
-impl From<EXTIPSEL3_A> for u8 {
+impl From<Extipsel3> for u8 {
     #[inline(always)]
-    fn from(variant: EXTIPSEL3_A) -> Self {
+    fn from(variant: Extipsel3) -> Self {
         variant as _
     }
 }
-impl crate::FieldSpec for EXTIPSEL3_A {
+impl crate::FieldSpec for Extipsel3 {
     type Ux = u8;
 }
-impl EXTIPSEL3_R {
+impl crate::IsEnum for Extipsel3 {}
+#[doc = "Field `EXTIPSEL3` reader - External Interrupt 3 Port Select"]
+pub type Extipsel3R = crate::FieldReader<Extipsel3>;
+impl Extipsel3R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub const fn variant(&self) -> Option<EXTIPSEL3_A> {
+    pub const fn variant(&self) -> Option<Extipsel3> {
         match self.bits {
-            0 => Some(EXTIPSEL3_A::PORTA),
-            1 => Some(EXTIPSEL3_A::PORTB),
-            2 => Some(EXTIPSEL3_A::PORTC),
-            3 => Some(EXTIPSEL3_A::PORTD),
-            4 => Some(EXTIPSEL3_A::PORTE),
-            5 => Some(EXTIPSEL3_A::PORTF),
+            0 => Some(Extipsel3::Porta),
+            1 => Some(Extipsel3::Portb),
+            2 => Some(Extipsel3::Portc),
+            3 => Some(Extipsel3::Portd),
+            4 => Some(Extipsel3::Porte),
+            5 => Some(Extipsel3::Portf),
             _ => None,
         }
     }
     #[doc = "Port A pin 3 selected for external interrupt 3"]
     #[inline(always)]
     pub fn is_porta(&self) -> bool {
-        *self == EXTIPSEL3_A::PORTA
+        *self == Extipsel3::Porta
     }
     #[doc = "Port B pin 3 selected for external interrupt 3"]
     #[inline(always)]
     pub fn is_portb(&self) -> bool {
-        *self == EXTIPSEL3_A::PORTB
+        *self == Extipsel3::Portb
     }
     #[doc = "Port C pin 3 selected for external interrupt 3"]
     #[inline(always)]
     pub fn is_portc(&self) -> bool {
-        *self == EXTIPSEL3_A::PORTC
+        *self == Extipsel3::Portc
     }
     #[doc = "Port D pin 3 selected for external interrupt 3"]
     #[inline(always)]
     pub fn is_portd(&self) -> bool {
-        *self == EXTIPSEL3_A::PORTD
+        *self == Extipsel3::Portd
     }
     #[doc = "Port E pin 3 selected for external interrupt 3"]
     #[inline(always)]
     pub fn is_porte(&self) -> bool {
-        *self == EXTIPSEL3_A::PORTE
+        *self == Extipsel3::Porte
     }
     #[doc = "Port F pin 3 selected for external interrupt 3"]
     #[inline(always)]
     pub fn is_portf(&self) -> bool {
-        *self == EXTIPSEL3_A::PORTF
+        *self == Extipsel3::Portf
     }
 }
 #[doc = "Field `EXTIPSEL3` writer - External Interrupt 3 Port Select"]
-pub type EXTIPSEL3_W<'a, REG> = crate::FieldWriter<'a, REG, 3, EXTIPSEL3_A>;
-impl<'a, REG> EXTIPSEL3_W<'a, REG>
+pub type Extipsel3W<'a, REG> = crate::FieldWriter<'a, REG, 3, Extipsel3>;
+impl<'a, REG> Extipsel3W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -418,110 +422,111 @@ where
     #[doc = "Port A pin 3 selected for external interrupt 3"]
     #[inline(always)]
     pub fn porta(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL3_A::PORTA)
+        self.variant(Extipsel3::Porta)
     }
     #[doc = "Port B pin 3 selected for external interrupt 3"]
     #[inline(always)]
     pub fn portb(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL3_A::PORTB)
+        self.variant(Extipsel3::Portb)
     }
     #[doc = "Port C pin 3 selected for external interrupt 3"]
     #[inline(always)]
     pub fn portc(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL3_A::PORTC)
+        self.variant(Extipsel3::Portc)
     }
     #[doc = "Port D pin 3 selected for external interrupt 3"]
     #[inline(always)]
     pub fn portd(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL3_A::PORTD)
+        self.variant(Extipsel3::Portd)
     }
     #[doc = "Port E pin 3 selected for external interrupt 3"]
     #[inline(always)]
     pub fn porte(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL3_A::PORTE)
+        self.variant(Extipsel3::Porte)
     }
     #[doc = "Port F pin 3 selected for external interrupt 3"]
     #[inline(always)]
     pub fn portf(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL3_A::PORTF)
+        self.variant(Extipsel3::Portf)
     }
 }
-#[doc = "Field `EXTIPSEL4` reader - External Interrupt 4 Port Select"]
-pub type EXTIPSEL4_R = crate::FieldReader<EXTIPSEL4_A>;
 #[doc = "External Interrupt 4 Port Select\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum EXTIPSEL4_A {
+pub enum Extipsel4 {
     #[doc = "0: Port A pin 4 selected for external interrupt 4"]
-    PORTA = 0,
+    Porta = 0,
     #[doc = "1: Port B pin 4 selected for external interrupt 4"]
-    PORTB = 1,
+    Portb = 1,
     #[doc = "2: Port C pin 4 selected for external interrupt 4"]
-    PORTC = 2,
+    Portc = 2,
     #[doc = "3: Port D pin 4 selected for external interrupt 4"]
-    PORTD = 3,
+    Portd = 3,
     #[doc = "4: Port E pin 4 selected for external interrupt 4"]
-    PORTE = 4,
+    Porte = 4,
     #[doc = "5: Port F pin 4 selected for external interrupt 4"]
-    PORTF = 5,
+    Portf = 5,
 }
-impl From<EXTIPSEL4_A> for u8 {
+impl From<Extipsel4> for u8 {
     #[inline(always)]
-    fn from(variant: EXTIPSEL4_A) -> Self {
+    fn from(variant: Extipsel4) -> Self {
         variant as _
     }
 }
-impl crate::FieldSpec for EXTIPSEL4_A {
+impl crate::FieldSpec for Extipsel4 {
     type Ux = u8;
 }
-impl EXTIPSEL4_R {
+impl crate::IsEnum for Extipsel4 {}
+#[doc = "Field `EXTIPSEL4` reader - External Interrupt 4 Port Select"]
+pub type Extipsel4R = crate::FieldReader<Extipsel4>;
+impl Extipsel4R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub const fn variant(&self) -> Option<EXTIPSEL4_A> {
+    pub const fn variant(&self) -> Option<Extipsel4> {
         match self.bits {
-            0 => Some(EXTIPSEL4_A::PORTA),
-            1 => Some(EXTIPSEL4_A::PORTB),
-            2 => Some(EXTIPSEL4_A::PORTC),
-            3 => Some(EXTIPSEL4_A::PORTD),
-            4 => Some(EXTIPSEL4_A::PORTE),
-            5 => Some(EXTIPSEL4_A::PORTF),
+            0 => Some(Extipsel4::Porta),
+            1 => Some(Extipsel4::Portb),
+            2 => Some(Extipsel4::Portc),
+            3 => Some(Extipsel4::Portd),
+            4 => Some(Extipsel4::Porte),
+            5 => Some(Extipsel4::Portf),
             _ => None,
         }
     }
     #[doc = "Port A pin 4 selected for external interrupt 4"]
     #[inline(always)]
     pub fn is_porta(&self) -> bool {
-        *self == EXTIPSEL4_A::PORTA
+        *self == Extipsel4::Porta
     }
     #[doc = "Port B pin 4 selected for external interrupt 4"]
     #[inline(always)]
     pub fn is_portb(&self) -> bool {
-        *self == EXTIPSEL4_A::PORTB
+        *self == Extipsel4::Portb
     }
     #[doc = "Port C pin 4 selected for external interrupt 4"]
     #[inline(always)]
     pub fn is_portc(&self) -> bool {
-        *self == EXTIPSEL4_A::PORTC
+        *self == Extipsel4::Portc
     }
     #[doc = "Port D pin 4 selected for external interrupt 4"]
     #[inline(always)]
     pub fn is_portd(&self) -> bool {
-        *self == EXTIPSEL4_A::PORTD
+        *self == Extipsel4::Portd
     }
     #[doc = "Port E pin 4 selected for external interrupt 4"]
     #[inline(always)]
     pub fn is_porte(&self) -> bool {
-        *self == EXTIPSEL4_A::PORTE
+        *self == Extipsel4::Porte
     }
     #[doc = "Port F pin 4 selected for external interrupt 4"]
     #[inline(always)]
     pub fn is_portf(&self) -> bool {
-        *self == EXTIPSEL4_A::PORTF
+        *self == Extipsel4::Portf
     }
 }
 #[doc = "Field `EXTIPSEL4` writer - External Interrupt 4 Port Select"]
-pub type EXTIPSEL4_W<'a, REG> = crate::FieldWriter<'a, REG, 3, EXTIPSEL4_A>;
-impl<'a, REG> EXTIPSEL4_W<'a, REG>
+pub type Extipsel4W<'a, REG> = crate::FieldWriter<'a, REG, 3, Extipsel4>;
+impl<'a, REG> Extipsel4W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -529,110 +534,111 @@ where
     #[doc = "Port A pin 4 selected for external interrupt 4"]
     #[inline(always)]
     pub fn porta(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL4_A::PORTA)
+        self.variant(Extipsel4::Porta)
     }
     #[doc = "Port B pin 4 selected for external interrupt 4"]
     #[inline(always)]
     pub fn portb(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL4_A::PORTB)
+        self.variant(Extipsel4::Portb)
     }
     #[doc = "Port C pin 4 selected for external interrupt 4"]
     #[inline(always)]
     pub fn portc(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL4_A::PORTC)
+        self.variant(Extipsel4::Portc)
     }
     #[doc = "Port D pin 4 selected for external interrupt 4"]
     #[inline(always)]
     pub fn portd(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL4_A::PORTD)
+        self.variant(Extipsel4::Portd)
     }
     #[doc = "Port E pin 4 selected for external interrupt 4"]
     #[inline(always)]
     pub fn porte(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL4_A::PORTE)
+        self.variant(Extipsel4::Porte)
     }
     #[doc = "Port F pin 4 selected for external interrupt 4"]
     #[inline(always)]
     pub fn portf(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL4_A::PORTF)
+        self.variant(Extipsel4::Portf)
     }
 }
-#[doc = "Field `EXTIPSEL5` reader - External Interrupt 5 Port Select"]
-pub type EXTIPSEL5_R = crate::FieldReader<EXTIPSEL5_A>;
 #[doc = "External Interrupt 5 Port Select\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum EXTIPSEL5_A {
+pub enum Extipsel5 {
     #[doc = "0: Port A pin 5 selected for external interrupt 5"]
-    PORTA = 0,
+    Porta = 0,
     #[doc = "1: Port B pin 5 selected for external interrupt 5"]
-    PORTB = 1,
+    Portb = 1,
     #[doc = "2: Port C pin 5 selected for external interrupt 5"]
-    PORTC = 2,
+    Portc = 2,
     #[doc = "3: Port D pin 5 selected for external interrupt 5"]
-    PORTD = 3,
+    Portd = 3,
     #[doc = "4: Port E pin 5 selected for external interrupt 5"]
-    PORTE = 4,
+    Porte = 4,
     #[doc = "5: Port F pin 5 selected for external interrupt 5"]
-    PORTF = 5,
+    Portf = 5,
 }
-impl From<EXTIPSEL5_A> for u8 {
+impl From<Extipsel5> for u8 {
     #[inline(always)]
-    fn from(variant: EXTIPSEL5_A) -> Self {
+    fn from(variant: Extipsel5) -> Self {
         variant as _
     }
 }
-impl crate::FieldSpec for EXTIPSEL5_A {
+impl crate::FieldSpec for Extipsel5 {
     type Ux = u8;
 }
-impl EXTIPSEL5_R {
+impl crate::IsEnum for Extipsel5 {}
+#[doc = "Field `EXTIPSEL5` reader - External Interrupt 5 Port Select"]
+pub type Extipsel5R = crate::FieldReader<Extipsel5>;
+impl Extipsel5R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub const fn variant(&self) -> Option<EXTIPSEL5_A> {
+    pub const fn variant(&self) -> Option<Extipsel5> {
         match self.bits {
-            0 => Some(EXTIPSEL5_A::PORTA),
-            1 => Some(EXTIPSEL5_A::PORTB),
-            2 => Some(EXTIPSEL5_A::PORTC),
-            3 => Some(EXTIPSEL5_A::PORTD),
-            4 => Some(EXTIPSEL5_A::PORTE),
-            5 => Some(EXTIPSEL5_A::PORTF),
+            0 => Some(Extipsel5::Porta),
+            1 => Some(Extipsel5::Portb),
+            2 => Some(Extipsel5::Portc),
+            3 => Some(Extipsel5::Portd),
+            4 => Some(Extipsel5::Porte),
+            5 => Some(Extipsel5::Portf),
             _ => None,
         }
     }
     #[doc = "Port A pin 5 selected for external interrupt 5"]
     #[inline(always)]
     pub fn is_porta(&self) -> bool {
-        *self == EXTIPSEL5_A::PORTA
+        *self == Extipsel5::Porta
     }
     #[doc = "Port B pin 5 selected for external interrupt 5"]
     #[inline(always)]
     pub fn is_portb(&self) -> bool {
-        *self == EXTIPSEL5_A::PORTB
+        *self == Extipsel5::Portb
     }
     #[doc = "Port C pin 5 selected for external interrupt 5"]
     #[inline(always)]
     pub fn is_portc(&self) -> bool {
-        *self == EXTIPSEL5_A::PORTC
+        *self == Extipsel5::Portc
     }
     #[doc = "Port D pin 5 selected for external interrupt 5"]
     #[inline(always)]
     pub fn is_portd(&self) -> bool {
-        *self == EXTIPSEL5_A::PORTD
+        *self == Extipsel5::Portd
     }
     #[doc = "Port E pin 5 selected for external interrupt 5"]
     #[inline(always)]
     pub fn is_porte(&self) -> bool {
-        *self == EXTIPSEL5_A::PORTE
+        *self == Extipsel5::Porte
     }
     #[doc = "Port F pin 5 selected for external interrupt 5"]
     #[inline(always)]
     pub fn is_portf(&self) -> bool {
-        *self == EXTIPSEL5_A::PORTF
+        *self == Extipsel5::Portf
     }
 }
 #[doc = "Field `EXTIPSEL5` writer - External Interrupt 5 Port Select"]
-pub type EXTIPSEL5_W<'a, REG> = crate::FieldWriter<'a, REG, 3, EXTIPSEL5_A>;
-impl<'a, REG> EXTIPSEL5_W<'a, REG>
+pub type Extipsel5W<'a, REG> = crate::FieldWriter<'a, REG, 3, Extipsel5>;
+impl<'a, REG> Extipsel5W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -640,110 +646,111 @@ where
     #[doc = "Port A pin 5 selected for external interrupt 5"]
     #[inline(always)]
     pub fn porta(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL5_A::PORTA)
+        self.variant(Extipsel5::Porta)
     }
     #[doc = "Port B pin 5 selected for external interrupt 5"]
     #[inline(always)]
     pub fn portb(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL5_A::PORTB)
+        self.variant(Extipsel5::Portb)
     }
     #[doc = "Port C pin 5 selected for external interrupt 5"]
     #[inline(always)]
     pub fn portc(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL5_A::PORTC)
+        self.variant(Extipsel5::Portc)
     }
     #[doc = "Port D pin 5 selected for external interrupt 5"]
     #[inline(always)]
     pub fn portd(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL5_A::PORTD)
+        self.variant(Extipsel5::Portd)
     }
     #[doc = "Port E pin 5 selected for external interrupt 5"]
     #[inline(always)]
     pub fn porte(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL5_A::PORTE)
+        self.variant(Extipsel5::Porte)
     }
     #[doc = "Port F pin 5 selected for external interrupt 5"]
     #[inline(always)]
     pub fn portf(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL5_A::PORTF)
+        self.variant(Extipsel5::Portf)
     }
 }
-#[doc = "Field `EXTIPSEL6` reader - External Interrupt 6 Port Select"]
-pub type EXTIPSEL6_R = crate::FieldReader<EXTIPSEL6_A>;
 #[doc = "External Interrupt 6 Port Select\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum EXTIPSEL6_A {
+pub enum Extipsel6 {
     #[doc = "0: Port A pin 6 selected for external interrupt 6"]
-    PORTA = 0,
+    Porta = 0,
     #[doc = "1: Port B pin 6 selected for external interrupt 6"]
-    PORTB = 1,
+    Portb = 1,
     #[doc = "2: Port C pin 6 selected for external interrupt 6"]
-    PORTC = 2,
+    Portc = 2,
     #[doc = "3: Port D pin 6 selected for external interrupt 6"]
-    PORTD = 3,
+    Portd = 3,
     #[doc = "4: Port E pin 6 selected for external interrupt 6"]
-    PORTE = 4,
+    Porte = 4,
     #[doc = "5: Port F pin 6 selected for external interrupt 6"]
-    PORTF = 5,
+    Portf = 5,
 }
-impl From<EXTIPSEL6_A> for u8 {
+impl From<Extipsel6> for u8 {
     #[inline(always)]
-    fn from(variant: EXTIPSEL6_A) -> Self {
+    fn from(variant: Extipsel6) -> Self {
         variant as _
     }
 }
-impl crate::FieldSpec for EXTIPSEL6_A {
+impl crate::FieldSpec for Extipsel6 {
     type Ux = u8;
 }
-impl EXTIPSEL6_R {
+impl crate::IsEnum for Extipsel6 {}
+#[doc = "Field `EXTIPSEL6` reader - External Interrupt 6 Port Select"]
+pub type Extipsel6R = crate::FieldReader<Extipsel6>;
+impl Extipsel6R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub const fn variant(&self) -> Option<EXTIPSEL6_A> {
+    pub const fn variant(&self) -> Option<Extipsel6> {
         match self.bits {
-            0 => Some(EXTIPSEL6_A::PORTA),
-            1 => Some(EXTIPSEL6_A::PORTB),
-            2 => Some(EXTIPSEL6_A::PORTC),
-            3 => Some(EXTIPSEL6_A::PORTD),
-            4 => Some(EXTIPSEL6_A::PORTE),
-            5 => Some(EXTIPSEL6_A::PORTF),
+            0 => Some(Extipsel6::Porta),
+            1 => Some(Extipsel6::Portb),
+            2 => Some(Extipsel6::Portc),
+            3 => Some(Extipsel6::Portd),
+            4 => Some(Extipsel6::Porte),
+            5 => Some(Extipsel6::Portf),
             _ => None,
         }
     }
     #[doc = "Port A pin 6 selected for external interrupt 6"]
     #[inline(always)]
     pub fn is_porta(&self) -> bool {
-        *self == EXTIPSEL6_A::PORTA
+        *self == Extipsel6::Porta
     }
     #[doc = "Port B pin 6 selected for external interrupt 6"]
     #[inline(always)]
     pub fn is_portb(&self) -> bool {
-        *self == EXTIPSEL6_A::PORTB
+        *self == Extipsel6::Portb
     }
     #[doc = "Port C pin 6 selected for external interrupt 6"]
     #[inline(always)]
     pub fn is_portc(&self) -> bool {
-        *self == EXTIPSEL6_A::PORTC
+        *self == Extipsel6::Portc
     }
     #[doc = "Port D pin 6 selected for external interrupt 6"]
     #[inline(always)]
     pub fn is_portd(&self) -> bool {
-        *self == EXTIPSEL6_A::PORTD
+        *self == Extipsel6::Portd
     }
     #[doc = "Port E pin 6 selected for external interrupt 6"]
     #[inline(always)]
     pub fn is_porte(&self) -> bool {
-        *self == EXTIPSEL6_A::PORTE
+        *self == Extipsel6::Porte
     }
     #[doc = "Port F pin 6 selected for external interrupt 6"]
     #[inline(always)]
     pub fn is_portf(&self) -> bool {
-        *self == EXTIPSEL6_A::PORTF
+        *self == Extipsel6::Portf
     }
 }
 #[doc = "Field `EXTIPSEL6` writer - External Interrupt 6 Port Select"]
-pub type EXTIPSEL6_W<'a, REG> = crate::FieldWriter<'a, REG, 3, EXTIPSEL6_A>;
-impl<'a, REG> EXTIPSEL6_W<'a, REG>
+pub type Extipsel6W<'a, REG> = crate::FieldWriter<'a, REG, 3, Extipsel6>;
+impl<'a, REG> Extipsel6W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -751,110 +758,111 @@ where
     #[doc = "Port A pin 6 selected for external interrupt 6"]
     #[inline(always)]
     pub fn porta(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL6_A::PORTA)
+        self.variant(Extipsel6::Porta)
     }
     #[doc = "Port B pin 6 selected for external interrupt 6"]
     #[inline(always)]
     pub fn portb(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL6_A::PORTB)
+        self.variant(Extipsel6::Portb)
     }
     #[doc = "Port C pin 6 selected for external interrupt 6"]
     #[inline(always)]
     pub fn portc(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL6_A::PORTC)
+        self.variant(Extipsel6::Portc)
     }
     #[doc = "Port D pin 6 selected for external interrupt 6"]
     #[inline(always)]
     pub fn portd(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL6_A::PORTD)
+        self.variant(Extipsel6::Portd)
     }
     #[doc = "Port E pin 6 selected for external interrupt 6"]
     #[inline(always)]
     pub fn porte(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL6_A::PORTE)
+        self.variant(Extipsel6::Porte)
     }
     #[doc = "Port F pin 6 selected for external interrupt 6"]
     #[inline(always)]
     pub fn portf(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL6_A::PORTF)
+        self.variant(Extipsel6::Portf)
     }
 }
-#[doc = "Field `EXTIPSEL7` reader - External Interrupt 7 Port Select"]
-pub type EXTIPSEL7_R = crate::FieldReader<EXTIPSEL7_A>;
 #[doc = "External Interrupt 7 Port Select\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum EXTIPSEL7_A {
+pub enum Extipsel7 {
     #[doc = "0: Port A pin 7 selected for external interrupt 7"]
-    PORTA = 0,
+    Porta = 0,
     #[doc = "1: Port B pin 7 selected for external interrupt 7"]
-    PORTB = 1,
+    Portb = 1,
     #[doc = "2: Port C pin 7 selected for external interrupt 7"]
-    PORTC = 2,
+    Portc = 2,
     #[doc = "3: Port D pin 7 selected for external interrupt 7"]
-    PORTD = 3,
+    Portd = 3,
     #[doc = "4: Port E pin 7 selected for external interrupt 7"]
-    PORTE = 4,
+    Porte = 4,
     #[doc = "5: Port F pin 7 selected for external interrupt 7"]
-    PORTF = 5,
+    Portf = 5,
 }
-impl From<EXTIPSEL7_A> for u8 {
+impl From<Extipsel7> for u8 {
     #[inline(always)]
-    fn from(variant: EXTIPSEL7_A) -> Self {
+    fn from(variant: Extipsel7) -> Self {
         variant as _
     }
 }
-impl crate::FieldSpec for EXTIPSEL7_A {
+impl crate::FieldSpec for Extipsel7 {
     type Ux = u8;
 }
-impl EXTIPSEL7_R {
+impl crate::IsEnum for Extipsel7 {}
+#[doc = "Field `EXTIPSEL7` reader - External Interrupt 7 Port Select"]
+pub type Extipsel7R = crate::FieldReader<Extipsel7>;
+impl Extipsel7R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub const fn variant(&self) -> Option<EXTIPSEL7_A> {
+    pub const fn variant(&self) -> Option<Extipsel7> {
         match self.bits {
-            0 => Some(EXTIPSEL7_A::PORTA),
-            1 => Some(EXTIPSEL7_A::PORTB),
-            2 => Some(EXTIPSEL7_A::PORTC),
-            3 => Some(EXTIPSEL7_A::PORTD),
-            4 => Some(EXTIPSEL7_A::PORTE),
-            5 => Some(EXTIPSEL7_A::PORTF),
+            0 => Some(Extipsel7::Porta),
+            1 => Some(Extipsel7::Portb),
+            2 => Some(Extipsel7::Portc),
+            3 => Some(Extipsel7::Portd),
+            4 => Some(Extipsel7::Porte),
+            5 => Some(Extipsel7::Portf),
             _ => None,
         }
     }
     #[doc = "Port A pin 7 selected for external interrupt 7"]
     #[inline(always)]
     pub fn is_porta(&self) -> bool {
-        *self == EXTIPSEL7_A::PORTA
+        *self == Extipsel7::Porta
     }
     #[doc = "Port B pin 7 selected for external interrupt 7"]
     #[inline(always)]
     pub fn is_portb(&self) -> bool {
-        *self == EXTIPSEL7_A::PORTB
+        *self == Extipsel7::Portb
     }
     #[doc = "Port C pin 7 selected for external interrupt 7"]
     #[inline(always)]
     pub fn is_portc(&self) -> bool {
-        *self == EXTIPSEL7_A::PORTC
+        *self == Extipsel7::Portc
     }
     #[doc = "Port D pin 7 selected for external interrupt 7"]
     #[inline(always)]
     pub fn is_portd(&self) -> bool {
-        *self == EXTIPSEL7_A::PORTD
+        *self == Extipsel7::Portd
     }
     #[doc = "Port E pin 7 selected for external interrupt 7"]
     #[inline(always)]
     pub fn is_porte(&self) -> bool {
-        *self == EXTIPSEL7_A::PORTE
+        *self == Extipsel7::Porte
     }
     #[doc = "Port F pin 7 selected for external interrupt 7"]
     #[inline(always)]
     pub fn is_portf(&self) -> bool {
-        *self == EXTIPSEL7_A::PORTF
+        *self == Extipsel7::Portf
     }
 }
 #[doc = "Field `EXTIPSEL7` writer - External Interrupt 7 Port Select"]
-pub type EXTIPSEL7_W<'a, REG> = crate::FieldWriter<'a, REG, 3, EXTIPSEL7_A>;
-impl<'a, REG> EXTIPSEL7_W<'a, REG>
+pub type Extipsel7W<'a, REG> = crate::FieldWriter<'a, REG, 3, Extipsel7>;
+impl<'a, REG> Extipsel7W<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
     REG::Ux: From<u8>,
@@ -862,149 +870,128 @@ where
     #[doc = "Port A pin 7 selected for external interrupt 7"]
     #[inline(always)]
     pub fn porta(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL7_A::PORTA)
+        self.variant(Extipsel7::Porta)
     }
     #[doc = "Port B pin 7 selected for external interrupt 7"]
     #[inline(always)]
     pub fn portb(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL7_A::PORTB)
+        self.variant(Extipsel7::Portb)
     }
     #[doc = "Port C pin 7 selected for external interrupt 7"]
     #[inline(always)]
     pub fn portc(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL7_A::PORTC)
+        self.variant(Extipsel7::Portc)
     }
     #[doc = "Port D pin 7 selected for external interrupt 7"]
     #[inline(always)]
     pub fn portd(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL7_A::PORTD)
+        self.variant(Extipsel7::Portd)
     }
     #[doc = "Port E pin 7 selected for external interrupt 7"]
     #[inline(always)]
     pub fn porte(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL7_A::PORTE)
+        self.variant(Extipsel7::Porte)
     }
     #[doc = "Port F pin 7 selected for external interrupt 7"]
     #[inline(always)]
     pub fn portf(self) -> &'a mut crate::W<REG> {
-        self.variant(EXTIPSEL7_A::PORTF)
+        self.variant(Extipsel7::Portf)
     }
 }
 impl R {
     #[doc = "Bits 0:2 - External Interrupt 0 Port Select"]
     #[inline(always)]
-    pub fn extipsel0(&self) -> EXTIPSEL0_R {
-        EXTIPSEL0_R::new((self.bits & 7) as u8)
+    pub fn extipsel0(&self) -> Extipsel0R {
+        Extipsel0R::new((self.bits & 7) as u8)
     }
     #[doc = "Bits 4:6 - External Interrupt 1 Port Select"]
     #[inline(always)]
-    pub fn extipsel1(&self) -> EXTIPSEL1_R {
-        EXTIPSEL1_R::new(((self.bits >> 4) & 7) as u8)
+    pub fn extipsel1(&self) -> Extipsel1R {
+        Extipsel1R::new(((self.bits >> 4) & 7) as u8)
     }
     #[doc = "Bits 8:10 - External Interrupt 2 Port Select"]
     #[inline(always)]
-    pub fn extipsel2(&self) -> EXTIPSEL2_R {
-        EXTIPSEL2_R::new(((self.bits >> 8) & 7) as u8)
+    pub fn extipsel2(&self) -> Extipsel2R {
+        Extipsel2R::new(((self.bits >> 8) & 7) as u8)
     }
     #[doc = "Bits 12:14 - External Interrupt 3 Port Select"]
     #[inline(always)]
-    pub fn extipsel3(&self) -> EXTIPSEL3_R {
-        EXTIPSEL3_R::new(((self.bits >> 12) & 7) as u8)
+    pub fn extipsel3(&self) -> Extipsel3R {
+        Extipsel3R::new(((self.bits >> 12) & 7) as u8)
     }
     #[doc = "Bits 16:18 - External Interrupt 4 Port Select"]
     #[inline(always)]
-    pub fn extipsel4(&self) -> EXTIPSEL4_R {
-        EXTIPSEL4_R::new(((self.bits >> 16) & 7) as u8)
+    pub fn extipsel4(&self) -> Extipsel4R {
+        Extipsel4R::new(((self.bits >> 16) & 7) as u8)
     }
     #[doc = "Bits 20:22 - External Interrupt 5 Port Select"]
     #[inline(always)]
-    pub fn extipsel5(&self) -> EXTIPSEL5_R {
-        EXTIPSEL5_R::new(((self.bits >> 20) & 7) as u8)
+    pub fn extipsel5(&self) -> Extipsel5R {
+        Extipsel5R::new(((self.bits >> 20) & 7) as u8)
     }
     #[doc = "Bits 24:26 - External Interrupt 6 Port Select"]
     #[inline(always)]
-    pub fn extipsel6(&self) -> EXTIPSEL6_R {
-        EXTIPSEL6_R::new(((self.bits >> 24) & 7) as u8)
+    pub fn extipsel6(&self) -> Extipsel6R {
+        Extipsel6R::new(((self.bits >> 24) & 7) as u8)
     }
     #[doc = "Bits 28:30 - External Interrupt 7 Port Select"]
     #[inline(always)]
-    pub fn extipsel7(&self) -> EXTIPSEL7_R {
-        EXTIPSEL7_R::new(((self.bits >> 28) & 7) as u8)
+    pub fn extipsel7(&self) -> Extipsel7R {
+        Extipsel7R::new(((self.bits >> 28) & 7) as u8)
     }
 }
 impl W {
     #[doc = "Bits 0:2 - External Interrupt 0 Port Select"]
     #[inline(always)]
-    #[must_use]
-    pub fn extipsel0(&mut self) -> EXTIPSEL0_W<EXTIPSELL_SPEC> {
-        EXTIPSEL0_W::new(self, 0)
+    pub fn extipsel0(&mut self) -> Extipsel0W<'_, ExtipsellSpec> {
+        Extipsel0W::new(self, 0)
     }
     #[doc = "Bits 4:6 - External Interrupt 1 Port Select"]
     #[inline(always)]
-    #[must_use]
-    pub fn extipsel1(&mut self) -> EXTIPSEL1_W<EXTIPSELL_SPEC> {
-        EXTIPSEL1_W::new(self, 4)
+    pub fn extipsel1(&mut self) -> Extipsel1W<'_, ExtipsellSpec> {
+        Extipsel1W::new(self, 4)
     }
     #[doc = "Bits 8:10 - External Interrupt 2 Port Select"]
     #[inline(always)]
-    #[must_use]
-    pub fn extipsel2(&mut self) -> EXTIPSEL2_W<EXTIPSELL_SPEC> {
-        EXTIPSEL2_W::new(self, 8)
+    pub fn extipsel2(&mut self) -> Extipsel2W<'_, ExtipsellSpec> {
+        Extipsel2W::new(self, 8)
     }
     #[doc = "Bits 12:14 - External Interrupt 3 Port Select"]
     #[inline(always)]
-    #[must_use]
-    pub fn extipsel3(&mut self) -> EXTIPSEL3_W<EXTIPSELL_SPEC> {
-        EXTIPSEL3_W::new(self, 12)
+    pub fn extipsel3(&mut self) -> Extipsel3W<'_, ExtipsellSpec> {
+        Extipsel3W::new(self, 12)
     }
     #[doc = "Bits 16:18 - External Interrupt 4 Port Select"]
     #[inline(always)]
-    #[must_use]
-    pub fn extipsel4(&mut self) -> EXTIPSEL4_W<EXTIPSELL_SPEC> {
-        EXTIPSEL4_W::new(self, 16)
+    pub fn extipsel4(&mut self) -> Extipsel4W<'_, ExtipsellSpec> {
+        Extipsel4W::new(self, 16)
     }
     #[doc = "Bits 20:22 - External Interrupt 5 Port Select"]
     #[inline(always)]
-    #[must_use]
-    pub fn extipsel5(&mut self) -> EXTIPSEL5_W<EXTIPSELL_SPEC> {
-        EXTIPSEL5_W::new(self, 20)
+    pub fn extipsel5(&mut self) -> Extipsel5W<'_, ExtipsellSpec> {
+        Extipsel5W::new(self, 20)
     }
     #[doc = "Bits 24:26 - External Interrupt 6 Port Select"]
     #[inline(always)]
-    #[must_use]
-    pub fn extipsel6(&mut self) -> EXTIPSEL6_W<EXTIPSELL_SPEC> {
-        EXTIPSEL6_W::new(self, 24)
+    pub fn extipsel6(&mut self) -> Extipsel6W<'_, ExtipsellSpec> {
+        Extipsel6W::new(self, 24)
     }
     #[doc = "Bits 28:30 - External Interrupt 7 Port Select"]
     #[inline(always)]
-    #[must_use]
-    pub fn extipsel7(&mut self) -> EXTIPSEL7_W<EXTIPSELL_SPEC> {
-        EXTIPSEL7_W::new(self, 28)
-    }
-    #[doc = r" Writes raw bits to the register."]
-    #[doc = r""]
-    #[doc = r" # Safety"]
-    #[doc = r""]
-    #[doc = r" Passing incorrect value can cause undefined behaviour. See reference manual"]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.bits = bits;
-        self
+    pub fn extipsel7(&mut self) -> Extipsel7W<'_, ExtipsellSpec> {
+        Extipsel7W::new(self, 28)
     }
 }
-#[doc = "External Interrupt Port Select Low Register\n\nYou can [`read`](crate::generic::Reg::read) this register and get [`extipsell::R`](R).  You can [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero) this register using [`extipsell::W`](W). You can also [`modify`](crate::generic::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
-pub struct EXTIPSELL_SPEC;
-impl crate::RegisterSpec for EXTIPSELL_SPEC {
+#[doc = "External Interrupt Port Select Low Register\n\nYou can [`read`](crate::Reg::read) this register and get [`extipsell::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`extipsell::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct ExtipsellSpec;
+impl crate::RegisterSpec for ExtipsellSpec {
     type Ux = u32;
 }
 #[doc = "`read()` method returns [`extipsell::R`](R) reader structure"]
-impl crate::Readable for EXTIPSELL_SPEC {}
+impl crate::Readable for ExtipsellSpec {}
 #[doc = "`write(|w| ..)` method takes [`extipsell::W`](W) writer structure"]
-impl crate::Writable for EXTIPSELL_SPEC {
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
+impl crate::Writable for ExtipsellSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets EXTIPSELL to value 0"]
-impl crate::Resettable for EXTIPSELL_SPEC {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ExtipsellSpec {}

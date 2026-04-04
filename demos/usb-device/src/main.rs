@@ -207,23 +207,23 @@ static LINE_CODING: Mutex<RefCell<[u8; 7]>> = Mutex::new(RefCell::new([
 fn ep0_write(usb: &pac::usb::RegisterBlock, data: &[u8], max_len: usize) {
     let len = data.len().min(max_len);
     usb.diep0tsiz()
-        .write(|w| w.xfersize().variant(len as u8).pktcnt().variant(1));
+        .write(|w: &mut pac::usb::diep0tsiz::W| unsafe {
+            w.xfersize().bits(len as u8).pktcnt().bits(1)
+        });
     usb.diep0ctl()
-        .modify(|_, w| w.epena().set_bit().cnak().set_bit());
+        .modify(|_, w: &mut pac::usb::diep0ctl::W| w.epena().set_bit().cnak().set_bit());
     write_fifo(EP0_FIFO, data, len);
 }
 
 /// Write `data` into EP1 IN FIFO (bulk data, device→host).
 fn ep1_write(usb: &pac::usb::RegisterBlock, data: &[u8]) {
     let len = data.len().min(EP1_MPS as usize);
-    usb.diep0_tsiz().write(|w| {
-        w.xfersize()
-            .variant(len as u32)
-            .pktcnt()
-            .variant(1)
-    });
+    usb.diep0_tsiz()
+        .write(|w: &mut pac::usb::diep0_tsiz::W| unsafe {
+            w.xfersize().bits(len as u32).pktcnt().bits(1)
+        });
     usb.diep0_ctl()
-        .modify(|_, w| w.cnak().set_bit().epena().set_bit());
+        .modify(|_, w: &mut pac::usb::diep0_ctl::W| w.cnak().set_bit().epena().set_bit());
     write_fifo(EP1_FIFO, data, len);
 }
 
@@ -245,21 +245,21 @@ fn write_fifo(addr: u32, data: &[u8], len: usize) {
 /// Prepare EP0 OUT to receive the next SETUP / data packet.
 fn ep0_prepare_out(usb: &pac::usb::RegisterBlock) {
     usb.doep0tsiz()
-        .write(|w| w.supcnt().variant(3).pktcnt().set_bit().xfersize().variant(64));
+        .write(|w: &mut pac::usb::doep0tsiz::W| unsafe {
+            w.supcnt().bits(3).pktcnt().set_bit().xfersize().bits(64)
+        });
     usb.doep0ctl()
-        .modify(|_, w| w.epena().set_bit().cnak().set_bit());
+        .modify(|_, w: &mut pac::usb::doep0ctl::W| w.epena().set_bit().cnak().set_bit());
 }
 
 /// Arm EP1 OUT to receive up to EP1_MPS bytes from the host.
 fn ep1_prepare_out(usb: &pac::usb::RegisterBlock) {
-    usb.doep0_tsiz().write(|w| {
-        w.xfersize()
-            .variant(EP1_MPS as u32)
-            .pktcnt()
-            .variant(1)
-    });
+    usb.doep0_tsiz()
+        .write(|w: &mut pac::usb::doep0_tsiz::W| unsafe {
+            w.xfersize().bits(EP1_MPS as u32).pktcnt().bits(1)
+        });
     usb.doep0_ctl()
-        .modify(|_, w| w.epena().set_bit().cnak().set_bit());
+        .modify(|_, w: &mut pac::usb::doep0_ctl::W| w.epena().set_bit().cnak().set_bit());
 }
 
 // ---------------------------------------------------------------------------
@@ -285,19 +285,22 @@ static RX_TOGGLE: AtomicBool = AtomicBool::new(false);
 
 #[interrupt]
 fn USB() {
-    let usb = unsafe { &*pac::USB::ptr() };
+    let usb = unsafe { &*pac::Usb::ptr() };
     let gintsts = usb.gintsts().read();
 
     // ---- USB Bus Reset ----
     if gintsts.usbrst().bit_is_set() {
-        usb.gintsts().write(|w| w.usbrst().set_bit());
+        usb.gintsts()
+            .write(|w: &mut pac::usb::gintsts::W| w.usbrst().set_bit());
         handle_usb_reset(usb);
     }
 
     // ---- Enumeration Done ----
     if gintsts.enumdone().bit_is_set() {
-        usb.gintsts().write(|w| w.enumdone().set_bit());
-        usb.gusbcfg().modify(|_, w| w.usbtrdtim().variant(5));
+        usb.gintsts()
+            .write(|w: &mut pac::usb::gintsts::W| w.enumdone().set_bit());
+        usb.gusbcfg()
+            .modify(|_, w: &mut pac::usb::gusbcfg::W| unsafe { w.usbtrdtim().bits(5) });
         defmt::info!("Enumeration done");
     }
 
@@ -324,65 +327,73 @@ fn USB() {
 fn handle_usb_reset(usb: &pac::usb::RegisterBlock) {
     defmt::info!("USB reset");
 
-    usb.dcfg().modify(|_, w| w.devaddr().variant(0));
+    usb.dcfg()
+        .modify(|_, w: &mut pac::usb::dcfg::W| unsafe { w.devaddr().bits(0) });
 
     // Flush FIFOs.
-    usb.grstctl()
-        .write(|w| w.txfflsh().set_bit().txfnum().fall().rxfflsh().set_bit());
-    while usb.grstctl().read().txfflsh().bit_is_set()
-        || usb.grstctl().read().rxfflsh().bit_is_set()
-    {}
+    usb.grstctl().write(|w: &mut pac::usb::grstctl::W| {
+        w.txfflsh().set_bit().txfnum().fall().rxfflsh().set_bit()
+    });
+    while usb.grstctl().read().txfflsh().bit_is_set() || usb.grstctl().read().rxfflsh().bit_is_set()
+    {
+    }
 
     // Configure EP0 (64-byte MPS).
-    usb.diep0ctl().write(|w| w.mps()._64b().snak().set_bit());
-    usb.doep0ctl().write(|w| w.snak().set_bit());
+    usb.diep0ctl()
+        .write(|w: &mut pac::usb::diep0ctl::W| w.mps()._64b().snak().set_bit());
+    usb.doep0ctl()
+        .write(|w: &mut pac::usb::doep0ctl::W| w.snak().set_bit());
 
     // Activate EP1 IN (bulk, 64-byte MPS, TXFIFO 1).
-    usb.diep0_ctl().write(|w| {
-        w.mps()
-            .variant(EP1_MPS)
-            .eptype()
-            .bulk()
-            .usbactep()
-            .set_bit()
-            .txfnum()
-            .variant(1)
-            .snak()
-            .set_bit()
-    });
+    usb.diep0_ctl()
+        .write(|w: &mut pac::usb::diep0_ctl::W| unsafe {
+            w.mps()
+                .bits(EP1_MPS)
+                .eptype()
+                .bulk()
+                .usbactep()
+                .set_bit()
+                .txfnum()
+                .bits(1)
+                .snak()
+                .set_bit()
+        });
     // Activate EP1 OUT (bulk, 64-byte MPS).
-    usb.doep0_ctl().write(|w| {
-        w.mps()
-            .variant(EP1_MPS)
-            .eptype()
-            .bulk()
-            .usbactep()
-            .set_bit()
-            .snak()
-            .set_bit()
-    });
+    usb.doep0_ctl()
+        .write(|w: &mut pac::usb::doep0_ctl::W| unsafe {
+            w.mps()
+                .bits(EP1_MPS)
+                .eptype()
+                .bulk()
+                .usbactep()
+                .set_bit()
+                .snak()
+                .set_bit()
+        });
 
     // Activate EP2 IN (interrupt, 8-byte MPS, TXFIFO 2).
-    usb.diep1_ctl().write(|w| {
-        w.mps()
-            .variant(EP2_MPS)
-            .eptype()
-            .int()
-            .usbactep()
-            .set_bit()
-            .txfnum()
-            .variant(2)
-            .snak()
-            .set_bit()
-    });
+    usb.diep1_ctl()
+        .write(|w: &mut pac::usb::diep1_ctl::W| unsafe {
+            w.mps()
+                .bits(EP2_MPS)
+                .eptype()
+                .int()
+                .usbactep()
+                .set_bit()
+                .txfnum()
+                .bits(2)
+                .snak()
+                .set_bit()
+        });
 
     // Unmask EP0-2 IN + EP0-1 OUT.
     // DAINTMSK: bits 0-2 = IN EPs, bits 16-17 = OUT EPs.
     usb.daintmsk()
-        .write(|w| unsafe { w.bits(0x0003_0007) });
-    usb.diepmsk().write(|w| w.xfercomplmsk().set_bit());
+        .write(|w: &mut pac::usb::daintmsk::W| unsafe { w.bits(0x0003_0007) });
+    usb.diepmsk()
+        .write(|w: &mut pac::usb::diepmsk::W| w.xfercomplmsk().set_bit());
     usb.doepmsk()
-        .write(|w| w.xfercomplmsk().set_bit().setupmsk().set_bit());
+        .write(|w: &mut pac::usb::doepmsk::W| w.xfercomplmsk().set_bit().setupmsk().set_bit());
 
     // Arm EP0 OUT for SETUP.
     ep0_prepare_out(usb);
@@ -497,7 +508,8 @@ fn handle_iepint(usb: &pac::usb::RegisterBlock) {
     // EP0 IN complete.
     let diep0int = usb.diep0int().read();
     if diep0int.xfercompl().bit_is_set() {
-        usb.diep0int().write(|w| w.xfercompl().set_bit());
+        usb.diep0int()
+            .write(|w: &mut pac::usb::diep0int::W| w.xfercompl().set_bit());
 
         // Apply deferred SET_ADDRESS.
         let addr = critical_section::with(|lock| {
@@ -507,7 +519,8 @@ fn handle_iepint(usb: &pac::usb::RegisterBlock) {
             v
         });
         if addr != 0 {
-            usb.dcfg().modify(|_, w| w.devaddr().variant(addr & 0x7F));
+            usb.dcfg()
+                .modify(|_, w: &mut pac::usb::dcfg::W| unsafe { w.devaddr().bits(addr & 0x7F) });
             defmt::info!("Address set to {}", addr);
         }
 
@@ -517,14 +530,16 @@ fn handle_iepint(usb: &pac::usb::RegisterBlock) {
     // EP1 IN complete (bulk TX done) – re-arm EP1 OUT for next host data.
     let diep1int = usb.diep0_int().read();
     if diep1int.xfercompl().bit_is_set() {
-        usb.diep0_int().write(|w| w.xfercompl().set_bit());
+        usb.diep0_int()
+            .write(|w: &mut pac::usb::diep0_int::W| w.xfercompl().set_bit());
         ep1_prepare_out(usb);
     }
 
     // EP2 IN complete – nothing to do.
     let diep2int = usb.diep1_int().read();
     if diep2int.xfercompl().bit_is_set() {
-        usb.diep1_int().write(|w| w.xfercompl().set_bit());
+        usb.diep1_int()
+            .write(|w: &mut pac::usb::diep1_int::W| w.xfercompl().set_bit());
     }
 }
 
@@ -532,7 +547,8 @@ fn handle_oepint(usb: &pac::usb::RegisterBlock) {
     // EP0 OUT complete.
     let doep0int = usb.doep0int().read();
     if doep0int.xfercompl().bit_is_set() {
-        usb.doep0int().write(|w| w.xfercompl().set_bit());
+        usb.doep0int()
+            .write(|w: &mut pac::usb::doep0int::W| w.xfercompl().set_bit());
 
         // Check if this was a SET_LINE_CODING data stage.
         let is_line_coding = critical_section::with(|lock| {
@@ -562,7 +578,8 @@ fn handle_oepint(usb: &pac::usb::RegisterBlock) {
     // EP1 OUT complete.
     let doep1int = usb.doep0_int().read();
     if doep1int.xfercompl().bit_is_set() {
-        usb.doep0_int().write(|w| w.xfercompl().set_bit());
+        usb.doep0_int()
+            .write(|w: &mut pac::usb::doep0_int::W| w.xfercompl().set_bit());
         // Re-arm for next bulk OUT packet.
         ep1_prepare_out(usb);
     }
@@ -710,8 +727,10 @@ fn handle_setup(
 }
 
 fn stall_ep0(usb: &pac::usb::RegisterBlock) {
-    usb.diep0ctl().modify(|_, w| w.stall().set_bit());
-    usb.doep0ctl().modify(|_, w| w.stall().set_bit());
+    usb.diep0ctl()
+        .modify(|_, w: &mut pac::usb::diep0ctl::W| w.stall().set_bit());
+    usb.doep0ctl()
+        .modify(|_, w: &mut pac::usb::doep0ctl::W| w.stall().set_bit());
 }
 
 // ---------------------------------------------------------------------------
@@ -722,54 +741,73 @@ fn stall_ep0(usb: &pac::usb::RegisterBlock) {
 fn main() -> ! {
     let p = pac::Peripherals::take().unwrap();
 
-    p.WDOG.constrain().disable();
+    p.wdog.constrain().disable();
 
     enable_gpio_clock();
-    let gpio = p.GPIO.constrain().split();
+    let gpio = p.gpio.constrain().split();
     let board = SlStk3400a::new(gpio).unwrap();
     critical_section::with(|lock| {
         BOARD.borrow(lock).replace(Some(board));
     });
 
     // ---- Enable USHFRCO at 48 MHz for USB PHY ----
-    p.CMU.ushfrcoconf().write(|w| w.band()._48mhz());
-    p.CMU.oscencmd().write(|w| w.ushfrcoen().set_bit());
-    while p.CMU.status().read().ushfrcordy().bit_is_clear() {}
+    p.cmu
+        .ushfrcoconf()
+        .write(|w: &mut pac::cmu::ushfrcoconf::W| w.band()._48mhz());
+    p.cmu
+        .oscencmd()
+        .write(|w: &mut pac::cmu::oscencmd::W| w.ushfrcoen().set_bit());
+    while p.cmu.status().read().ushfrcordy().bit_is_clear() {}
 
-    p.CMU.cmd().write(|w| w.usbcclksel().ushfrco());
-    p.CMU
+    p.cmu
+        .cmd()
+        .write(|w: &mut pac::cmu::cmd::W| w.usbcclksel().ushfrco());
+    p.cmu
         .hfcoreclken0()
-        .modify(|_, w| w.usbc().set_bit().usb().set_bit());
+        .modify(|_, w: &mut pac::cmu::hfcoreclken0::W| w.usbc().set_bit().usb().set_bit());
 
-    let usb = &p.USB;
+    let usb = &p.usb;
 
     // ---- Core initialisation ----
-    usb.route().write(|w| w.phypen().set_bit());
-    usb.gahbcfg().write(|w| w.glblintrmsk().set_bit());
-    usb.gusbcfg().write(|w| w.usbtrdtim().variant(5));
+    usb.route()
+        .write(|w: &mut pac::usb::route::W| w.phypen().set_bit());
+    usb.gahbcfg()
+        .write(|w: &mut pac::usb::gahbcfg::W| w.glblintrmsk().set_bit());
+    usb.gusbcfg()
+        .write(|w: &mut pac::usb::gusbcfg::W| unsafe { w.usbtrdtim().bits(5) });
 
     // Soft reset.
-    usb.grstctl().write(|w| w.csftrst().set_bit());
+    usb.grstctl()
+        .write(|w: &mut pac::usb::grstctl::W| w.csftrst().set_bit());
     while usb.grstctl().read().csftrst().bit_is_set() {}
 
-    usb.gahbcfg().write(|w| w.glblintrmsk().set_bit());
-    usb.dcfg().write(|w| w.devspd().fs().devaddr().variant(0));
+    usb.gahbcfg()
+        .write(|w: &mut pac::usb::gahbcfg::W| w.glblintrmsk().set_bit());
+    usb.dcfg()
+        .write(|w: &mut pac::usb::dcfg::W| unsafe { w.devspd().fs().devaddr().bits(0) });
 
     // ---- FIFO allocation (in 32-bit words) ----
     //   RX FIFO          : 64 words  @  0
     //   TX FIFO 0 (EP0)  : 16 words  @ 64
     //   TX FIFO 1 (EP1)  : 64 words  @ 80
     //   TX FIFO 2 (EP2)  : 16 words  @144
-    usb.grxfsiz().write(|w| w.rxfdep().variant(64));
+    usb.grxfsiz()
+        .write(|w: &mut pac::usb::grxfsiz::W| unsafe { w.rxfdep().bits(64) });
     usb.gnptxfsiz()
-        .write(|w| w.nptxfstaddr().variant(64).nptxfineptxf0dep().variant(16));
+        .write(|w: &mut pac::usb::gnptxfsiz::W| unsafe {
+            w.nptxfstaddr().bits(64).nptxfineptxf0dep().bits(16)
+        });
     usb.dieptxf1()
-        .write(|w| w.inepntxfstaddr().variant(80).inepntxfdep().variant(64));
+        .write(|w: &mut pac::usb::dieptxf1::W| unsafe {
+            w.inepntxfstaddr().bits(80).inepntxfdep().bits(64)
+        });
     usb.dieptxf2()
-        .write(|w| w.inepntxfstaddr().variant(144).inepntxfdep().variant(16));
+        .write(|w: &mut pac::usb::dieptxf2::W| unsafe {
+            w.inepntxfstaddr().bits(144).inepntxfdep().bits(16)
+        });
 
     // ---- Unmask interrupts ----
-    usb.gintmsk().write(|w| {
+    usb.gintmsk().write(|w: &mut pac::usb::gintmsk::W| {
         w.usbrstmsk()
             .set_bit()
             .enumdonemsk()
@@ -783,11 +821,13 @@ fn main() -> ! {
     });
 
     usb.gintsts()
-        .write(|w| unsafe { w.bits(0xFFFF_FFFF) });
+        .write(|w: &mut pac::usb::gintsts::W| unsafe { w.bits(0xFFFF_FFFF) });
 
     // Connect.
-    usb.dctl().modify(|_, w| w.sftdiscon().clear_bit());
-    usb.dctl().modify(|_, w| w.pwronprgdone().set_bit());
+    usb.dctl()
+        .modify(|_, w: &mut pac::usb::dctl::W| w.sftdiscon().clear_bit());
+    usb.dctl()
+        .modify(|_, w: &mut pac::usb::dctl::W| w.pwronprgdone().set_bit());
 
     pac::NVIC::unpend(pac::Interrupt::USB);
     unsafe { pac::NVIC::unmask(pac::Interrupt::USB) };

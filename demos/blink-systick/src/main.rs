@@ -33,12 +33,12 @@ fn main() -> ! {
     let cp = pac::CorePeripherals::take().unwrap();
 
     // If the Watchdog is not reset/disabled, the board will reboot.
-    p.WDOG.constrain().disable();
+    p.wdog.constrain().disable();
 
     // Enable GPIO clock to enable GPIO as outputs.
     enable_gpio_clock();
 
-    let gpio = p.GPIO.constrain().split();
+    let gpio = p.gpio.constrain().split();
     let board = SlStk3400a::new(gpio).unwrap();
     critical_section::with(|lock| {
         BOARD.borrow(lock).replace(Some(board));
