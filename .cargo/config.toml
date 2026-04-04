@@ -1,10 +1,8 @@
-[build]
-target = "thumbv6m-none-eabi"
-
-# To flash and disconnect:
 [target.'cfg(all(target_arch = "arm", target_os = "none"))']
-runner = "cargo flash --chip EFM32HG322F64 --protocol swd --speed 16 --path"
+runner = ["probe-rs", "run", "--log-format", "{L} {s}", "--probe", "1366:1015:000440175541", "--chip", "EFM32HG322F64", "--protocol", "swd", "--speed", "128"]
 
+[build]
+target = "thumbv6m-none-eabi"        # Cortex-M0 and Cortex-M0+
 rustflags = [
   "-C",
   "linker=flip-link",
