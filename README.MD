@@ -28,7 +28,7 @@ One-time tool installation:
 
 ```sh
 cargo install flip-link
-cargo install probe-rs --features="cli"
+cargo install probe-rs-tools --features="cli"
 ```
 
 It is possible to process the compiled binary with `objcopy` and copy it over to the `STK3400A` disk
@@ -48,7 +48,7 @@ coreutils cp ./blink.bin /Volumes/STK3400
 
 ## Enjoy
 
-Run with
+Choose something from the above list and run it, e.g. with
 
 ```sh
 cargo run --release blink
@@ -59,15 +59,6 @@ or (for multi-channel RTT logging)
 ```sh
 cargo embed --release blink
 ```
-
-Other demos:
-
-Demo | Description
---- | ---
-blink | SLSTK3400A blink in a loop
-blink-pb | SLSTK3400A blink on push buttons
-blink-systick | SLSTK3400A blink on SysTick interrupt
-blink-rtc | SLSTK3400A blink on RTC interrupt
 
 **NOTE**: if your code configures the clock to run at lower speeds, the speed of
 communication with the debug probe in [`.cargo/config.toml`](.cargo/config.toml)
