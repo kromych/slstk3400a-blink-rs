@@ -1,0 +1,21 @@
+[package]
+authors = ["kromych <kromych@users.noreply.github.con"]
+categories = ["embedded", "no-std", "efm32"]
+description = "SLSTK3400A USB Mass Storage — tiny FAT16 with readme.txt"
+name = "usb-msc-demo"
+keywords = ["arm", "cortex-m"]
+license = "MIT"
+version = "0.0.1"
+edition = "2021"
+
+[dependencies]
+panic-halt.workspace = true
+cortex-m.workspace = true
+cortex-m-rt.workspace = true
+critical-section.workspace = true
+defmt.workspace = true
+defmt-rtt.workspace = true
+portable-atomic.workspace = true
+
+efm32hg322-pac.workspace = true
+efm32hg322-usb.workspace = true

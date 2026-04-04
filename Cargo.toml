@@ -17,6 +17,7 @@ members = [
     "demos/pwm-led",
     "demos/usb-midi",
     "demos/usb-hid",
+    "demos/usb-msc",
     "support/efm32hg322_hal",
     "support/efm32hg322_pac",
     "support/efm32hg322_usb",
