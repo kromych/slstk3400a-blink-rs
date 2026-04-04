@@ -13,4 +13,6 @@ cortex-m.workspace = true
 critical-section.workspace = true
 defmt.workspace = true
 
+portable-atomic.workspace = true
+
 efm32hg322-pac.workspace = true

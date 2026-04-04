@@ -147,13 +147,13 @@ pub fn fb_draw_text(text_row: u8, text_col: u8, text: &str) {
             0
         };
         let glyph = &FONT[glyph_idx];
-        for py in 0..8 {
+        for (py, &glyph_row) in glyph.iter().enumerate().take(8) {
             let row = y + py;
             if row >= 128 {
                 break;
             }
             let base = row * display::BYTES_PER_ROW;
-            let lcd_byte = !reverse_bits(glyph[py]);
+            let lcd_byte = !reverse_bits(glyph_row);
             set_fb_byte(base + cx, lcd_byte);
             mark_dirty(row as u8);
         }

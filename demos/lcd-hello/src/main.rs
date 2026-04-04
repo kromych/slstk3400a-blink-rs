@@ -71,7 +71,7 @@ fn main() -> ! {
 
     defmt::info!("LCD hello demo running");
 
-    // Main loop — toggle VCOM at ~1 Hz to keep the display healthy.
+    // Main loop - toggle VCOM at ~1 Hz to keep the display healthy.
     loop {
         cortex_m::asm::delay(14_000_000); // ~1 s at 14 MHz
         display::toggle_vcom();

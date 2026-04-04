@@ -242,6 +242,7 @@ dependencies = [
  "critical-section",
  "defmt",
  "efm32hg322-pac",
+ "portable-atomic",
 ]
 
 [[package]]
@@ -513,16 +514,11 @@ version = "0.0.1"
 dependencies = [
  "cortex-m",
  "cortex-m-rt",
- "critical-section",
  "defmt",
  "defmt-rtt",
- "efm32hg322-hal",
  "efm32hg322-pac",
  "efm32hg322-usb",
- "embedded-hal 1.0.0",
  "panic-halt",
- "portable-atomic",
- "slstk3400a",
 ]
 
 [[package]]
@@ -531,13 +527,11 @@ version = "0.0.1"
 dependencies = [
  "cortex-m",
  "cortex-m-rt",
- "critical-section",
  "defmt",
  "defmt-rtt",
  "efm32hg322-pac",
  "efm32hg322-usb",
  "panic-halt",
- "portable-atomic",
 ]
 
 [[package]]
@@ -546,13 +540,11 @@ version = "0.0.1"
 dependencies = [
  "cortex-m",
  "cortex-m-rt",
- "critical-section",
  "defmt",
  "defmt-rtt",
  "efm32hg322-pac",
  "efm32hg322-usb",
  "panic-halt",
- "portable-atomic",
 ]
 
 [[package]]
@@ -561,13 +553,11 @@ version = "0.0.1"
 dependencies = [
  "cortex-m",
  "cortex-m-rt",
- "critical-section",
  "defmt",
  "defmt-rtt",
  "efm32hg322-pac",
  "efm32hg322-usb",
  "panic-halt",
- "portable-atomic",
 ]
 
 [[package]]

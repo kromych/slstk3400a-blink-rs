@@ -161,7 +161,7 @@ fn TIMER0() {
 
 #[interrupt]
 fn GPIO_ODD() {
-    // PC9 (BTN0 = LEFT) — odd pin number.
+    // PC9 (BTN0 = LEFT) - odd pin number.
     let gpio = unsafe { &*pac::Gpio::ptr() };
     gpio.ifc()
         .write(|w: &mut pac::gpio::ifc::W| unsafe { w.bits(1 << 9) });
@@ -173,7 +173,7 @@ fn GPIO_ODD() {
 
 #[interrupt]
 fn GPIO_EVEN() {
-    // PC10 (BTN1 = RIGHT) — even pin number.
+    // PC10 (BTN1 = RIGHT) - even pin number.
     let gpio = unsafe { &*pac::Gpio::ptr() };
     gpio.ifc()
         .write(|w: &mut pac::gpio::ifc::W| unsafe { w.bits(1 << 10) });

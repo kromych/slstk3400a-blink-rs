@@ -61,7 +61,7 @@ fn main() -> ! {
         .modify(|_, w: &mut pac::cmu::hfperclken0::W| w.timer2().set_bit());
 
     // Configure TIMER2 for ~10 kHz overflow (14 MHz / 1 / 1400 = 10 kHz).
-    // 10 kHz / 100 steps = 100 Hz PWM frequency — flicker-free.
+    // 10 kHz / 100 steps = 100 Hz PWM frequency - flicker-free.
     p.timer2
         .ctrl()
         .write(|w: &mut pac::timer2::ctrl::W| w.presc().div1());

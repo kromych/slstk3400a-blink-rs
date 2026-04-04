@@ -1,7 +1,7 @@
 [package]
 authors = ["kromych <kromych@users.noreply.github.con"]
 categories = ["embedded", "no-std", "efm32"]
-description = "SLSTK3400A USB HID keyboard — types a greeting"
+description = "SLSTK3400A USB HID keyboard - types a greeting"
 name = "usb-hid-demo"
 keywords = ["arm", "cortex-m"]
 license = "MIT"
@@ -12,9 +12,8 @@ edition = "2021"
 panic-halt.workspace = true
 cortex-m.workspace = true
 cortex-m-rt.workspace = true
-critical-section.workspace = true
 defmt.workspace = true
 defmt-rtt.workspace = true
-portable-atomic.workspace = true
+
 efm32hg322-pac.workspace = true
 efm32hg322-usb.workspace = true

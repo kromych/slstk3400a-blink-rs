@@ -107,8 +107,8 @@ pub fn init() {
     // Pin 8: bits 0-3, Pin 10: bits 8-11.
     gpio.pa_modeh().modify(|r, w| unsafe {
         let mut v = r.bits();
-        v &= !(0xF << 0);  // clear pin 8 (DISP_SEL)
-        v |= 4 << 0;       // push-pull
+        v &= !0xF;          // clear pin 8 (DISP_SEL)
+        v |= 4;             // push-pull
         v &= !(0xF << 8);  // clear pin 10 (CS)
         v |= 4 << 8;       // push-pull
         w.bits(v)

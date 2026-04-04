@@ -38,7 +38,7 @@ fn main() -> ! {
     led0.set_low().ok();
     led1.set_low().ok();
 
-    // BTN0 on PC9 — configure as input with pull-up and enable GPIO interrupt
+    // BTN0 on PC9 - configure as input with pull-up and enable GPIO interrupt
     // on falling edge (button press).
     let mut btn0 = gpio.pc9.into_input_pulled_up();
     btn0.enable_interrupt(ExtInterruptEdge::Fall);
@@ -46,7 +46,7 @@ fn main() -> ! {
     pac::NVIC::unpend(pac::Interrupt::GPIO_ODD);
     unsafe { pac::NVIC::unmask(pac::Interrupt::GPIO_ODD) };
 
-    defmt::info!("Pulse counter demo — press BTN0 (PC9)");
+    defmt::info!("Pulse counter demo - press BTN0 (PC9)");
 
     let mut last = u32::MAX;
     loop {

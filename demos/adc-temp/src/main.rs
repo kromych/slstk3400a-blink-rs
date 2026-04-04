@@ -30,7 +30,7 @@ const DEVINFO_BASE: u32 = 0x0FE0_81B0;
 /// `DEVINFO_BASE`.
 fn devinfo_read(offset: u32) -> u32 {
     // SAFETY: DEVINFO addresses are read-only factory-programmed MMIO in the
-    // EFM32 information block — always valid and always readable.
+    // EFM32 information block - always valid and always readable.
     unsafe { core::ptr::read_volatile((DEVINFO_BASE + offset) as *const u32) }
 }
 

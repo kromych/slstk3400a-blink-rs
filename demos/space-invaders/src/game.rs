@@ -335,8 +335,8 @@ impl GameState {
             }
         }
         // Zero-pad.
-        for i in 1..1 + start {
-            buf[i] = b'0';
+        for b in buf.iter_mut().skip(1).take(start) {
+            *b = b'0';
         }
 
         buf[8] = b'L';

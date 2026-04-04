@@ -4,8 +4,8 @@
 //! to display elapsed time in MM:SS.d format (1/10 second resolution).
 //!
 //! Controls:
-//!   BTN0 (PC9)  — Start / Stop
-//!   BTN1 (PC10) — Lap (while running) / Reset (while stopped)
+//!   BTN0 (PC9)  - Start / Stop
+//!   BTN1 (PC10) - Lap (while running) / Reset (while stopped)
 //!
 //! Up to 4 lap times are shown on screen.
 
@@ -193,8 +193,8 @@ fn main() -> ! {
             // Draw laps.
             if lap_count > 0 {
                 display::draw_text(8, 0, "Laps:", &mut vcom);
-                for i in 0..lap_count.min(4) {
-                    draw_lap(9 + i as u8, i as u8, laps[i], &mut vcom);
+                for (i, &lap) in laps.iter().enumerate().take(lap_count.min(4)) {
+                    draw_lap(9 + i as u8, i as u8, lap, &mut vcom);
                 }
             }
 

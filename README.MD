@@ -1,7 +1,26 @@
 # Example applications for SLSTK3400A
 
-This example shows how to log via RTT and blink an LED on
-[the SLSTK3400A starter kit board](https://www.silabs.com/development-tools/mcu/32-bit/efm32hg-starter-kit)
+This repo has a number of demo projects for the
+[SLSTK3400A starter kit board](https://www.silabs.com/development-tools/mcu/32-bit/efm32hg-starter-kit):
+
+Demo | Description
+--- | ---
+adc-temp | SLSTK3400A ADC temperature sensor displayed on the Sharp Memory LCD
+blink | SLSTK3400A blink in a loop
+blink-captouch | SLSTK3400A blink with the capapcitive touch buttons
+blink-pb | SLSTK3400A blink on push buttons
+blink-rtc | SLSTK3400A blink on RTC interrupt
+blink-systick | SLSTK3400A blink on SysTick interrupt
+lcd-counter | SLSTK3400A RTC counter displayed on the Sharp Memory LCD
+lcd-hello | SLSTK3400A Sharp Memory LCD hello world
+pulse-counter | SLSTK3400A pulse counter using PCNT0 and push buttons
+pwm-led | SLSTK3400A PWM LED brightness control using TIMER2 CC output
+space-invaders | Space Invaders demo on the SLSTK3400A Sharp Memory LCD
+stopwatch | SLSTK3400A stopwatch using RTC, buttons, and Sharp Memory LCD
+usb-cdc-demo | SLSTK3400A USB serial port - echoes what's typed back
+usb-hid-demo | SLSTK3400A USB HID keyboard - types a greeting
+usb-midi-demo | SLSTK3400A USB MIDI device - plays a simple tune
+usb-msc-demo | SLSTK3400A USB Mass Storage - tiny FAT16 with readme.txt
 
 ## Prepare
 

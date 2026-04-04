@@ -7,9 +7,109 @@
 #![no_std]
 
 pub mod bus;
+pub mod cdc_acm;
+pub mod hid_keyboard;
+pub mod midi;
+pub mod msc;
 
 pub use bus::UsbBus;
+
 use efm32hg322_pac as pac;
+use pac::interrupt;
+use portable_atomic::{AtomicUsize, Ordering};
+
+// ---------------------------------------------------------------------------
+// Utilities
+// ---------------------------------------------------------------------------
+
+/// Busy-wait delay assuming the 14 MHz HFRCO default.
+pub fn delay_ms(ms: u32) {
+    cortex_m::asm::delay(ms * 14_000);
+}
+
+/// Sleep forever, handling all USB activity in interrupt callbacks.
+pub fn idle() -> ! {
+    loop {
+        cortex_m::asm::wfi();
+    }
+}
+
+// ---------------------------------------------------------------------------
+// USB interrupt handler (lives in the library, dispatches via function pointer)
+// ---------------------------------------------------------------------------
+
+static POLL_FN: AtomicUsize = AtomicUsize::new(0);
+
+#[interrupt]
+fn USB() {
+    let f = POLL_FN.load(Ordering::Relaxed);
+    if f != 0 {
+        let poll: fn() = unsafe { core::mem::transmute(f) };
+        poll();
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Macro support
+// ---------------------------------------------------------------------------
+
+/// Re-exports used by [`usb_device!`]. Not part of the public API.
+#[doc(hidden)]
+pub mod __private {
+    pub use critical_section::{with, Mutex};
+
+    pub fn register_poll(f: fn()) {
+        super::POLL_FN.store(f as usize, super::Ordering::Release);
+    }
+
+    pub fn unpend_and_unmask() {
+        use efm32hg322_pac as pac;
+        pac::NVIC::unpend(pac::Interrupt::USB);
+        unsafe { pac::NVIC::unmask(pac::Interrupt::USB) };
+    }
+}
+
+/// Define the USB device global and helper functions.
+///
+/// Expands to:
+/// - `static USB_DEV` - global device instance behind a `Mutex<RefCell<…>>`
+/// - `fn usb_start(dev)` - stores the device and enables the USB interrupt
+/// - `fn usb_with_bus(f)` - runs a closure with `&UsbBus` in a critical section
+#[macro_export]
+macro_rules! usb_device {
+    ($class:ty) => {
+        static USB_DEV: $crate::__private::Mutex<
+            core::cell::RefCell<Option<$crate::UsbDevice<$class>>>,
+        > = $crate::__private::Mutex::new(core::cell::RefCell::new(None));
+
+        fn usb_poll() {
+            $crate::__private::with(|lock| {
+                use core::ops::DerefMut;
+                if let Some(dev) = USB_DEV.borrow(lock).borrow_mut().deref_mut() {
+                    dev.poll();
+                }
+            });
+        }
+
+        fn usb_start(dev: $crate::UsbDevice<$class>) {
+            $crate::__private::with(|lock| {
+                USB_DEV.borrow(lock).replace(Some(dev));
+            });
+            $crate::__private::register_poll(usb_poll);
+            $crate::__private::unpend_and_unmask();
+        }
+
+        #[allow(dead_code)]
+        fn usb_with_bus(f: impl FnOnce(&$crate::UsbBus)) {
+            $crate::__private::with(|lock| {
+                use core::ops::DerefMut;
+                if let Some(dev) = USB_DEV.borrow(lock).borrow_mut().deref_mut() {
+                    f(dev.bus());
+                }
+            });
+        }
+    };
+}
 
 // ---------------------------------------------------------------------------
 // Types
@@ -34,7 +134,7 @@ pub enum SetupResult {
     /// Class expects a DATA OUT stage; library buffers it and calls
     /// [`UsbClass::ep0_data_out`] when complete.
     DataOut,
-    /// Request not recognized — library STALLs EP0.
+    /// Request not recognized - library STALLs EP0.
     Unhandled,
 }
 
@@ -128,7 +228,7 @@ macro_rules! usb_string {
     }};
 }
 
-/// String descriptor 0 — language ID (English US).
+/// String descriptor 0 - language ID (English US).
 static STRING0: [u8; 4] = [4, 0x03, 0x09, 0x04];
 
 // ---------------------------------------------------------------------------
@@ -478,7 +578,7 @@ impl<C: UsbClass> UsbDevice<C> {
 
                     self.handle_setup(setup);
                 }
-                // EP0 SETUP complete — re-arm.
+                // EP0 SETUP complete - re-arm.
                 (0, 0x4) => self.bus.ep0_prepare_out(),
 
                 // EP0 OUT data (e.g. SET_LINE_CODING payload).
@@ -509,7 +609,7 @@ impl<C: UsbClass> UsbDevice<C> {
     fn handle_iepint(&mut self) {
         let usb = self.bus.regs();
 
-        // EP0 IN — read and clear all pending bits.
+        // EP0 IN - read and clear all pending bits.
         let diep0int = usb.diep0int().read();
         usb.diep0int()
             .write(|w| unsafe { w.bits(diep0int.bits()) });
@@ -541,7 +641,7 @@ impl<C: UsbClass> UsbDevice<C> {
     fn handle_oepint(&mut self) {
         let usb = self.bus.regs();
 
-        // EP0 OUT — read and clear all pending bits.
+        // EP0 OUT - read and clear all pending bits.
         let doep0int = usb.doep0int().read();
         usb.doep0int()
             .write(|w| unsafe { w.bits(doep0int.bits()) });

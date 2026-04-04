@@ -9,16 +9,11 @@ version = "0.0.1"
 edition = "2021"
 
 [dependencies]
-embedded-hal.workspace = true
 panic-halt.workspace = true
 cortex-m.workspace = true
 cortex-m-rt.workspace = true
-critical-section.workspace = true
-portable-atomic.workspace = true
 defmt.workspace = true
 defmt-rtt.workspace = true
 
-efm32hg322-hal.workspace = true
 efm32hg322-pac.workspace = true
 efm32hg322-usb.workspace = true
-slstk3400a.workspace = true

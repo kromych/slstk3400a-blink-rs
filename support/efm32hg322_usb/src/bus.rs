@@ -72,6 +72,12 @@ pub struct UsbBus {
 unsafe impl Send for UsbBus {}
 unsafe impl Sync for UsbBus {}
 
+impl Default for UsbBus {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl UsbBus {
     pub fn new() -> Self {
         Self {
@@ -87,7 +93,7 @@ impl UsbBus {
     /// Write data to EP0 IN (control responses).
     pub fn ep0_write(&self, data: &[u8], max_len: usize) {
         let len = data.len().min(max_len);
-        let pktcnt = if len == 0 { 1 } else { ((len + 63) / 64) as u8 };
+        let pktcnt = if len == 0 { 1 } else { len.div_ceil(64) as u8 };
         self.usb.diep0tsiz().write(|w| unsafe {
             w.xfersize().bits(len as u8).pktcnt().bits(pktcnt)
         });

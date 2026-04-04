@@ -17,7 +17,7 @@ pub const PLAYER: [[u8; 2]; 8] = [
     [0x7F, 0xFE], //  ##############
 ];
 
-/// Invader type A (rows 0-1): 8px wide, 8 rows — "crab" shape, frame 1.
+/// Invader type A (rows 0-1): 8px wide, 8 rows - "crab" shape, frame 1.
 pub const INVADER_A1: [u8; 8] = [
     0x18, //    ##
     0x3C, //   ####
@@ -41,7 +41,7 @@ pub const INVADER_A2: [u8; 8] = [
     0x24, //   #  #
 ];
 
-/// Invader type B (rows 2-3): 8px wide — "squid" shape, frame 1.
+/// Invader type B (rows 2-3): 8px wide - "squid" shape, frame 1.
 pub const INVADER_B1: [u8; 8] = [
     0x24, //   #  #
     0x24, //   #  #
@@ -65,7 +65,7 @@ pub const INVADER_B2: [u8; 8] = [
     0x42, //  #    #
 ];
 
-/// Invader type C (row 4): 8px wide — "octopus" shape, frame 1.
+/// Invader type C (row 4): 8px wide - "octopus" shape, frame 1.
 pub const INVADER_C1: [u8; 8] = [
     0x3C, //   ####
     0x7E, //  ######

@@ -3,7 +3,7 @@
 //! proportional to the pad capacitance. A PRS channel routes the ACMP0 output
 //! to TIMER0 which counts edges over a fixed measurement window. When a finger
 //! touches a pad the capacitance increases, the oscillation slows, and the
-//! count drops below a threshold — indicating a touch.
+//! count drops below a threshold - indicating a touch.
 //!
 //! On the SLSTK3400A the two capacitive touch pads are:
 //!   BUTTON0 → ACMP0 channel 4
@@ -33,7 +33,7 @@ use slstk3400a::leds::{LedTrait, LEDs};
 /// Number of capacitive touch channels to scan.
 const NUM_CHANNELS: usize = 2;
 
-/// Touch detection threshold — counts below this percentage of baseline indicate a touch.
+/// Touch detection threshold - counts below this percentage of baseline indicate a touch.
 const TOUCH_THRESHOLD_PCT: u32 = 80;
 
 /// Measurement window in microseconds for each channel scan.
@@ -159,7 +159,7 @@ fn main() -> ! {
     let clock_config = get_clock_config().expect("Must be able to get clock config");
     let mut systick = systick.constrain(&clock_config);
 
-    defmt::info!("Capsense demo started — BUTTON0=ch4, BUTTON1=ch3");
+    defmt::info!("Capsense demo started - BUTTON0=ch4, BUTTON1=ch3");
 
     // Establish baselines.
     let mut baselines = [0u32; NUM_CHANNELS];
