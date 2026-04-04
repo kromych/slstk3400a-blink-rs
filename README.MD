@@ -5,22 +5,22 @@ This repo has a number of demo projects for the
 
 Demo | Description
 --- | ---
-adc-temp | SLSTK3400A ADC temperature sensor displayed on the Sharp Memory LCD
-blink | SLSTK3400A blink in a loop
-blink-captouch | SLSTK3400A blink with the capapcitive touch buttons
-blink-pb | SLSTK3400A blink on push buttons
-blink-rtc | SLSTK3400A blink on RTC interrupt
-blink-systick | SLSTK3400A blink on SysTick interrupt
-lcd-counter | SLSTK3400A RTC counter displayed on the Sharp Memory LCD
-lcd-hello | SLSTK3400A Sharp Memory LCD hello world
-pulse-counter | SLSTK3400A pulse counter using PCNT0 and push buttons
-pwm-led | SLSTK3400A PWM LED brightness control using TIMER2 CC output
-space-invaders | Space Invaders demo on the SLSTK3400A Sharp Memory LCD
-stopwatch | SLSTK3400A stopwatch using RTC, buttons, and Sharp Memory LCD
-usb-cdc-demo | SLSTK3400A USB serial port - echoes what's typed back
-usb-hid-demo | SLSTK3400A USB HID keyboard - types a greeting
-usb-midi-demo | SLSTK3400A USB MIDI device - plays a simple tune
-usb-msc-demo | SLSTK3400A USB Mass Storage - tiny FAT16 with readme.txt
+[`adc-temp`](./demos/adc-temp) | SLSTK3400A ADC temperature sensor displayed on the Sharp Memory LCD
+[`blink`](./demos/blink) | SLSTK3400A blink in a loop
+[`blink-captouch`](./demos/blink-captouch) | SLSTK3400A blink with the capapcitive touch buttons
+[`blink-pb`](./demos/blink-pb) | SLSTK3400A blink on push buttons
+[`blink-rtc`](./demos/blink-rtc) | SLSTK3400A blink on RTC interrupt
+[`blink-systick`](./demos/blink-systick) | SLSTK3400A blink on SysTick interrupt
+[`lcd-counter`](./demos/lcd-counter) | SLSTK3400A RTC counter displayed on the Sharp Memory LCD
+[`lcd-hello`](./demos/lcd-hello) | SLSTK3400A Sharp Memory LCD hello world
+[`pulse-counter`](./demos/pulse-counter) | SLSTK3400A pulse counter using PCNT0 and push buttons
+[`pwm-led`](./demos/pwm-led) | SLSTK3400A PWM LED brightness control using TIMER2 CC output
+[`space-invaders`](./demos/space-invaders) | Space Invaders demo on the SLSTK3400A Sharp Memory LCD
+[`stopwatch`](./demos/stopwatch) | SLSTK3400A stopwatch using RTC, buttons, and Sharp Memory LCD
+[`usb-cdc-demo`](./demos/usb-cdc-demo) | SLSTK3400A USB serial port - echoes what's typed back
+[`usb-hid-demo`](./demos/usb-hid-demo) | SLSTK3400A USB HID keyboard - types a greeting
+[`usb-midi-demo`](./demos/usb-midi-demo) | SLSTK3400A USB MIDI device - plays a simple tune
+[`usb-msc-demo`](./demos/usb-msc-demo) | SLSTK3400A USB Mass Storage - tiny FAT16 with readme.txt
 
 ## Prepare
 
