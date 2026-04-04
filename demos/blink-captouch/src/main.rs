@@ -5,9 +5,12 @@
 //! touches a pad the capacitance increases, the oscillation slows, and the
 //! count drops below a threshold — indicating a touch.
 //!
-//! On the SLSTK3400A the four capacitive touch pads are wired to ACMP0
-//! channels 0–3 (PC0–PC3). This demo scans all four pads and toggles LEDs
-//! when pad 0 or pad 1 is touched.
+//! On the SLSTK3400A the two capacitive touch pads are:
+//!   BUTTON0 → ACMP0 channel 4
+//!   BUTTON1 → ACMP0 channel 3
+//! (per capsenseconfig.h from the SiLabs board support package).
+//!
+//! This demo scans both pads and toggles the corresponding LED when touched.
 
 #![no_main]
 #![no_std]
@@ -25,39 +28,34 @@ use hal::clocks::get_clock_config;
 use hal::gpio::GPIOExt;
 use hal::systick::SystickExt;
 use hal::watchdog::WatchdogExt;
-use slstk3400a::SlStk3400a;
+use slstk3400a::leds::{LedTrait, LEDs};
 
 /// Number of capacitive touch channels to scan.
-const NUM_CHANNELS: usize = 4;
+const NUM_CHANNELS: usize = 2;
 
-/// Touch detection threshold — counts below this value indicate a touch.
-/// This value is relative to the baseline and may need tuning for a given board.
+/// Touch detection threshold — counts below this percentage of baseline indicate a touch.
 const TOUCH_THRESHOLD_PCT: u32 = 80;
 
 /// Measurement window in microseconds for each channel scan.
 const MEASURE_WINDOW_US: u32 = 1000;
 
-/// Positive-input channel selectors for the four capsense pads.
-const CHANNELS: [fn(&mut pac::acmp0::inputsel::W) -> &mut pac::acmp0::inputsel::W; NUM_CHANNELS] = [
-    |w: &mut pac::acmp0::inputsel::W| w.possel().ch0(),
-    |w: &mut pac::acmp0::inputsel::W| w.possel().ch1(),
-    |w: &mut pac::acmp0::inputsel::W| w.possel().ch2(),
-    |w: &mut pac::acmp0::inputsel::W| w.possel().ch3(),
-];
+/// ACMP0 channel numbers for the two capsense pads (from capsenseconfig.h).
+const CAPSENSE_CHANNELS: [u8; NUM_CHANNELS] = [4, 3]; // BUTTON0=ch4, BUTTON1=ch3
 
 /// Set up ACMP0 for capacitive sense on the selected channel.
-fn acmp_setup_capsense(acmp: &pac::Acmp0, channel_idx: usize) {
+fn acmp_setup_capsense(acmp: &pac::Acmp0, channel: u8) {
     // Disable while reconfiguring.
     acmp.ctrl()
         .modify(|_, w: &mut pac::acmp0::ctrl::W| w.en().clear_bit());
 
     // Select channel and capsense mode.
-    acmp.inputsel().write(|w: &mut pac::acmp0::inputsel::W| {
-        let w = CHANNELS[channel_idx](w);
+    acmp.inputsel().write(|w: &mut pac::acmp0::inputsel::W| unsafe {
+        w.possel().bits(channel);
         w.negsel().capsense().csresen().set_bit().csressel().res3()
     });
 
-    // Enable ACMP with full-bias for fast capsense oscillation.
+    // Enable ACMP with settings matching SiLabs capsense driver:
+    // fullbias=1, biasprog=0x7, warmtime=512cycles, hystsel=hyst5.
     acmp.ctrl().write(|w: &mut pac::acmp0::ctrl::W| unsafe {
         w.en()
             .set_bit()
@@ -68,7 +66,7 @@ fn acmp_setup_capsense(acmp: &pac::Acmp0, channel_idx: usize) {
             .fullbias()
             .set_bit()
             .biasprog()
-            .bits(31)
+            .bits(0x7)
     });
 }
 
@@ -77,10 +75,10 @@ fn measure_channel(
     acmp: &pac::Acmp0,
     timer: &pac::Timer0,
     systick: &mut hal::systick::Systick,
-    channel_idx: usize,
+    channel: u8,
     window_us: u32,
 ) -> u32 {
-    acmp_setup_capsense(acmp, channel_idx);
+    acmp_setup_capsense(acmp, channel);
 
     // Wait for ACMP warm-up.
     while acmp.status().read().acmpact().bit_is_clear() {}
@@ -112,23 +110,17 @@ fn main() -> ! {
     // Disable watchdog.
     p.wdog.constrain().disable();
 
-    // Enable peripheral clocks: GPIO, ACMP0, TIMER0, PRS.
+    // Enable peripheral clocks: GPIO, ACMP0, TIMER0.
     enable_gpio_clock();
     p.cmu
         .hfperclken0()
         .modify(|_, w: &mut pac::cmu::hfperclken0::W| w.acmp0().set_bit().timer0().set_bit());
 
-    // Enable PRS clock (bit 15 of HFPERCLKEN0 is documented but the PAC may
-    // not expose a named field; if needed we fall back to raw bits).
-    // The PRS clock is always enabled on EFM32HG when HFPERCLK is running,
-    // so this is a no-op on this device.
-
-    // Board and GPIO.
+    // GPIO and LEDs.
     let gpio = p.gpio.constrain().split();
-    let mut board = SlStk3400a::new(gpio).unwrap();
-    for led in board.leds_mut() {
-        led.off();
-    }
+    let mut leds = LEDs::new(gpio.pf4.into(), gpio.pf5.into());
+    leds.led0.off();
+    leds.led1.off();
 
     // --- PRS: Route ACMP0 output (signal 0) to PRS channel 0 ---
     p.prs
@@ -138,13 +130,7 @@ fn main() -> ! {
             w.edsel().posedge()
         });
 
-    // --- TIMER0: Count PRS channel 0 edges via CC0 input capture ---
-    // Select CC1 as clock source won't work for edge counting.
-    // Instead we use CC0 in input-capture mode with PRS, and count overflows.
-    // Simpler: clock TIMER0 from HFPERCLK and use CC0 to capture — but the
-    // most straightforward capsense counting approach is to clock TIMER0 from
-    // PRS via the CC1 clock-select path.
-    //
+    // --- TIMER0: Count PRS channel 0 edges via CC1 clock-select path ---
     // On EFM32HG, TIMER CLKSEL=CC1 means the timer is clocked by CC channel 1
     // input. We route PRS CH0 to CC1 input.
     p.timer0
@@ -173,47 +159,48 @@ fn main() -> ! {
     let clock_config = get_clock_config().expect("Must be able to get clock config");
     let mut systick = systick.constrain(&clock_config);
 
-    defmt::info!("Capsense demo started — touch pads 0-3 (PC0-PC3)");
+    defmt::info!("Capsense demo started — BUTTON0=ch4, BUTTON1=ch3");
 
     // Establish baselines.
     let mut baselines = [0u32; NUM_CHANNELS];
-    for (ch, baseline) in baselines.iter_mut().enumerate() {
-        // Average a few readings for a stable baseline.
+    for (i, baseline) in baselines.iter_mut().enumerate() {
+        let ch = CAPSENSE_CHANNELS[i];
         let mut sum = 0u32;
         for _ in 0..4 {
             sum += measure_channel(&p.acmp0, &p.timer0, &mut systick, ch, MEASURE_WINDOW_US);
         }
         *baseline = sum / 4;
-        defmt::info!("Baseline CH{}: {}", ch, *baseline);
+        defmt::info!("Baseline BUTTON{} (ch{}): {}", i, ch, *baseline);
     }
 
     // Main scan loop.
     loop {
-        for (ch, baseline) in baselines.iter().enumerate() {
-            let count = measure_channel(&p.acmp0, &p.timer0, &mut systick, ch, MEASURE_WINDOW_US);
+        for (i, baseline) in baselines.iter().enumerate() {
+            let ch = CAPSENSE_CHANNELS[i];
+            let count =
+                measure_channel(&p.acmp0, &p.timer0, &mut systick, ch, MEASURE_WINDOW_US);
 
             let threshold = baseline * TOUCH_THRESHOLD_PCT / 100;
             let touched = count < threshold;
 
             if touched {
-                defmt::info!("Touch CH{}: count={} baseline={}", ch, count, baseline);
+                defmt::info!("Touch BUTTON{} (ch{}): count={} baseline={}", i, ch, count, baseline);
             }
 
-            // Map pad 0 → LED 0, pad 1 → LED 1.
-            let leds = board.leds_mut();
-            match ch {
+            // BUTTON0 (ch4) → LED 0, BUTTON1 (ch3) → LED 1.
+            match i {
                 0 => {
                     if touched {
-                        leds[0].on();
+                        leds.led0.on();
                     } else {
-                        leds[0].off();
+                        leds.led0.off();
                     }
                 }
                 1 => {
                     if touched {
-                        leds[1].on();
+                        leds.led1.on();
                     } else {
-                        leds[1].off();
+                        leds.led1.off();
                     }
                 }
                 _ => {}

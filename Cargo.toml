@@ -13,8 +13,13 @@ members = [
     "demos/adc-temp",
     "demos/pulse-counter",
     "demos/space-invaders",
+    "demos/stopwatch",
+    "demos/pwm-led",
+    "demos/usb-midi",
+    "demos/usb-hid",
     "support/efm32hg322_hal",
     "support/efm32hg322_pac",
+    "support/efm32hg322_usb",
     "support/slstk3400a"
 ]
 
@@ -33,4 +38,5 @@ defmt-rtt = "1.1"
 
 efm32hg322-pac = { path = "support/efm32hg322_pac" }
 efm32hg322-hal = { path = "support/efm32hg322_hal" }
+efm32hg322-usb = { path = "support/efm32hg322_usb" }
 slstk3400a = { path = "support/slstk3400a" }

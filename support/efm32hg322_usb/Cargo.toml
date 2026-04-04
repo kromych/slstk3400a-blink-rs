@@ -1,0 +1,16 @@
+[package]
+authors = ["kromych <kromych@users.noreply.github.com>"]
+categories = ["embedded", "no-std", "efm32"]
+description = "DWC2 USB device driver for EFM32HG322"
+name = "efm32hg322-usb"
+keywords = ["arm", "cortex-m", "usb"]
+license = "MIT"
+version = "0.0.1"
+edition = "2021"
+
+[dependencies]
+cortex-m.workspace = true
+critical-section.workspace = true
+defmt.workspace = true
+
+efm32hg322-pac.workspace = true

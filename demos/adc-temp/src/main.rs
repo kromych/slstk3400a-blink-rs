@@ -36,18 +36,18 @@ fn devinfo_read(offset: u32) -> u32 {
 
 /// Read factory ADC calibration temperature (degrees C, from DEVINFO).
 fn cal_temp() -> i32 {
-    // DEVINFO offset 0x1C = CAL (ADC0 calibration)
-    // Bits 15:8 = TEMP (temperature in C at which ADC was calibrated)
-    let cal = devinfo_read(0x1C);
-    ((cal >> 8) & 0xFF) as i32
+    // DEVINFO offset 0x00 = CAL
+    // Bits 23:16 = TEMP (temperature in C at which ADC was calibrated)
+    let cal = devinfo_read(0x00);
+    ((cal >> 16) & 0xFF) as i32
 }
 
 /// Read factory ADC calibration reading at reference temperature.
 fn cal_adc_value() -> i32 {
-    // DEVINFO offset 0x18 = ADC0CAL2
-    // Bits 15:4 = TEMP1V25 (12-bit ADC reading at cal_temp with 1.25V ref)
-    let cal = devinfo_read(0x18);
-    ((cal >> 4) & 0xFFF) as i32
+    // DEVINFO offset 0x0C = ADC0CAL2
+    // Bits 31:20 = TEMP1V25 (12-bit ADC reading at cal_temp with 1.25V ref)
+    let cal = devinfo_read(0x0C);
+    ((cal >> 20) & 0xFFF) as i32
 }
 
 /// Initialise ADC0 for single-conversion reads from the temperature sensor.
