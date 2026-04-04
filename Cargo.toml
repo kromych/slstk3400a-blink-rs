@@ -14,6 +14,7 @@ members = [
     "demos/pwm-led",
     "demos/space-invaders",
     "demos/stopwatch",
+    "demos/usb-audio",
     "demos/usb-cdc",
     "demos/usb-hid",
     "demos/usb-midi",

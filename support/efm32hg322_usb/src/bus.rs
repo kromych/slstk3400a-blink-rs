@@ -131,9 +131,22 @@ impl UsbBus {
                 self.usb.diep0_tsiz().write(|w| unsafe {
                     w.xfersize().bits(len as u32).pktcnt().bits(1)
                 });
-                self.usb
-                    .diep0_ctl()
-                    .modify(|_, w| w.cnak().set_bit().epena().set_bit());
+                let is_iso = self.usb.diep0_ctl().read().eptype().is_iso();
+                self.usb.diep0_ctl().modify(|_, w| {
+                    let w = w.cnak().set_bit().epena().set_bit();
+                    if is_iso {
+                        // Schedule for the next frame (opposite parity).
+                        let even_now =
+                            self.usb.dsts().read().soffn().bits() & 1 == 0;
+                        if even_now {
+                            w.setd1pidof().set_bit()
+                        } else {
+                            w.setd0pidef().set_bit()
+                        }
+                    } else {
+                        w
+                    }
+                });
                 write_fifo(fifo_addr(1), data, len);
             }
             2 => {
@@ -141,9 +154,21 @@ impl UsbBus {
                 self.usb.diep1_tsiz().write(|w| unsafe {
                     w.xfersize().bits(len as u32).pktcnt().bits(1)
                 });
-                self.usb
-                    .diep1_ctl()
-                    .modify(|_, w| w.cnak().set_bit().epena().set_bit());
+                let is_iso = self.usb.diep1_ctl().read().eptype().is_iso();
+                self.usb.diep1_ctl().modify(|_, w| {
+                    let w = w.cnak().set_bit().epena().set_bit();
+                    if is_iso {
+                        let even_now =
+                            self.usb.dsts().read().soffn().bits() & 1 == 0;
+                        if even_now {
+                            w.setd1pidof().set_bit()
+                        } else {
+                            w.setd0pidef().set_bit()
+                        }
+                    } else {
+                        w
+                    }
+                });
                 write_fifo(fifo_addr(2), data, len);
             }
             _ => {}

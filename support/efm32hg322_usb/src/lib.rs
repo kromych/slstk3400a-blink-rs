@@ -6,6 +6,7 @@
 
 #![no_std]
 
+pub mod audio;
 pub mod bus;
 pub mod cdc_acm;
 pub mod hid_keyboard;
@@ -143,6 +144,7 @@ pub enum SetupResult {
 pub enum EpType {
     Bulk,
     Interrupt,
+    Isochronous,
 }
 
 /// Configuration for a non-EP0 endpoint index (1 or 2).
@@ -198,6 +200,10 @@ pub trait UsbClass {
     fn reset(&mut self) {}
     /// Called on bus suspend.
     fn suspended(&mut self) {}
+    /// Called when the host sends SET_INTERFACE.
+    fn set_interface(&mut self, _interface: u8, _alt_setting: u8, _usb: &UsbBus) {}
+    /// Called when the host sends GET_INTERFACE; return the current alternate setting.
+    fn get_interface(&self, _interface: u8) -> u8 { 0 }
 }
 
 // ---------------------------------------------------------------------------
@@ -474,6 +480,7 @@ impl<C: UsbClass> UsbDevice<C> {
                     match ep.ep_type {
                         EpType::Bulk => w.eptype().bulk(),
                         EpType::Interrupt => w.eptype().int(),
+                        EpType::Isochronous => w.eptype().iso(),
                     }
                 });
             }
@@ -490,6 +497,7 @@ impl<C: UsbClass> UsbDevice<C> {
                     match ep.ep_type {
                         EpType::Bulk => w.eptype().bulk(),
                         EpType::Interrupt => w.eptype().int(),
+                        EpType::Isochronous => w.eptype().iso(),
                     }
                 });
             }
@@ -511,6 +519,7 @@ impl<C: UsbClass> UsbDevice<C> {
                     match ep.ep_type {
                         EpType::Bulk => w.eptype().bulk(),
                         EpType::Interrupt => w.eptype().int(),
+                        EpType::Isochronous => w.eptype().iso(),
                     }
                 });
             }
@@ -527,6 +536,7 @@ impl<C: UsbClass> UsbDevice<C> {
                     match ep.ep_type {
                         EpType::Bulk => w.eptype().bulk(),
                         EpType::Interrupt => w.eptype().int(),
+                        EpType::Isochronous => w.eptype().iso(),
                     }
                 });
             }
@@ -688,6 +698,8 @@ impl<C: UsbClass> UsbDevice<C> {
         const SET_ADDRESS: u8 = 0x05;
         const GET_DESCRIPTOR: u8 = 0x06;
         const SET_CONFIGURATION: u8 = 0x09;
+        const GET_INTERFACE: u8 = 0x0A;
+        const SET_INTERFACE: u8 = 0x0B;
 
         const DESC_DEVICE: u8 = 0x01;
         const DESC_CONFIGURATION: u8 = 0x02;
@@ -785,6 +797,22 @@ impl<C: UsbClass> UsbDevice<C> {
             (0x81, GET_STATUS) | (0x82, GET_STATUS) => {
                 self.bus
                     .ep0_write(&[0x00, 0x00], setup.w_length as usize);
+            }
+
+            // SET_INTERFACE (alternate setting).
+            (0x01, SET_INTERFACE) => {
+                let iface = setup.w_index as u8;
+                let alt = setup.w_value as u8;
+                defmt::info!("SET_INTERFACE iface={} alt={}", iface, alt);
+                self.class.set_interface(iface, alt, &self.bus);
+                self.bus.ep0_write(&[], 0);
+            }
+
+            // GET_INTERFACE.
+            (0x81, GET_INTERFACE) => {
+                let iface = setup.w_index as u8;
+                let alt = self.class.get_interface(iface);
+                self.bus.ep0_write(&[alt], setup.w_length as usize);
             }
 
             // ---- Delegate to class ----
