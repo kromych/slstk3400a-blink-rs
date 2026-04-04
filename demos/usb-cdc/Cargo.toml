@@ -1,8 +1,8 @@
 [package]
 authors = ["kromych <kromych@users.noreply.github.con"]
 categories = ["embedded", "no-std", "efm32"]
-description = "SLSTK3400A minimal USB device enumeration"
-name = "usb-device-demo"
+description = "SLSTK3400A USB serial port - echoes what's typed back"
+name = "usb-cdc-demo"
 keywords = ["arm", "cortex-m"]
 license = "MIT"
 version = "0.0.1"
