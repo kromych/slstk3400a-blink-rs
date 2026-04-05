@@ -28,7 +28,7 @@ use hal::clocks::get_clock_config;
 use hal::gpio::GPIOExt;
 use hal::systick::SystickExt;
 use hal::watchdog::WatchdogExt;
-use slstk3400a::leds::{LedTrait, LEDs};
+use slstk3400a::leds::{LEDs, LedTrait};
 
 /// Number of capacitive touch channels to scan.
 const NUM_CHANNELS: usize = 2;
@@ -49,10 +49,11 @@ fn acmp_setup_capsense(acmp: &pac::Acmp0, channel: u8) {
         .modify(|_, w: &mut pac::acmp0::ctrl::W| w.en().clear_bit());
 
     // Select channel and capsense mode.
-    acmp.inputsel().write(|w: &mut pac::acmp0::inputsel::W| unsafe {
-        w.possel().bits(channel);
-        w.negsel().capsense().csresen().set_bit().csressel().res3()
-    });
+    acmp.inputsel()
+        .write(|w: &mut pac::acmp0::inputsel::W| unsafe {
+            w.possel().bits(channel);
+            w.negsel().capsense().csresen().set_bit().csressel().res3()
+        });
 
     // Enable ACMP with settings matching SiLabs capsense driver:
     // fullbias=1, biasprog=0x7, warmtime=512cycles, hystsel=hyst5.
@@ -177,14 +178,19 @@ fn main() -> ! {
     loop {
         for (i, baseline) in baselines.iter().enumerate() {
             let ch = CAPSENSE_CHANNELS[i];
-            let count =
-                measure_channel(&p.acmp0, &p.timer0, &mut systick, ch, MEASURE_WINDOW_US);
+            let count = measure_channel(&p.acmp0, &p.timer0, &mut systick, ch, MEASURE_WINDOW_US);
 
             let threshold = baseline * TOUCH_THRESHOLD_PCT / 100;
             let touched = count < threshold;
 
             if touched {
-                defmt::info!("Touch BUTTON{} (ch{}): count={} baseline={}", i, ch, count, baseline);
+                defmt::info!(
+                    "Touch BUTTON{} (ch{}): count={} baseline={}",
+                    i,
+                    ch,
+                    count,
+                    baseline
+                );
             }
 
             // BUTTON0 (ch4) → LED 0, BUTTON1 (ch3) → LED 1.

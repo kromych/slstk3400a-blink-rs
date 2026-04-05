@@ -107,10 +107,10 @@ pub fn init() {
     // Pin 8: bits 0-3, Pin 10: bits 8-11.
     gpio.pa_modeh().modify(|r, w| unsafe {
         let mut v = r.bits();
-        v &= !0xF;          // clear pin 8 (DISP_SEL)
-        v |= 4;             // push-pull
-        v &= !(0xF << 8);  // clear pin 10 (CS)
-        v |= 4 << 8;       // push-pull
+        v &= !0xF; // clear pin 8 (DISP_SEL)
+        v |= 4; // push-pull
+        v &= !(0xF << 8); // clear pin 10 (CS)
+        v |= 4 << 8; // push-pull
         w.bits(v)
     });
 
@@ -118,8 +118,8 @@ pub fn init() {
     // PE_MODEH covers pins 8-15; pin 10 = bits 8-11.
     gpio.pe_modeh().modify(|r, w| unsafe {
         let mut v = r.bits();
-        v &= !(0xF << 8);  // clear pin 10
-        v |= 4 << 8;       // push-pull
+        v &= !(0xF << 8); // clear pin 10
+        v |= 4 << 8; // push-pull
         w.bits(v)
     });
 
@@ -128,7 +128,7 @@ pub fn init() {
     gpio.pe_modeh().modify(|r, w| unsafe {
         let mut v = r.bits();
         v &= !(0xF << 16); // clear pin 12
-        v |= 4 << 16;      // push-pull
+        v |= 4 << 16; // push-pull
         w.bits(v)
     });
 
@@ -137,7 +137,7 @@ pub fn init() {
     gpio.pf_model().modify(|r, w| unsafe {
         let mut v = r.bits();
         v &= !(0xF << 12); // clear pin 3
-        v |= 4 << 12;      // push-pull
+        v |= 4 << 12; // push-pull
         w.bits(v)
     });
 

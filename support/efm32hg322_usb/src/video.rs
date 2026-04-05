@@ -343,9 +343,7 @@ impl<H: VideoHandler> UsbClass for VideoClass<H> {
                 SetupResult::DataIn
             }
             // SET_CUR on VS interface (class, interface recipient, host-to-device)
-            (0x21, SET_CUR)
-                if setup.w_value == VS_PROBE || setup.w_value == VS_COMMIT =>
-            {
+            (0x21, SET_CUR) if setup.w_value == VS_PROBE || setup.w_value == VS_COMMIT => {
                 defmt::info!("VS Probe/Commit SET");
                 // Accept and discard the host's probe/commit data.
                 SetupResult::DataOut

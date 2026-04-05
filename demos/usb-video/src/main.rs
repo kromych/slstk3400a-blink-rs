@@ -11,9 +11,7 @@ use defmt_rtt as _;
 use panic_halt as _;
 
 use efm32hg322_pac as pac;
-use efm32hg322_usb::video::{
-    self, VideoClass, VideoHandler, BYTES_PER_LINE, HEIGHT, WIDTH,
-};
+use efm32hg322_usb::video::{self, VideoClass, VideoHandler, BYTES_PER_LINE, HEIGHT, WIDTH};
 use efm32hg322_usb::UsbDevice;
 
 // ---------------------------------------------------------------------------
@@ -286,13 +284,17 @@ impl VideoHandler for StarWarsCrawl {
             let line_px = line.len() * CHAR_W;
 
             // Iterate over bytes in this scanline that overlap [offset, end).
-            let row_start = if line_start >= offset { 0 } else { offset - line_start };
+            let row_start = offset.saturating_sub(line_start);
             let row_end = BYTES_PER_LINE.min(end - line_start);
 
             let mut lb = row_start;
             while lb < row_end {
                 let val = if lb < margin_bytes || lb >= BYTES_PER_LINE - margin_bytes {
-                    if lb & 1 == 0 { 16 } else { 128 }
+                    if lb & 1 == 0 {
+                        16
+                    } else {
+                        128
+                    }
                 } else if lb & 1 != 0 {
                     128 // chrominance = neutral
                 } else {

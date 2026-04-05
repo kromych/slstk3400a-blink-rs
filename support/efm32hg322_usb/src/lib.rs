@@ -204,7 +204,9 @@ pub trait UsbClass {
     /// Called when the host sends SET_INTERFACE.
     fn set_interface(&mut self, _interface: u8, _alt_setting: u8, _usb: &UsbBus) {}
     /// Called when the host sends GET_INTERFACE; return the current alternate setting.
-    fn get_interface(&self, _interface: u8) -> u8 { 0 }
+    fn get_interface(&self, _interface: u8) -> u8 {
+        0
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -305,20 +307,17 @@ impl<C: UsbClass> UsbDevice<C> {
 
         // Soft-reset.
         while usb.grstctl().read().ahbidle().bit_is_clear() {}
-        usb.grstctl()
-            .modify(|_, w| w.csftrst().set_bit());
+        usb.grstctl().modify(|_, w| w.csftrst().set_bit());
         while usb.grstctl().read().csftrst().bit_is_set() {}
         while usb.grstctl().read().ahbidle().bit_is_clear() {}
 
         usb.gahbcfg().write(|w| w.glblintrmsk().set_bit());
-        usb.dctl()
-            .modify(|_, w| w.sftdiscon().set_bit());
+        usb.dctl().modify(|_, w| w.sftdiscon().set_bit());
         usb.dcfg()
             .write(|w| unsafe { w.devspd().fs().devaddr().bits(0) });
 
         // Endpoint interrupt masks.
-        usb.diepmsk()
-            .write(|w| w.xfercomplmsk().set_bit());
+        usb.diepmsk().write(|w| w.xfercomplmsk().set_bit());
         usb.doepmsk()
             .write(|w| w.xfercomplmsk().set_bit().setupmsk().set_bit());
 
@@ -366,19 +365,15 @@ impl<C: UsbClass> UsbDevice<C> {
         });
 
         // Clear all pending interrupts.
-        usb.gintsts()
-            .write(|w| unsafe { w.bits(0xFFFF_FFFF) });
+        usb.gintsts().write(|w| unsafe { w.bits(0xFFFF_FFFF) });
 
         // Power-on programming done handshake.
-        usb.dctl()
-            .modify(|_, w| w.pwronprgdone().set_bit());
+        usb.dctl().modify(|_, w| w.pwronprgdone().set_bit());
         cortex_m::asm::delay(800); // ~10 µs at 48 MHz
-        usb.dctl()
-            .modify(|_, w| w.pwronprgdone().clear_bit());
+        usb.dctl().modify(|_, w| w.pwronprgdone().clear_bit());
 
         // Connect (clear soft-disconnect).
-        usb.dctl()
-            .modify(|_, w| w.sftdiscon().clear_bit());
+        usb.dctl().modify(|_, w| w.sftdiscon().clear_bit());
 
         Self {
             bus: UsbBus::new(),
@@ -452,8 +447,7 @@ impl<C: UsbClass> UsbDevice<C> {
         defmt::info!("USB reset");
         let usb = self.bus.regs();
 
-        usb.dcfg()
-            .modify(|_, w| unsafe { w.devaddr().bits(0) });
+        usb.dcfg().modify(|_, w| unsafe { w.devaddr().bits(0) });
 
         // Flush all FIFOs.
         usb.grstctl()
@@ -463,16 +457,14 @@ impl<C: UsbClass> UsbDevice<C> {
         {}
 
         // Configure EP0.
-        usb.diep0ctl()
-            .write(|w| w.mps()._64b().snak().set_bit());
+        usb.diep0ctl().write(|w| w.mps()._64b().snak().set_bit());
         usb.doep0ctl().write(|w| w.snak().set_bit());
 
         // Activate class endpoints and set DAINTMSK.
         self.activate_endpoints();
 
         // EP0 OUT STUPCNT.
-        usb.doep0tsiz()
-            .write(|w| unsafe { w.supcnt().bits(3) });
+        usb.doep0tsiz().write(|w| unsafe { w.supcnt().bits(3) });
 
         self.pending_data_out = false;
         self.class.reset();
@@ -506,13 +498,7 @@ impl<C: UsbClass> UsbDevice<C> {
             if ep.has_out {
                 daintmsk |= 1 << 17;
                 usb.doep0_ctl().write(|w| unsafe {
-                    let w = w
-                        .mps()
-                        .bits(ep.mps)
-                        .usbactep()
-                        .set_bit()
-                        .snak()
-                        .set_bit();
+                    let w = w.mps().bits(ep.mps).usbactep().set_bit().snak().set_bit();
                     match ep.ep_type {
                         EpType::Bulk => w.eptype().bulk(),
                         EpType::Interrupt => w.eptype().int(),
@@ -545,13 +531,7 @@ impl<C: UsbClass> UsbDevice<C> {
             if ep.has_out {
                 daintmsk |= 1 << 18;
                 usb.doep1_ctl().write(|w| unsafe {
-                    let w = w
-                        .mps()
-                        .bits(ep.mps)
-                        .usbactep()
-                        .set_bit()
-                        .snak()
-                        .set_bit();
+                    let w = w.mps().bits(ep.mps).usbactep().set_bit().snak().set_bit();
                     match ep.ep_type {
                         EpType::Bulk => w.eptype().bulk(),
                         EpType::Interrupt => w.eptype().int(),
@@ -561,10 +541,8 @@ impl<C: UsbClass> UsbDevice<C> {
             }
         }
 
-        usb.daintmsk()
-            .write(|w| unsafe { w.bits(daintmsk) });
-        usb.diepmsk()
-            .write(|w| w.xfercomplmsk().set_bit());
+        usb.daintmsk().write(|w| unsafe { w.bits(daintmsk) });
+        usb.diepmsk().write(|w| w.xfercomplmsk().set_bit());
         usb.doepmsk()
             .write(|w| w.xfercomplmsk().set_bit().setupmsk().set_bit());
     }
@@ -639,7 +617,9 @@ impl<C: UsbClass> UsbDevice<C> {
     fn handle_iepint(&mut self) {
         // EP0 IN - read and clear all pending bits.
         let diep0int = self.bus.regs().diep0int().read();
-        self.bus.regs().diep0int()
+        self.bus
+            .regs()
+            .diep0int()
             .write(|w| unsafe { w.bits(diep0int.bits()) });
         if diep0int.xfercompl().bit_is_set() {
             if self.ep0_in_remaining > 0 {
@@ -652,7 +632,9 @@ impl<C: UsbClass> UsbDevice<C> {
         // EP1 IN.
         if self.config.ep1.as_ref().is_some_and(|e| e.has_in) {
             let int = self.bus.regs().diep0_int().read();
-            self.bus.regs().diep0_int()
+            self.bus
+                .regs()
+                .diep0_int()
                 .write(|w| unsafe { w.bits(int.bits()) });
             if int.xfercompl().bit_is_set() {
                 self.class.in_complete(1, &self.bus);
@@ -662,7 +644,9 @@ impl<C: UsbClass> UsbDevice<C> {
         // EP2 IN.
         if self.config.ep2.as_ref().is_some_and(|e| e.has_in) {
             let int = self.bus.regs().diep1_int().read();
-            self.bus.regs().diep1_int()
+            self.bus
+                .regs()
+                .diep1_int()
                 .write(|w| unsafe { w.bits(int.bits()) });
             if int.xfercompl().bit_is_set() {
                 self.class.in_complete(2, &self.bus);
@@ -673,7 +657,9 @@ impl<C: UsbClass> UsbDevice<C> {
     fn handle_oepint(&mut self) {
         // EP0 OUT - read and clear all pending bits.
         let doep0int = self.bus.regs().doep0int().read();
-        self.bus.regs().doep0int()
+        self.bus
+            .regs()
+            .doep0int()
             .write(|w| unsafe { w.bits(doep0int.bits()) });
         if doep0int.xfercompl().bit_is_set() {
             if self.pending_data_out {
@@ -691,7 +677,9 @@ impl<C: UsbClass> UsbDevice<C> {
         // EP1 OUT.
         if self.config.ep1.as_ref().is_some_and(|e| e.has_out) {
             let int = self.bus.regs().doep0_int().read();
-            self.bus.regs().doep0_int()
+            self.bus
+                .regs()
+                .doep0_int()
                 .write(|w| unsafe { w.bits(int.bits()) });
             if int.xfercompl().bit_is_set() {
                 if let Some(ref ep) = self.config.ep1 {
@@ -703,7 +691,9 @@ impl<C: UsbClass> UsbDevice<C> {
         // EP2 OUT.
         if self.config.ep2.as_ref().is_some_and(|e| e.has_out) {
             let int = self.bus.regs().doep1_int().read();
-            self.bus.regs().doep1_int()
+            self.bus
+                .regs()
+                .doep1_int()
                 .write(|w| unsafe { w.bits(int.bits()) });
             if int.xfercompl().bit_is_set() {
                 if let Some(ref ep) = self.config.ep2 {
@@ -798,9 +788,7 @@ impl<C: UsbClass> UsbDevice<C> {
                     DESC_STRING => {
                         if desc_index == 0 {
                             self.ep0_start_in(&STRING0, setup.w_length as usize);
-                        } else if let Some(desc) =
-                            self.class.string_descriptor(desc_index)
-                        {
+                        } else if let Some(desc) = self.class.string_descriptor(desc_index) {
                             let ptr = desc.as_ptr();
                             let len = desc.len();
                             self.ep0_start_in(

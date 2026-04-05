@@ -26,7 +26,7 @@ use hal::timer::{InterruptFlag, TimerExt};
 use hal::watchdog::WatchdogExt;
 use portable_atomic::{AtomicBool, Ordering};
 use slstk3400a::display;
-use slstk3400a::leds::{LedTrait, LEDs};
+use slstk3400a::leds::{LEDs, LedTrait};
 
 use game::GameState;
 

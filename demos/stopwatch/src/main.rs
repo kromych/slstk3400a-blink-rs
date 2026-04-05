@@ -29,7 +29,7 @@ use hal::rtc::RTCExt;
 use hal::watchdog::WatchdogExt;
 use portable_atomic::{AtomicBool, AtomicU32, Ordering};
 use slstk3400a::display;
-use slstk3400a::leds::{LedTrait, LEDs};
+use slstk3400a::leds::{LEDs, LedTrait};
 
 static RTC: Mutex<RefCell<Option<hal::rtc::RTC>>> = Mutex::new(RefCell::new(None));
 

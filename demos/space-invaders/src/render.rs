@@ -172,8 +172,11 @@ pub fn fb_flush(vcom: &mut bool) {
                 let row = byte_idx as u8 * 8 + bit;
                 if row < 128 {
                     let base = row as usize * display::BYTES_PER_ROW;
-                    let row_data: &[u8; display::BYTES_PER_ROW] =
-                        unsafe { &*((&(*fb()))[base..base + display::BYTES_PER_ROW].as_ptr().cast()) };
+                    let row_data: &[u8; display::BYTES_PER_ROW] = unsafe {
+                        &*((&(*fb()))[base..base + display::BYTES_PER_ROW]
+                            .as_ptr()
+                            .cast())
+                    };
                     display::write_row(row, row_data, vcom);
                 }
             }

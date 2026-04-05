@@ -28,12 +28,7 @@ fn main() -> ! {
     let p = pac::Peripherals::take().unwrap();
     p.wdog.ctrl().write(|w| w.en().clear_bit());
 
-    let dev = UsbDevice::init(
-        &p.cmu,
-        &p.usb,
-        HidKeyboardClass,
-        hid_keyboard::usb_config(),
-    );
+    let dev = UsbDevice::init(&p.cmu, &p.usb, HidKeyboardClass, hid_keyboard::usb_config());
 
     defmt::info!("USB HID keyboard ready - connect cable now");
     usb_start(dev);

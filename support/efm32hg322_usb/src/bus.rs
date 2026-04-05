@@ -96,10 +96,10 @@ impl UsbBus {
     /// remaining data and call this again from the EP0 IN XFERCOMPL handler.
     pub fn ep0_write_packet(&self, data: &[u8]) {
         let len = data.len().min(64);
-        let pktcnt: u8 = if len == 0 { 1 } else { 1 };
-        self.usb.diep0tsiz().write(|w| unsafe {
-            w.xfersize().bits(len as u8).pktcnt().bits(pktcnt)
-        });
+        let pktcnt = 1;
+        self.usb
+            .diep0tsiz()
+            .write(|w| unsafe { w.xfersize().bits(len as u8).pktcnt().bits(pktcnt) });
         self.usb
             .diep0ctl()
             .modify(|_, w| w.epena().set_bit().cnak().set_bit());
@@ -108,9 +108,9 @@ impl UsbBus {
 
     /// Prepare EP0 OUT to receive SETUP or data.
     pub fn ep0_prepare_out(&self) {
-        self.usb.doep0tsiz().write(|w| unsafe {
-            w.supcnt().bits(3).pktcnt().set_bit().xfersize().bits(64)
-        });
+        self.usb
+            .doep0tsiz()
+            .write(|w| unsafe { w.supcnt().bits(3).pktcnt().set_bit().xfersize().bits(64) });
         self.usb
             .doep0ctl()
             .modify(|_, w| w.epena().set_bit().cnak().set_bit());
@@ -118,12 +118,8 @@ impl UsbBus {
 
     /// STALL EP0 (both directions).
     pub fn stall_ep0(&self) {
-        self.usb
-            .diep0ctl()
-            .modify(|_, w| w.stall().set_bit());
-        self.usb
-            .doep0ctl()
-            .modify(|_, w| w.stall().set_bit());
+        self.usb.diep0ctl().modify(|_, w| w.stall().set_bit());
+        self.usb.doep0ctl().modify(|_, w| w.stall().set_bit());
     }
 
     /// Write data to a non-EP0 IN endpoint (1 or 2).
@@ -131,16 +127,15 @@ impl UsbBus {
         match ep {
             1 => {
                 let len = data.len();
-                self.usb.diep0_tsiz().write(|w| unsafe {
-                    w.xfersize().bits(len as u32).pktcnt().bits(1)
-                });
+                self.usb
+                    .diep0_tsiz()
+                    .write(|w| unsafe { w.xfersize().bits(len as u32).pktcnt().bits(1) });
                 let is_iso = self.usb.diep0_ctl().read().eptype().is_iso();
                 self.usb.diep0_ctl().modify(|_, w| {
                     let w = w.cnak().set_bit().epena().set_bit();
                     if is_iso {
                         // Schedule for the next frame (opposite parity).
-                        let even_now =
-                            self.usb.dsts().read().soffn().bits() & 1 == 0;
+                        let even_now = self.usb.dsts().read().soffn().bits() & 1 == 0;
                         if even_now {
                             w.setd1pidof().set_bit()
                         } else {
@@ -154,15 +149,14 @@ impl UsbBus {
             }
             2 => {
                 let len = data.len();
-                self.usb.diep1_tsiz().write(|w| unsafe {
-                    w.xfersize().bits(len as u32).pktcnt().bits(1)
-                });
+                self.usb
+                    .diep1_tsiz()
+                    .write(|w| unsafe { w.xfersize().bits(len as u32).pktcnt().bits(1) });
                 let is_iso = self.usb.diep1_ctl().read().eptype().is_iso();
                 self.usb.diep1_ctl().modify(|_, w| {
                     let w = w.cnak().set_bit().epena().set_bit();
                     if is_iso {
-                        let even_now =
-                            self.usb.dsts().read().soffn().bits() & 1 == 0;
+                        let even_now = self.usb.dsts().read().soffn().bits() & 1 == 0;
                         if even_now {
                             w.setd1pidof().set_bit()
                         } else {
@@ -182,17 +176,17 @@ impl UsbBus {
     pub fn ep_prepare_out(&self, ep: u8, mps: u16) {
         match ep {
             1 => {
-                self.usb.doep0_tsiz().write(|w| unsafe {
-                    w.xfersize().bits(mps as u32).pktcnt().bits(1)
-                });
+                self.usb
+                    .doep0_tsiz()
+                    .write(|w| unsafe { w.xfersize().bits(mps as u32).pktcnt().bits(1) });
                 self.usb
                     .doep0_ctl()
                     .modify(|_, w| w.epena().set_bit().cnak().set_bit());
             }
             2 => {
-                self.usb.doep1_tsiz().write(|w| unsafe {
-                    w.xfersize().bits(mps as u32).pktcnt().bits(1)
-                });
+                self.usb
+                    .doep1_tsiz()
+                    .write(|w| unsafe { w.xfersize().bits(mps as u32).pktcnt().bits(1) });
                 self.usb
                     .doep1_ctl()
                     .modify(|_, w| w.epena().set_bit().cnak().set_bit());
@@ -204,13 +198,17 @@ impl UsbBus {
     /// Flush EP0 IN TX FIFO if a transfer is pending.
     pub fn flush_ep0_tx_if_pending(&self) {
         if self.usb.diep0tsiz().read().pktcnt().bits() != 0 {
-            self.usb.grstctl().write(|w| w.txfflsh().set_bit().txfnum().f0());
+            self.usb
+                .grstctl()
+                .write(|w| w.txfflsh().set_bit().txfnum().f0());
             while self.usb.grstctl().read().txfflsh().bit_is_set() {}
         }
     }
 
     /// Clear SETUP-phase bits in DOEP0INT (prevents race with data-stage XFERCOMPL).
     pub fn clear_ep0_setup_int(&self) {
-        self.usb.doep0int().write(|w| w.setup().set_bit().xfercompl().set_bit());
+        self.usb
+            .doep0int()
+            .write(|w| w.setup().set_bit().xfercompl().set_bit());
     }
 }

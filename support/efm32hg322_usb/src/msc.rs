@@ -300,7 +300,7 @@ impl<H: MscHandler> MscClass<H> {
                 resp[3] = 8; // capacity list length
                 resp[4..8].copy_from_slice(&total_sectors.to_be_bytes());
                 resp[8] = 0x02; // formatted media
-                // Block size 512 in bytes 9-11 (big-endian, 3 bytes)
+                                // Block size 512 in bytes 9-11 (big-endian, 3 bytes)
                 resp[10] = 0x02;
                 resp[11] = 0x00;
                 self.send_data_in(usb, &resp);
