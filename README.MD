@@ -22,6 +22,7 @@ Demo | Description
 [`usb-hid`](./demos/usb-hid) | USB HID keyboard - types a greeting
 [`usb-midi`](./demos/usb-midi) | USB MIDI device - plays a simple tune
 [`usb-msc`](./demos/usb-msc) | USB Mass Storage - tiny FAT16 with readme.txt
+[`usb-video`](./demos/usb-video) | USB Video - tiny STAR WARS crawl :)
 
 ## Prepare
 

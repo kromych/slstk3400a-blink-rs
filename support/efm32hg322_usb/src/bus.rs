@@ -90,10 +90,13 @@ impl UsbBus {
         self.usb
     }
 
-    /// Write data to EP0 IN (control responses).
-    pub fn ep0_write(&self, data: &[u8], max_len: usize) {
-        let len = data.len().min(max_len);
-        let pktcnt = if len == 0 { 1 } else { len.div_ceil(64) as u8 };
+    /// Write up to 64 bytes (one MPS) to EP0 IN and start the transfer.
+    ///
+    /// For responses longer than 64 bytes, the caller must track the
+    /// remaining data and call this again from the EP0 IN XFERCOMPL handler.
+    pub fn ep0_write_packet(&self, data: &[u8]) {
+        let len = data.len().min(64);
+        let pktcnt: u8 = if len == 0 { 1 } else { 1 };
         self.usb.diep0tsiz().write(|w| unsafe {
             w.xfersize().bits(len as u8).pktcnt().bits(pktcnt)
         });
@@ -123,11 +126,11 @@ impl UsbBus {
             .modify(|_, w| w.stall().set_bit());
     }
 
-    /// Write data to a bulk/interrupt IN endpoint (1 or 2).
+    /// Write data to a non-EP0 IN endpoint (1 or 2).
     pub fn ep_write(&self, ep: u8, data: &[u8]) {
         match ep {
             1 => {
-                let len = data.len().min(64);
+                let len = data.len();
                 self.usb.diep0_tsiz().write(|w| unsafe {
                     w.xfersize().bits(len as u32).pktcnt().bits(1)
                 });
@@ -150,7 +153,7 @@ impl UsbBus {
                 write_fifo(fifo_addr(1), data, len);
             }
             2 => {
-                let len = data.len().min(64);
+                let len = data.len();
                 self.usb.diep1_tsiz().write(|w| unsafe {
                     w.xfersize().bits(len as u32).pktcnt().bits(1)
                 });

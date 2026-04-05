@@ -237,7 +237,8 @@ impl UsbClass for HidKeyboardClass {
                 let desc_type = (setup.w_value >> 8) as u8;
                 if desc_type == DESC_HID_REPORT {
                     defmt::info!("GET_DESCRIPTOR HID Report");
-                    usb.ep0_write(&REPORT_DESC, setup.w_length as usize);
+                    let len = (setup.w_length as usize).min(REPORT_DESC.len());
+                    usb.ep0_write_packet(&REPORT_DESC[..len]);
                     SetupResult::DataIn
                 } else {
                     SetupResult::Unhandled

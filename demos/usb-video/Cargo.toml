@@ -1,0 +1,19 @@
+[package]
+authors = ["kromych <kromych@users.noreply.github.con"]
+categories = ["embedded", "no-std", "efm32"]
+description = "SLSTK3400A USB Video - Star Wars opening crawl"
+name = "usb-video-demo"
+keywords = ["arm", "cortex-m"]
+license = "MIT"
+version = "0.0.1"
+edition = "2021"
+
+[dependencies]
+panic-halt.workspace = true
+cortex-m.workspace = true
+cortex-m-rt.workspace = true
+defmt.workspace = true
+defmt-rtt.workspace = true
+
+efm32hg322-pac.workspace = true
+efm32hg322-usb.workspace = true

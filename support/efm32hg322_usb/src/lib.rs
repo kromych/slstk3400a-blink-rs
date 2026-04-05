@@ -12,6 +12,7 @@ pub mod cdc_acm;
 pub mod hid_keyboard;
 pub mod midi;
 pub mod msc;
+pub mod video;
 
 pub use bus::UsbBus;
 
@@ -242,6 +243,13 @@ static STRING0: [u8; 4] = [4, 0x03, 0x09, 0x04];
 // ---------------------------------------------------------------------------
 
 /// Core USB device state machine, generic over a [`UsbClass`] implementation.
+///
+/// # Safety
+///
+/// Contains a `*const u8` for multi-packet EP0 IN continuation. The pointer
+/// always references `&'static` descriptor data or has been consumed by the
+/// time the next SETUP packet arrives. On this single-core Cortex-M0+, all
+/// access is within ISR / critical-section context, so `Send` is safe.
 pub struct UsbDevice<C: UsbClass> {
     bus: UsbBus,
     /// The class driver instance. Public so demos can inspect class state.
@@ -250,7 +258,16 @@ pub struct UsbDevice<C: UsbClass> {
     ep0_out_buf: [u8; 64],
     ep0_out_len: usize,
     pending_data_out: bool,
+    /// Pointer to the next byte to send in a multi-packet EP0 IN transfer.
+    ep0_in_ptr: *const u8,
+    /// Bytes remaining in a multi-packet EP0 IN transfer.
+    ep0_in_remaining: usize,
 }
+
+// SAFETY: The raw pointer is only dereferenced inside ISR/critical-section
+// context on a single-core Cortex-M0+. It always points to static descriptor
+// data and is consumed before the next SETUP packet.
+unsafe impl<C: UsbClass + Send> Send for UsbDevice<C> {}
 
 impl<C: UsbClass> UsbDevice<C> {
     /// Initialize USB clocks, the DWC2 peripheral, and connect to the bus.
@@ -370,6 +387,8 @@ impl<C: UsbClass> UsbDevice<C> {
             ep0_out_buf: [0u8; 64],
             ep0_out_len: 0,
             pending_data_out: false,
+            ep0_in_ptr: core::ptr::null(),
+            ep0_in_remaining: 0,
         }
     }
 
@@ -565,6 +584,7 @@ impl<C: UsbClass> UsbDevice<C> {
                 (0, 0x6) => {
                     self.bus.flush_ep0_tx_if_pending();
                     self.bus.clear_ep0_setup_int();
+                    self.ep0_in_remaining = 0;
 
                     let w0 = bus::read_rx_word();
                     let w1 = bus::read_rx_word();
@@ -617,20 +637,22 @@ impl<C: UsbClass> UsbDevice<C> {
     }
 
     fn handle_iepint(&mut self) {
-        let usb = self.bus.regs();
-
         // EP0 IN - read and clear all pending bits.
-        let diep0int = usb.diep0int().read();
-        usb.diep0int()
+        let diep0int = self.bus.regs().diep0int().read();
+        self.bus.regs().diep0int()
             .write(|w| unsafe { w.bits(diep0int.bits()) });
         if diep0int.xfercompl().bit_is_set() {
-            self.bus.ep0_prepare_out();
+            if self.ep0_in_remaining > 0 {
+                self.ep0_continue_in();
+            } else {
+                self.bus.ep0_prepare_out();
+            }
         }
 
         // EP1 IN.
         if self.config.ep1.as_ref().is_some_and(|e| e.has_in) {
-            let int = usb.diep0_int().read();
-            usb.diep0_int()
+            let int = self.bus.regs().diep0_int().read();
+            self.bus.regs().diep0_int()
                 .write(|w| unsafe { w.bits(int.bits()) });
             if int.xfercompl().bit_is_set() {
                 self.class.in_complete(1, &self.bus);
@@ -639,8 +661,8 @@ impl<C: UsbClass> UsbDevice<C> {
 
         // EP2 IN.
         if self.config.ep2.as_ref().is_some_and(|e| e.has_in) {
-            let int = usb.diep1_int().read();
-            usb.diep1_int()
+            let int = self.bus.regs().diep1_int().read();
+            self.bus.regs().diep1_int()
                 .write(|w| unsafe { w.bits(int.bits()) });
             if int.xfercompl().bit_is_set() {
                 self.class.in_complete(2, &self.bus);
@@ -649,11 +671,9 @@ impl<C: UsbClass> UsbDevice<C> {
     }
 
     fn handle_oepint(&mut self) {
-        let usb = self.bus.regs();
-
         // EP0 OUT - read and clear all pending bits.
-        let doep0int = usb.doep0int().read();
-        usb.doep0int()
+        let doep0int = self.bus.regs().doep0int().read();
+        self.bus.regs().doep0int()
             .write(|w| unsafe { w.bits(doep0int.bits()) });
         if doep0int.xfercompl().bit_is_set() {
             if self.pending_data_out {
@@ -662,7 +682,7 @@ impl<C: UsbClass> UsbDevice<C> {
                 let mut buf = [0u8; 64];
                 buf[..len].copy_from_slice(&self.ep0_out_buf[..len]);
                 self.class.ep0_data_out(&buf[..len], &self.bus);
-                self.bus.ep0_write(&[], 0);
+                self.bus.ep0_write_packet(&[]);
             } else {
                 self.bus.ep0_prepare_out();
             }
@@ -670,8 +690,8 @@ impl<C: UsbClass> UsbDevice<C> {
 
         // EP1 OUT.
         if self.config.ep1.as_ref().is_some_and(|e| e.has_out) {
-            let int = usb.doep0_int().read();
-            usb.doep0_int()
+            let int = self.bus.regs().doep0_int().read();
+            self.bus.regs().doep0_int()
                 .write(|w| unsafe { w.bits(int.bits()) });
             if int.xfercompl().bit_is_set() {
                 if let Some(ref ep) = self.config.ep1 {
@@ -682,14 +702,51 @@ impl<C: UsbClass> UsbDevice<C> {
 
         // EP2 OUT.
         if self.config.ep2.as_ref().is_some_and(|e| e.has_out) {
-            let int = usb.doep1_int().read();
-            usb.doep1_int()
+            let int = self.bus.regs().doep1_int().read();
+            self.bus.regs().doep1_int()
                 .write(|w| unsafe { w.bits(int.bits()) });
             if int.xfercompl().bit_is_set() {
                 if let Some(ref ep) = self.config.ep2 {
                     self.bus.ep_prepare_out(2, ep.mps);
                 }
             }
+        }
+    }
+
+    /// Start a (possibly multi-packet) EP0 IN transfer.
+    ///
+    /// Writes the first ≤64-byte packet immediately. If there is more data,
+    /// saves a pointer so that [`handle_iepint`] can continue on XFERCOMPL.
+    /// `max_len` is the host's `wLength`; we never send more than that.
+    fn ep0_start_in(&mut self, data: &[u8], max_len: usize) {
+        let total = data.len().min(max_len);
+        let chunk = total.min(64);
+        self.bus.ep0_write_packet(&data[..chunk]);
+        if total > chunk {
+            // SAFETY: `data` is a &'static descriptor or stack buffer that
+            // outlives the transfer (EP0 IN completes before the next SETUP).
+            self.ep0_in_ptr = unsafe { data.as_ptr().add(chunk) };
+            self.ep0_in_remaining = total - chunk;
+        } else {
+            self.ep0_in_ptr = core::ptr::null();
+            self.ep0_in_remaining = 0;
+        }
+    }
+
+    /// Continue a multi-packet EP0 IN transfer (called from XFERCOMPL).
+    fn ep0_continue_in(&mut self) {
+        if self.ep0_in_remaining == 0 {
+            return;
+        }
+        let chunk = self.ep0_in_remaining.min(64);
+        let data = unsafe { core::slice::from_raw_parts(self.ep0_in_ptr, chunk) };
+        self.bus.ep0_write_packet(data);
+        if self.ep0_in_remaining > chunk {
+            self.ep0_in_ptr = unsafe { self.ep0_in_ptr.add(chunk) };
+            self.ep0_in_remaining -= chunk;
+        } else {
+            self.ep0_in_ptr = core::ptr::null();
+            self.ep0_in_remaining = 0;
         }
     }
 
@@ -710,8 +767,7 @@ impl<C: UsbClass> UsbDevice<C> {
 
             // GET_STATUS (device).
             (0x80, GET_STATUS) => {
-                self.bus
-                    .ep0_write(&[0x00, 0x00], setup.w_length as usize);
+                self.ep0_start_in(&[0x00, 0x00], setup.w_length as usize);
             }
 
             // GET_DESCRIPTOR.
@@ -721,25 +777,36 @@ impl<C: UsbClass> UsbDevice<C> {
                 match desc_type {
                     DESC_DEVICE => {
                         defmt::info!("GET_DESCRIPTOR Device");
-                        self.bus.ep0_write(
-                            self.class.device_descriptor(),
+                        let desc = self.class.device_descriptor();
+                        let ptr = desc.as_ptr();
+                        let len = desc.len();
+                        self.ep0_start_in(
+                            unsafe { core::slice::from_raw_parts(ptr, len) },
                             setup.w_length as usize,
                         );
                     }
                     DESC_CONFIGURATION => {
                         defmt::info!("GET_DESCRIPTOR Configuration");
-                        self.bus.ep0_write(
-                            self.class.config_descriptor(),
+                        let desc = self.class.config_descriptor();
+                        let ptr = desc.as_ptr();
+                        let len = desc.len();
+                        self.ep0_start_in(
+                            unsafe { core::slice::from_raw_parts(ptr, len) },
                             setup.w_length as usize,
                         );
                     }
                     DESC_STRING => {
                         if desc_index == 0 {
-                            self.bus.ep0_write(&STRING0, setup.w_length as usize);
+                            self.ep0_start_in(&STRING0, setup.w_length as usize);
                         } else if let Some(desc) =
                             self.class.string_descriptor(desc_index)
                         {
-                            self.bus.ep0_write(desc, setup.w_length as usize);
+                            let ptr = desc.as_ptr();
+                            let len = desc.len();
+                            self.ep0_start_in(
+                                unsafe { core::slice::from_raw_parts(ptr, len) },
+                                setup.w_length as usize,
+                            );
                         } else {
                             self.bus.stall_ep0();
                         }
@@ -759,7 +826,7 @@ impl<C: UsbClass> UsbDevice<C> {
                     .regs()
                     .dcfg()
                     .modify(|_, w| unsafe { w.devaddr().bits(addr) });
-                self.bus.ep0_write(&[], 0);
+                self.bus.ep0_write_packet(&[]);
             }
 
             // SET_CONFIGURATION.
@@ -789,14 +856,13 @@ impl<C: UsbClass> UsbDevice<C> {
                         .lemaddrmen()
                         .set_bit()
                 });
-                self.bus.ep0_write(&[], 0);
+                self.bus.ep0_write_packet(&[]);
                 self.class.configured(&self.bus);
             }
 
             // GET_STATUS (interface / endpoint).
             (0x81, GET_STATUS) | (0x82, GET_STATUS) => {
-                self.bus
-                    .ep0_write(&[0x00, 0x00], setup.w_length as usize);
+                self.ep0_start_in(&[0x00, 0x00], setup.w_length as usize);
             }
 
             // SET_INTERFACE (alternate setting).
@@ -805,20 +871,20 @@ impl<C: UsbClass> UsbDevice<C> {
                 let alt = setup.w_value as u8;
                 defmt::info!("SET_INTERFACE iface={} alt={}", iface, alt);
                 self.class.set_interface(iface, alt, &self.bus);
-                self.bus.ep0_write(&[], 0);
+                self.bus.ep0_write_packet(&[]);
             }
 
             // GET_INTERFACE.
             (0x81, GET_INTERFACE) => {
                 let iface = setup.w_index as u8;
                 let alt = self.class.get_interface(iface);
-                self.bus.ep0_write(&[alt], setup.w_length as usize);
+                self.ep0_start_in(&[alt], setup.w_length as usize);
             }
 
             // ---- Delegate to class ----
             _ => match self.class.handle_setup(&setup, &self.bus) {
                 SetupResult::Handled => {
-                    self.bus.ep0_write(&[], 0);
+                    self.bus.ep0_write_packet(&[]);
                 }
                 SetupResult::DataIn => { /* class already sent response */ }
                 SetupResult::DataOut => {

@@ -203,7 +203,8 @@ impl<H: CdcAcmHandler> UsbClass for CdcAcmClass<H> {
 
             (0xA1, GET_LINE_CODING) => {
                 defmt::info!("GET_LINE_CODING");
-                usb.ep0_write(&self.line_coding, setup.w_length as usize);
+                let len = (setup.w_length as usize).min(self.line_coding.len());
+                usb.ep0_write_packet(&self.line_coding[..len]);
                 SetupResult::DataIn
             }
 

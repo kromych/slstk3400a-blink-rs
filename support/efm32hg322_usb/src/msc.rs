@@ -398,7 +398,7 @@ impl<H: MscHandler> UsbClass for MscClass<H> {
             }
             (0xA1, GET_MAX_LUN) => {
                 defmt::info!("GET_MAX_LUN");
-                usb.ep0_write(&[0x00], 1); // LUN 0 only
+                usb.ep0_write_packet(&[0x00]); // LUN 0 only
                 SetupResult::DataIn
             }
             _ => SetupResult::Unhandled,
