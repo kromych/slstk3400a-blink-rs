@@ -24,6 +24,8 @@ Demo | Description
 [`usb-msc`](./demos/usb-msc) | USB Mass Storage - tiny FAT16 with readme.txt
 [`usb-video`](./demos/usb-video) | USB Video - tiny STAR WARS crawl :)
 
+The USB demos use the FIFO mode by default; add `--features dma` for the DMA mode.
+
 ## Prepare
 
 One-time tool installation:

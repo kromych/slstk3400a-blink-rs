@@ -1,7 +1,8 @@
 # efm32hg322_usb — DWC2 USB Device Driver for EFM32HG322
 
 Bare-metal USB device driver for the EFM32 Happy Gecko (Cortex-M0+, EFM32HG322F64).
-Uses the on-chip DWC2 OTG core in slave (FIFO) mode with no DMA.
+Uses the on-chip DWC2 OTG core in slave (FIFO) mode by default, with an optional
+`dma` feature for the DWC2 internal DMA engine.
 
 ## DWC2 on the EFM32HG
 
@@ -15,115 +16,250 @@ Uses the on-chip DWC2 OTG core in slave (FIFO) mode with no DMA.
 | Max packet size (EP0) | 64 bytes |
 | PHY | Integrated FS-only |
 | USB clock | USHFRCO 48 MHz with SOF clock recovery |
-| DMA support | No (slave/FIFO mode only) |
+| DMA support | Internal DMA via `feature = "dma"` |
 | VBUS detection | `USB->CTRL.VREGOSEN` + `USB->STATUS.VREGOS` |
 | OTG | No — device mode only |
 | D+ pull-up | `USB->ROUTE.DMPUPEN` (explicit pull-up bit) |
 
 ### EFM32HG-specific init
 
-1. Enable clocks: `HFCORECLKEN0.USBC + USB + LE`, `LFCCLKEN0.USBLE`, select LFC = LFRCO
-2. Configure USHFRCO to 48 MHz band, enable clock recovery, wait ready
-3. Select USHFRCO as USB clock: `CMD.USBCCLKSEL = USHFRCO`
-4. `USB->CTRL.LEMOSCCTRL = NONE` during init
-5. `USB->ROUTE = PHYPEN | DMPUPEN` (enable PHY pins and D+ pull-up)
-6. Clear `PCGCCTL`, soft-reset (`GRSTCTL.CSFTRST`), wait `AHBIDLE`
-7. `GAHBCFG.GLBLINTRMSK = 1` (enable DWC2 core interrupts to NVIC)
-8. `DCFG.DEVSPD = FS`, `DEVADDR = 0`
-9. Set EP interrupt masks, allocate FIFOs
-10. Set `GINTMSK` for: USBRST, ENUMDONE, USBSUSP, WKUPINT, IEPINT, OEPINT, RXFLVL
-11. Clear pending: `GINTSTS = 0xFFFFFFFF`
-12. Power-on handshake: toggle `DCTL.PWRONPRGDONE`
-13. Connect: clear `DCTL.SFTDISCON`
+```mermaid
+sequenceDiagram
+    participant FW as Firmware
+    participant CMU as CMU (Clocks)
+    participant USB as USB / DWC2
+
+    FW->>CMU: Enable HFCORECLKEN0.USBC + USB + LE
+    FW->>CMU: Enable LFCCLKEN0.USBLE, LFC = LFRCO
+    FW->>CMU: USHFRCO 48 MHz band + clock recovery
+    FW->>CMU: CMD.USBCCLKSEL = USHFRCO
+    FW->>USB: CTRL.LEMOSCCTRL = NONE
+    FW->>USB: ROUTE = PHYPEN | DMPUPEN
+    FW->>USB: Clear PCGCCTL
+    FW->>USB: GRSTCTL.CSFTRST (soft-reset)
+    USB-->>FW: GRSTCTL.AHBIDLE
+    FW->>USB: GAHBCFG.GLBLINTRMSK = 1
+    FW->>USB: DCFG.DEVSPD = FS, DEVADDR = 0
+    FW->>USB: Set EP interrupt masks, allocate FIFOs
+    FW->>USB: GINTMSK (USBRST, ENUMDONE, USBSUSP, IEPINT, OEPINT, RXFLVL)
+    FW->>USB: GINTSTS = 0xFFFFFFFF (clear pending)
+    FW->>USB: Toggle DCTL.PWRONPRGDONE
+    FW->>USB: Clear DCTL.SFTDISCON (connect)
+```
 
 No VBUS detection needed — the HG is typically bus-powered with VBUS always present.
 
-## SETUP Packet Flow (Slave Mode)
+## SETUP Packet Flow — FIFO (Slave) Mode
 
-```
-Host sends SETUP token + 8 data bytes
-  |
-  v
-GINTSTS.RXFLVL fires
-  |
-  +-- Read GRXSTSP: pktsts = SETUP_DATA_RECVD (0x6), epnum = 0, bcnt = 8
-  +-- Read 2 words (8 bytes) from RX FIFO -> parse SetupPacket
-  |
-  v
-GINTSTS.RXFLVL fires again
-  |
-  +-- Read GRXSTSP: pktsts = SETUP_COMPL (0x4), epnum = 0
-  +-- (no data to read)
-  |
-  v
-GINTSTS.OEPINT fires -> DOEP0INT.SETUP is set
-  |
-  +-- Clear DOEP0INT.SETUP + XFERCOMPL
-  +-- Dispatch to UsbClass::handle_setup()
-  +-- Based on SetupResult:
-       Handled  -> ep0_write_packet(ZLP) for status stage
-       DataIn   -> class already wrote response via ep0_write_packet()
-       DataOut  -> ep0_prepare_out() to receive DATA stage
-       Unhandled-> stall_ep0()
+```mermaid
+sequenceDiagram
+    participant Host
+    participant DWC2
+    participant ISR as poll()
+    participant Class as UsbClass
+
+    Host->>DWC2: SETUP token + 8 data bytes
+    DWC2->>ISR: GINTSTS.RXFLVL
+    ISR->>DWC2: Read GRXSTSP (pktsts=0x6 SETUP_DATA)
+    ISR->>DWC2: Read 2 words from RX FIFO
+    Note over ISR: Parse SetupPacket
+
+    DWC2->>ISR: GINTSTS.RXFLVL (pktsts=0x4 SETUP_COMPL)
+    ISR->>DWC2: ep0_prepare_out()
+
+    DWC2->>ISR: GINTSTS.OEPINT (DOEP0INT.SETUP)
+    Note over ISR: Ignored (already handled in RXFLVL)
+
+    ISR->>Class: handle_setup()
+
+    alt Handled (e.g. SET_ADDRESS)
+        ISR->>DWC2: ep0_write_packet(ZLP)
+    else DataIn (e.g. GET_DESCRIPTOR)
+        Class->>DWC2: ep0_write_packet(data)
+    else DataOut (e.g. SET_LINE_CODING)
+        ISR->>DWC2: ep0_prepare_out()
+        Host->>DWC2: DATA OUT payload
+        DWC2->>ISR: RXFLVL (pktsts=0x2 OUT_DATA)
+        DWC2->>ISR: OEPINT.XFERCOMPL
+        ISR->>Class: ep0_data_out(data)
+        ISR->>DWC2: ep0_write_packet(ZLP)
+    else Unhandled
+        ISR->>DWC2: STALL EP0
+    end
 ```
 
-## IN Transfer Flow (EP0 and EPn)
+## SETUP Packet Flow — DMA Mode
 
+```mermaid
+sequenceDiagram
+    participant Host
+    participant DWC2
+    participant ISR as poll()
+    participant Class as UsbClass
+
+    Host->>DWC2: SETUP token + 8 data bytes
+    Note over DWC2: DMA writes 8 bytes to EP0 OUT buffer
+
+    DWC2->>ISR: OEPINT (setup + xfercompl both set)
+    ISR->>DWC2: Read SETUP from DMA buffer
+    Note over ISR: Parse SetupPacket
+    ISR->>Class: handle_setup()
+
+    Note over ISR: xfercompl is from SETUP DMA,<br/>not a DATA OUT payload
+
+    alt Handled
+        ISR->>DWC2: ep0_write_packet_dma(ZLP)
+    else DataIn
+        Class->>DWC2: ep0_write_packet_dma(data)
+    else DataOut
+        Note over ISR: setup bit is set → skip xfercompl
+        ISR->>DWC2: ep0_prepare_out_dma()
+        Host->>DWC2: DATA OUT payload
+        Note over DWC2: DMA writes payload to EP0 OUT buffer
+        DWC2->>ISR: OEPINT.XFERCOMPL (setup NOT set)
+        ISR->>DWC2: Read actual byte count from DOEP0TSIZ
+        ISR->>Class: ep0_data_out(data)
+        ISR->>DWC2: ep0_write_packet_dma(ZLP)
+    else Unhandled
+        ISR->>DWC2: STALL EP0
+    end
 ```
-Firmware writes data:
-  |
-  +-- Set DIEPnTSIZ: xfersize = len, pktcnt = 1
-  +-- Set DIEPnCTL: EPENA + CNAK (+ frame parity for isochronous)
-  +-- Write data words to FIFO[ep] (4 bytes per write)
-  |
-  v
-Host sends IN token, DWC2 sends data from TX FIFO
-  |
-  v
-GINTSTS.IEPINT fires -> DIEPnINT.XFERCOMPL is set
-  |
-  +-- Clear DIEPnINT.XFERCOMPL
-  +-- For EP0: if multi-packet, send next 64-byte chunk
-  +-- For EPn: call UsbClass::in_complete(ep)
+
+## Multi-Packet EP0 IN Transfer
+
+`DIEP0TSIZ.xfersize` is only 7 bits wide (max 127), so descriptors
+larger than 64 bytes must be sent one packet at a time in both modes.
+
+```mermaid
+sequenceDiagram
+    participant FW as ep0_start_in
+    participant Bus as UsbBus
+    participant Host
+
+    FW->>Bus: ep0_write_packet(data[0..64])
+    Note over FW: Save pointer + remaining
+
+    loop While ep0_in_remaining > 0
+        Bus-->>Host: 64-byte DATA packet
+        Host-->>Bus: ACK
+        Bus->>FW: IEPINT.XFERCOMPL
+        FW->>Bus: ep0_continue_in → ep0_write_packet(next chunk)
+    end
+
+    Bus-->>Host: Final packet (may be short / ZLP)
+    Host-->>Bus: ACK
+    Bus->>FW: IEPINT.XFERCOMPL
+    FW->>Bus: ep0_prepare_out() (ready for next SETUP)
+```
+
+## IN Transfer Flow (EPn)
+
+```mermaid
+sequenceDiagram
+    participant Class as UsbClass
+    participant Bus as UsbBus
+    participant DWC2
+    participant Host
+
+    Class->>Bus: ep_write(ep, data)
+    Note over Bus: FIFO: write to TX FIFO<br/>DMA: copy to DMA buffer
+
+    Bus->>DWC2: DIEPnTSIZ + DIEPnCTL (EPENA, CNAK)
+    Host->>DWC2: IN token
+    DWC2-->>Host: Data packet
+    DWC2->>Class: IEPINT.XFERCOMPL → in_complete(ep)
 ```
 
 ## OUT Transfer Flow (EPn)
 
-```
-Firmware prepares for reception:
-  |
-  +-- Set DOEPnTSIZ: xfersize = MPS, pktcnt = 1
-  +-- Set DOEPnCTL: EPENA + CNAK
-  |
-  v
-Host sends OUT token + data
-  |
-  v
-GINTSTS.RXFLVL fires
-  |
-  +-- Read GRXSTSP: pktsts = OUT_DATA_RECVD (0x2), epnum, bcnt
-  +-- Read bcnt bytes from RX FIFO
-  |
-  v
-GINTSTS.OEPINT fires -> DOEPnINT.XFERCOMPL is set
-  |
-  +-- Clear DOEPnINT.XFERCOMPL
-  +-- Call UsbClass::data_out(ep, data)
+```mermaid
+sequenceDiagram
+    participant Class as UsbClass
+    participant Bus as UsbBus
+    participant DWC2
+    participant Host
+
+    Bus->>DWC2: DOEPnTSIZ + DOEPnCTL (EPENA, CNAK)
+    Note over DWC2: EP armed for reception
+
+    Host->>DWC2: OUT token + data
+
+    alt FIFO mode
+        DWC2->>Bus: RXFLVL (pktsts=0x2)
+        Bus->>Bus: Read data from RX FIFO
+        Bus->>Class: data_out(ep, data)
+        DWC2->>Bus: OEPINT.XFERCOMPL
+        Bus->>DWC2: Re-arm EP (ep_prepare_out)
+    else DMA mode
+        Note over DWC2: DMA writes to EPn OUT buffer
+        DWC2->>Bus: OEPINT.XFERCOMPL
+        Bus->>Bus: Read byte count from DOEPnTSIZ
+        Bus->>Class: data_out(ep, data)
+        Bus->>DWC2: Re-arm EP (ep_prepare_out_dma)
+    end
 ```
 
 ## Architecture
 
-```
-UsbDevice<C: UsbClass>
-  +-- UsbBus           (FIFO read/write, EP control)
-  +-- C                (class driver: CDC, HID, MIDI, ...)
-  +-- ep0 state        (setup buffer, multi-packet IN pointer)
+```mermaid
+graph TD
+    subgraph "USB ISR (poll)"
+        GINTSTS["GINTSTS dispatch"]
+        RXFLVL["RXFLVL<br/><i>FIFO mode only</i>"]
+        OEPINT["OEPINT<br/>SETUP + OUT completion"]
+        IEPINT["IEPINT<br/>IN completion"]
+        RST["USBRST / ENUMDONE"]
+        SUSP["USBSUSP"]
+    end
 
-USB ISR -> poll() -> dispatch GINTSTS bits:
-  RXFLVL  -> read GRXSTSP, read FIFO, buffer SETUP/OUT data
-  OEPINT  -> process buffered SETUP, dispatch to class
-  IEPINT  -> handle IN completions, multi-packet EP0
-  USBRST  -> reset state, re-enumerate
-  ENUMDONE -> configure EP0, set GINTMSK
-  USBSUSP -> notify class
+    subgraph "UsbDevice&lt;C: UsbClass&gt;"
+        STATE["EP0 state<br/>(pending_data_out,<br/>ep0_in_ptr, ep0_in_remaining)"]
+        SETUP["handle_setup()"]
+    end
+
+    subgraph UsbBus
+        direction LR
+        EP0W["ep0_write_packet"]
+        EP0P["ep0_prepare_out"]
+        EPW["ep_write"]
+        EPP["ep_prepare_out"]
+    end
+
+    subgraph "UsbClass (trait)"
+        CDC["CdcAcmClass"]
+        HID["HidKeyboardClass"]
+        VIDEO["VideoClass"]
+        MIDI["MidiClass"]
+        AUDIO["AudioClass"]
+        MSC["MscClass"]
+    end
+
+    GINTSTS --> RXFLVL
+    GINTSTS --> OEPINT
+    GINTSTS --> IEPINT
+    GINTSTS --> RST
+    GINTSTS --> SUSP
+
+    OEPINT --> SETUP
+    SETUP --> EP0W
+    SETUP --> EP0P
+
+    OEPINT -->|"data_out()"| CDC
+    IEPINT -->|"in_complete()"| CDC
+
+    EP0W -->|"FIFO mode"| FIFO["write_fifo()"]
+    EP0W -->|"DMA mode"| DMA["DMA buffer copy"]
+    EPW -->|"FIFO mode"| FIFO
+    EPW -->|"DMA mode"| DMA
 ```
+
+## Feature Flags
+
+| Feature | Effect |
+|---|---|
+| *(default)* | FIFO (slave) mode — CPU reads/writes FIFOs directly |
+| `dma` | DWC2 internal DMA mode — AHB DMA master handles transfers; uses ~1.3 KiB static RAM for DMA buffers |
+
+In DMA mode, the public `UsbBus` API (`ep_write`, `ep_prepare_out`,
+`ep0_write_packet`, `ep0_prepare_out`) dispatches to DMA internally,
+so class drivers work transparently in both modes.

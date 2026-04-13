@@ -74,7 +74,7 @@ pub mod __private {
 /// Define the USB device global and helper functions.
 ///
 /// Expands to:
-/// - `static USB_DEV` - global device instance behind a `Mutex<RefCell<…>>`
+/// - `static USB_DEV` - global device instance behind a `Mutex<RefCell<Option<...>>>`
 /// - `fn usb_start(dev)` - stores the device and enables the USB interrupt
 /// - `fn usb_with_bus(f)` - runs a closure with `&UsbBus` in a critical section
 #[macro_export]
@@ -177,7 +177,7 @@ pub struct UsbConfig {
 // UsbClass trait
 // ---------------------------------------------------------------------------
 
-/// Trait implemented by USB class drivers (CDC ACM, MIDI, HID, …).
+/// Trait implemented by USB class drivers (CDC ACM, MIDI, HID, etc.).
 pub trait UsbClass {
     /// Return the device descriptor (18 bytes).
     fn device_descriptor(&self) -> &[u8];
@@ -257,7 +257,9 @@ pub struct UsbDevice<C: UsbClass> {
     /// The class driver instance. Public so demos can inspect class state.
     pub class: C,
     config: UsbConfig,
+    #[cfg(not(feature = "dma"))]
     ep0_out_buf: [u8; 64],
+    #[cfg(not(feature = "dma"))]
     ep0_out_len: usize,
     pending_data_out: bool,
     /// Pointer to the next byte to send in a multi-packet EP0 IN transfer.
@@ -276,7 +278,7 @@ impl<C: UsbClass> UsbDevice<C> {
     ///
     /// Call this from `main()` after disabling the watchdog and setting up
     /// GPIOs. The returned `UsbDevice` should be stored in a
-    /// `Mutex<RefCell<Option<…>>>` and polled from the USB ISR via [`poll`].
+    /// `Mutex<RefCell<Option<...>>>` and polled from the USB ISR via [`poll`].
     pub fn init(
         cmu: &pac::cmu::RegisterBlock,
         usb: &pac::usb::RegisterBlock,
@@ -311,6 +313,16 @@ impl<C: UsbClass> UsbDevice<C> {
         while usb.grstctl().read().csftrst().bit_is_set() {}
         while usb.grstctl().read().ahbidle().bit_is_clear() {}
 
+        #[cfg(feature = "dma")]
+        usb.gahbcfg().write(|w| {
+            w.glblintrmsk()
+                .set_bit()
+                .dmaen()
+                .set_bit()
+                .hbstlen()
+                .incr4()
+        });
+        #[cfg(not(feature = "dma"))]
         usb.gahbcfg().write(|w| w.glblintrmsk().set_bit());
         usb.dctl().modify(|_, w| w.sftdiscon().set_bit());
         usb.dcfg()
@@ -347,8 +359,11 @@ impl<C: UsbClass> UsbDevice<C> {
         });
 
         // ---- Global interrupt mask ----
+        // In DMA mode the controller moves data to/from RAM automatically,
+        // so we don't need the RX FIFO level interrupt.
         usb.gintmsk().write(|w| {
-            w.usbrstmsk()
+            let w = w
+                .usbrstmsk()
                 .set_bit()
                 .enumdonemsk()
                 .set_bit()
@@ -359,9 +374,10 @@ impl<C: UsbClass> UsbDevice<C> {
                 .iepintmsk()
                 .set_bit()
                 .oepintmsk()
-                .set_bit()
-                .rxflvlmsk()
-                .set_bit()
+                .set_bit();
+            #[cfg(not(feature = "dma"))]
+            let w = w.rxflvlmsk().set_bit();
+            w
         });
 
         // Clear all pending interrupts.
@@ -369,7 +385,7 @@ impl<C: UsbClass> UsbDevice<C> {
 
         // Power-on programming done handshake.
         usb.dctl().modify(|_, w| w.pwronprgdone().set_bit());
-        cortex_m::asm::delay(800); // ~10 µs at 48 MHz
+        cortex_m::asm::delay(800); // ~10 us at 48 MHz
         usb.dctl().modify(|_, w| w.pwronprgdone().clear_bit());
 
         // Connect (clear soft-disconnect).
@@ -379,7 +395,9 @@ impl<C: UsbClass> UsbDevice<C> {
             bus: UsbBus::new(),
             class,
             config,
+            #[cfg(not(feature = "dma"))]
             ep0_out_buf: [0u8; 64],
+            #[cfg(not(feature = "dma"))]
             ep0_out_len: 0,
             pending_data_out: false,
             ep0_in_ptr: core::ptr::null(),
@@ -411,6 +429,9 @@ impl<C: UsbClass> UsbDevice<C> {
             usb.diep0ctl().modify(|_, w| w.mps()._64b());
             // Clear Global Non-Periodic IN NAK set during bus reset.
             usb.dctl().modify(|_, w| w.cgnpinnak().set_bit());
+            #[cfg(feature = "dma")]
+            self.bus.ep0_prepare_out_dma();
+            #[cfg(not(feature = "dma"))]
             self.bus.ep0_prepare_out();
             defmt::info!("Speed negotiation complete");
         }
@@ -426,6 +447,8 @@ impl<C: UsbClass> UsbDevice<C> {
             defmt::info!("USB wakeup");
         }
 
+        // In DMA mode the controller moves data autonomously; RXFLVL is not used.
+        #[cfg(not(feature = "dma"))]
         if gintsts.rxflvl().bit_is_set() {
             self.handle_rxflvl();
         }
@@ -547,6 +570,7 @@ impl<C: UsbClass> UsbDevice<C> {
             .write(|w| w.xfercomplmsk().set_bit().setupmsk().set_bit());
     }
 
+    #[cfg(not(feature = "dma"))]
     fn handle_rxflvl(&mut self) {
         loop {
             if !self.bus.regs().gintsts().read().rxflvl().bit_is_set() {
@@ -661,15 +685,61 @@ impl<C: UsbClass> UsbDevice<C> {
             .regs()
             .doep0int()
             .write(|w| unsafe { w.bits(doep0int.bits()) });
+
+        // In DMA mode, SETUP data arrives via DMA into EP0 OUT buffer.
+        // The SETUP bit in DOEP0INT signals a SETUP packet was received.
+        #[cfg(feature = "dma")]
+        if doep0int.setup().bit_is_set() {
+            self.bus.flush_ep0_tx_if_pending();
+            self.ep0_in_remaining = 0;
+
+            let raw = self.bus.read_setup_dma();
+            let setup = SetupPacket {
+                bm_request_type: raw[0],
+                b_request: raw[1],
+                w_value: u16::from_le_bytes([raw[2], raw[3]]),
+                w_index: u16::from_le_bytes([raw[4], raw[5]]),
+                w_length: u16::from_le_bytes([raw[6], raw[7]]),
+            };
+
+            defmt::debug!(
+                "SETUP: type={:02x} req={:02x} val={:04x} idx={:04x} len={}",
+                setup.bm_request_type,
+                setup.b_request,
+                setup.w_value,
+                setup.w_index,
+                setup.w_length,
+            );
+
+            self.handle_setup(setup);
+        }
+
         if doep0int.xfercompl().bit_is_set() {
-            if self.pending_data_out {
+            // When setup and xfercompl fire together, xfercompl is from the
+            // SETUP DMA transfer itself — not a DATA OUT payload. In that case
+            // just re-arm EP0 OUT (which also prepares it for the data phase
+            // if pending_data_out was set).
+            if self.pending_data_out && !doep0int.setup().bit_is_set() {
                 self.pending_data_out = false;
-                let len = self.ep0_out_len;
-                let mut buf = [0u8; 64];
-                buf[..len].copy_from_slice(&self.ep0_out_buf[..len]);
-                self.class.ep0_data_out(&buf[..len], &self.bus);
-                self.bus.ep0_write_packet(&[]);
+                #[cfg(feature = "dma")]
+                {
+                    let mut buf = [0u8; 64];
+                    let len = self.bus.read_ep0_data_dma(&mut buf, 64);
+                    self.class.ep0_data_out(&buf[..len], &self.bus);
+                    self.bus.ep0_write_packet_dma(&[]);
+                }
+                #[cfg(not(feature = "dma"))]
+                {
+                    let len = self.ep0_out_len;
+                    let mut buf = [0u8; 64];
+                    buf[..len].copy_from_slice(&self.ep0_out_buf[..len]);
+                    self.class.ep0_data_out(&buf[..len], &self.bus);
+                    self.bus.ep0_write_packet(&[]);
+                }
             } else {
+                #[cfg(feature = "dma")]
+                self.bus.ep0_prepare_out_dma();
+                #[cfg(not(feature = "dma"))]
                 self.bus.ep0_prepare_out();
             }
         }
@@ -683,6 +753,14 @@ impl<C: UsbClass> UsbDevice<C> {
                 .write(|w| unsafe { w.bits(int.bits()) });
             if int.xfercompl().bit_is_set() {
                 if let Some(ref ep) = self.config.ep1 {
+                    #[cfg(feature = "dma")]
+                    {
+                        let mut buf = [0u8; 64];
+                        let len = self.bus.read_ep_data_dma(1, &mut buf, ep.mps as usize);
+                        self.class.data_out(1, &buf[..len], &self.bus);
+                        self.bus.ep_prepare_out_dma(1, ep.mps);
+                    }
+                    #[cfg(not(feature = "dma"))]
                     self.bus.ep_prepare_out(1, ep.mps);
                 }
             }
@@ -697,19 +775,41 @@ impl<C: UsbClass> UsbDevice<C> {
                 .write(|w| unsafe { w.bits(int.bits()) });
             if int.xfercompl().bit_is_set() {
                 if let Some(ref ep) = self.config.ep2 {
+                    #[cfg(feature = "dma")]
+                    {
+                        let mut buf = [0u8; 64];
+                        let len = self.bus.read_ep_data_dma(2, &mut buf, ep.mps as usize);
+                        self.class.data_out(2, &buf[..len], &self.bus);
+                        self.bus.ep_prepare_out_dma(2, ep.mps);
+                    }
+                    #[cfg(not(feature = "dma"))]
                     self.bus.ep_prepare_out(2, ep.mps);
                 }
             }
         }
     }
 
+    /// Send a zero-length packet on EP0 IN (status stage).
+    /// Dispatches to the DMA or FIFO path based on the `dma` feature.
+    fn ep0_zlp(&self) {
+        #[cfg(feature = "dma")]
+        self.bus.ep0_write_packet_dma(&[]);
+        #[cfg(not(feature = "dma"))]
+        self.bus.ep0_write_packet(&[]);
+    }
+
     /// Start a (possibly multi-packet) EP0 IN transfer.
     ///
-    /// Writes the first ≤64-byte packet immediately. If there is more data,
-    /// saves a pointer so that [`handle_iepint`] can continue on XFERCOMPL.
+    /// Sends the first 64-byte (MPS) chunk and saves a pointer for
+    /// continuation on XFERCOMPL. Works identically in DMA and FIFO modes
+    /// since DIEP0TSIZ.xfersize is only 7 bits wide.
+    ///
     /// `max_len` is the host's `wLength`; we never send more than that.
     fn ep0_start_in(&mut self, data: &[u8], max_len: usize) {
         let total = data.len().min(max_len);
+        // EP0 DIEP0TSIZ.xfersize is 7 bits (max 127), so we must send
+        // in chunks of up to 64 bytes (EP0 MPS) and continue on
+        // each XFERCOMPL.
         let chunk = total.min(64);
         self.bus.ep0_write_packet(&data[..chunk]);
         if total > chunk {
@@ -814,7 +914,7 @@ impl<C: UsbClass> UsbDevice<C> {
                     .regs()
                     .dcfg()
                     .modify(|_, w| unsafe { w.devaddr().bits(addr) });
-                self.bus.ep0_write_packet(&[]);
+                self.ep0_zlp();
             }
 
             // SET_CONFIGURATION.
@@ -823,11 +923,17 @@ impl<C: UsbClass> UsbDevice<C> {
                 // Arm configured OUT endpoints.
                 if let Some(ref ep) = self.config.ep1 {
                     if ep.has_out {
+                        #[cfg(feature = "dma")]
+                        self.bus.ep_prepare_out_dma(1, ep.mps);
+                        #[cfg(not(feature = "dma"))]
                         self.bus.ep_prepare_out(1, ep.mps);
                     }
                 }
                 if let Some(ref ep) = self.config.ep2 {
                     if ep.has_out {
+                        #[cfg(feature = "dma")]
+                        self.bus.ep_prepare_out_dma(2, ep.mps);
+                        #[cfg(not(feature = "dma"))]
                         self.bus.ep_prepare_out(2, ep.mps);
                     }
                 }
@@ -844,7 +950,7 @@ impl<C: UsbClass> UsbDevice<C> {
                         .lemaddrmen()
                         .set_bit()
                 });
-                self.bus.ep0_write_packet(&[]);
+                self.ep0_zlp();
                 self.class.configured(&self.bus);
             }
 
@@ -859,7 +965,7 @@ impl<C: UsbClass> UsbDevice<C> {
                 let alt = setup.w_value as u8;
                 defmt::info!("SET_INTERFACE iface={} alt={}", iface, alt);
                 self.class.set_interface(iface, alt, &self.bus);
-                self.bus.ep0_write_packet(&[]);
+                self.ep0_zlp();
             }
 
             // GET_INTERFACE.
@@ -872,7 +978,7 @@ impl<C: UsbClass> UsbDevice<C> {
             // ---- Delegate to class ----
             _ => match self.class.handle_setup(&setup, &self.bus) {
                 SetupResult::Handled => {
-                    self.bus.ep0_write_packet(&[]);
+                    self.ep0_zlp();
                 }
                 SetupResult::DataIn => { /* class already sent response */ }
                 SetupResult::DataOut => {
