@@ -1,3 +1,5 @@
+[![CI](https://github.com/kromych/slstk3400a-blink-rs/actions/workflows/ci.yml/badge.svg)](https://github.com/kromych/slstk3400a-blink-rs/actions/workflows/ci.yml)
+
 # Example applications for SLSTK3400A
 
 This repo has a number of demo projects for the
