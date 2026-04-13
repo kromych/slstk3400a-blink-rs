@@ -8,6 +8,17 @@ name = "slstk3400a"
 version = "0.0.1"
 edition = "2021"
 
+[features]
+default = []
+## Enable uDMA-driven SPI transfers for the Sharp Memory LCD.
+##
+## When active, `display::dma_init()` and `display::write_rows_dma()` become
+## available.  The DMA path frees the CPU while pixel rows are clocked out
+## but requires ~2.6 KiB of static RAM (descriptor table + TX buffer).
+## When disabled (default), only the CPU-driven `display::write_rows()` is
+## compiled.
+dma = []
+
 [dependencies]
 efm32hg322-pac.workspace = true
 efm32hg322-hal.workspace = true

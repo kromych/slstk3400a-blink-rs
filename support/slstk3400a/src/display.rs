@@ -3,11 +3,11 @@
 //! The display is 128x128 monochrome, driven via USART0 in SPI mode.
 //!
 //! Pin mapping (SLSTK3400A, from SiLabs displayls013b7dh03config.h):
-//!   PE10 – USART0_TX  (SPI MOSI / SI),  location 0
-//!   PE12 – USART0_CLK (SPI SCK / SCLK), location 0
-//!   PA10 – LCD chip-select (SCS, active HIGH)
-//!   PA8  – LCD display-select (DISP_SEL)
-//!   PF3  – EXTCOMIN (VCOM inversion toggle)
+//!   PE10 - USART0_TX  (SPI MOSI / SI),  location 0
+//!   PE12 - USART0_CLK (SPI SCK / SCLK), location 0
+//!   PA10 - LCD chip-select (SCS, active HIGH)
+//!   PA8  - LCD display-select (DISP_SEL)
+//!   PF3  - EXTCOMIN (VCOM inversion toggle)
 //!
 //! The framebuffer-less API writes individual text lines directly, avoiding a
 //! 2 KiB RAM allocation.
@@ -73,16 +73,135 @@ fn delay_us(us: u32) {
     cortex_m::asm::delay(us * 14);
 }
 
-/// SCS setup time: 6 µs min (LS013B7DH03 datasheet).
+/// SCS setup time: 6 us min (LS013B7DH03 datasheet).
 #[inline]
 fn scs_setup_delay() {
     delay_us(6);
 }
 
-/// SCS hold time: 2 µs min (LS013B7DH03 datasheet).
+/// SCS hold time: 2 us min (LS013B7DH03 datasheet).
 #[inline]
 fn scs_hold_delay() {
     delay_us(2);
+}
+
+// ---------- uDMA for SPI (feature = "dma") ----------
+//
+// The EFM32HG PL230 uDMA controller can feed bytes from RAM to USART0_TXDATA
+// autonomously, freeing the CPU while the LCD SPI transaction is in flight.
+//
+// Descriptor table layout (PL230):
+//   6 primary descriptors (96 B) + 6 alternate descriptors (96 B) = 192 B
+//   Base address must be aligned to the next power-of-2 >= 192, i.e. 256.
+//
+// Each descriptor: src_end_ptr, dst_end_ptr, ctrl, _pad  (4 words = 16 bytes).
+
+/// USART0 TXDATA register address (base 0x4000_C000, offset 0x34).
+#[cfg(feature = "dma")]
+const USART0_TXDATA_ADDR: u32 = 0x4000_C034;
+/// DMA channel used for SPI display transfers.
+#[cfg(feature = "dma")]
+const DMA_CH: usize = 0;
+/// Max bytes per single basic-cycle DMA transfer (n_minus_1 is 10-bit).
+#[cfg(feature = "dma")]
+const DMA_MAX_XFER: usize = 1024;
+
+#[cfg(feature = "dma")]
+/// Single PL230 DMA descriptor (16 bytes).
+#[repr(C, align(4))]
+#[derive(Clone, Copy)]
+struct DmaDesc {
+    src_end: u32,
+    dst_end: u32,
+    ctrl: u32,
+    _pad: u32,
+}
+
+#[cfg(feature = "dma")]
+impl DmaDesc {
+    const ZERO: Self = Self {
+        src_end: 0,
+        dst_end: 0,
+        ctrl: 0,
+        _pad: 0,
+    };
+}
+
+#[cfg(feature = "dma")]
+/// Full descriptor table: 6 primary + 6 alternate, 256-byte aligned.
+#[repr(C, align(256))]
+struct DmaDescTable {
+    desc: [DmaDesc; 12],
+}
+
+#[cfg(feature = "dma")]
+/// Max SPI packet: cmd + 128 * (addr + 16 data + trailer) + final_trailer = 2306.
+const DMA_TX_BUF_SIZE: usize = 2308;
+
+#[cfg(feature = "dma")]
+static mut DMA_DESC: DmaDescTable = DmaDescTable {
+    desc: [DmaDesc::ZERO; 12],
+};
+#[cfg(feature = "dma")]
+static mut DMA_TX_BUF: [u8; DMA_TX_BUF_SIZE] = [0; DMA_TX_BUF_SIZE];
+
+#[cfg(feature = "dma")]
+fn dma_desc() -> *mut DmaDescTable {
+    core::ptr::addr_of_mut!(DMA_DESC)
+}
+
+#[cfg(feature = "dma")]
+fn dma_tx_buf() -> *mut [u8; DMA_TX_BUF_SIZE] {
+    core::ptr::addr_of_mut!(DMA_TX_BUF)
+}
+
+#[cfg(feature = "dma")]
+fn dma() -> &'static pac::dma::RegisterBlock {
+    unsafe { &*pac::Dma::ptr() }
+}
+
+#[cfg(feature = "dma")]
+/// Build a PL230 control word for a byte-to-peripheral basic transfer.
+///   src: byte, incrementing
+///   dst: byte, no increment (fixed TXDATA)
+///   R_power = 0 (re-arbitrate after every transfer -- peripheral paced)
+///   cycle_ctrl = 1 (basic)
+#[inline]
+const fn dma_ctrl_word(n_minus_1: u32) -> u32 {
+    // dst_inc=no_increment(11), dst_size=byte, src_inc=byte, src_size=byte,
+    // R_power=0 (re-arb every xfer), cycle_ctrl=basic(1)
+    (0b11 << 30)
+    | (n_minus_1 << 4)
+    | 1
+}
+
+#[cfg(feature = "dma")]
+/// Kick off a DMA-driven transfer of `data` to USART0_TXDATA.
+/// Blocks until all bytes have been pushed into the USART TX buffer.
+fn dma_spi_send(data: &[u8]) {
+    let dma = dma();
+    let mut offset = 0usize;
+
+    while offset < data.len() {
+        let chunk = (data.len() - offset).min(DMA_MAX_XFER);
+        let n_minus_1 = (chunk - 1) as u32;
+
+        // Programme the primary descriptor for channel 0.
+        let desc = unsafe { &mut (*dma_desc()).desc[DMA_CH] };
+        desc.src_end = unsafe { data.as_ptr().add(offset + chunk - 1) } as u32;
+        desc.dst_end = USART0_TXDATA_ADDR;
+        desc.ctrl = dma_ctrl_word(n_minus_1);
+
+        // Clear any stale done flag, then enable the channel.
+        dma.ifc().write(|w| w.ch0done().set_bit());
+        dma.chens().write(|w| w.ch0ens().set_bit());
+
+        // Spin until the DMA channel completes.
+        while dma.if_().read().ch0done().bit_is_clear() {}
+        dma.ifc().write(|w| w.ch0done().set_bit());
+
+        offset += chunk;
+    }
 }
 
 // ---------- public API ----------
@@ -102,7 +221,7 @@ pub fn init() {
         .modify(|_, w: &mut pac::cmu::hfperclken0::W| w.usart0().set_bit());
 
     // ---- Configure GPIO pins ----
-    // PA8 (DISP_SEL), PA10 (CS) → push-pull (mode 4).
+    // PA8 (DISP_SEL), PA10 (CS) -> push-pull (mode 4).
     // PA_MODEH covers pins 8-15, 4 bits each.
     // Pin 8: bits 0-3, Pin 10: bits 8-11.
     gpio.pa_modeh().modify(|r, w| unsafe {
@@ -114,7 +233,7 @@ pub fn init() {
         w.bits(v)
     });
 
-    // PE10 → push-pull (USART0_TX / MOSI).
+    // PE10 -> push-pull (USART0_TX / MOSI).
     // PE_MODEH covers pins 8-15; pin 10 = bits 8-11.
     gpio.pe_modeh().modify(|r, w| unsafe {
         let mut v = r.bits();
@@ -123,7 +242,7 @@ pub fn init() {
         w.bits(v)
     });
 
-    // PE12 → push-pull (USART0_CLK / SCK).
+    // PE12 -> push-pull (USART0_CLK / SCK).
     // PE_MODEH pin 12 = bits 16-19.
     gpio.pe_modeh().modify(|r, w| unsafe {
         let mut v = r.bits();
@@ -132,7 +251,7 @@ pub fn init() {
         w.bits(v)
     });
 
-    // PF3 → push-pull (EXTCOMIN).
+    // PF3 -> push-pull (EXTCOMIN).
     // PF_MODEL covers pins 0-7; pin 3 = bits 12-15.
     gpio.pf_model().modify(|r, w| unsafe {
         let mut v = r.bits();
@@ -233,9 +352,74 @@ pub fn write_rows(start_row: u8, rows: &[[u8; BYTES_PER_ROW]], vcom: &mut bool) 
     cs_low();
 }
 
+#[cfg(feature = "dma")]
+/// One-time DMA initialisation for SPI display transfers.
+///
+/// Enables the DMA clock, sets the descriptor table base pointer, configures
+/// channel 0 for USART0 TXBL requests, and enables the controller.
+/// After this call, [`write_rows_dma`] can be used instead of [`write_rows`].
+pub fn dma_init() {
+    let cmu = unsafe { &*pac::Cmu::ptr() };
+    let dma = dma();
+
+    // Enable DMA clock.
+    cmu.hfcoreclken0().modify(|_, w| w.dma().set_bit());
+
+    // Point controller at descriptor table.
+    dma.ctrlbase()
+        .write(|w| unsafe { w.ctrlbase().bits(dma_desc() as u32) });
+
+    // Enable controller.
+    dma.config().write(|w| w.en().set_bit());
+
+    // Channel 0: USART0, signal 1 = TXBL.
+    dma.ch0_ctrl()
+        .write(|w| unsafe { w.sourcesel().usart0().sigsel().bits(1) });
+}
+
+#[cfg(feature = "dma")]
+/// Write multiple consecutive pixel rows via DMA.
+///
+/// Same interface as [`write_rows`] but the SPI packet is assembled into a
+/// static buffer and transferred by the uDMA engine, freeing the CPU while
+/// bytes are clocked out.  Call [`dma_init`] once before first use.
+pub fn write_rows_dma(start_row: u8, rows: &[[u8; BYTES_PER_ROW]], vcom: &mut bool) {
+    if rows.is_empty() {
+        return;
+    }
+    let cmd = 0x01 | if *vcom { 0x02 } else { 0x00 };
+    *vcom = !*vcom;
+
+    // Assemble the full SPI packet into the DMA TX buffer.
+    let buf = unsafe { &mut *dma_tx_buf() };
+    let mut pos = 0usize;
+    buf[pos] = cmd;
+    pos += 1;
+    for (i, row_data) in rows.iter().enumerate() {
+        buf[pos] = start_row + i as u8 + 1; // 1-indexed line address
+        pos += 1;
+        buf[pos..pos + BYTES_PER_ROW].copy_from_slice(row_data);
+        pos += BYTES_PER_ROW;
+        buf[pos] = 0x00; // line trailer
+        pos += 1;
+    }
+    buf[pos] = 0x00; // final trailer
+    pos += 1;
+
+    cs_high();
+    scs_setup_delay();
+
+    dma_spi_send(&buf[..pos]);
+
+    // Wait for the last byte to finish clocking out of the shift register.
+    spi_wait_done();
+    scs_hold_delay();
+    cs_low();
+}
+
 /// Render a text string at the given text-row and text-column position.
 ///
-/// Characters are 8x8 pixels. The display has 16 columns × 16 rows of text.
+/// Characters are 8x8 pixels. The display has 16 columns x 16 rows of text.
 /// Background is white (1), text is black (0).
 pub fn draw_text(row: u8, col: u8, text: &str, vcom: &mut bool) {
     if row >= TEXT_ROWS {
