@@ -54,8 +54,19 @@ jobs:
             fi
           done
 
-      - name: Upload firmware
-        uses: actions/upload-artifact@v4
+      # Upload each .hex as its own artifact for individual download.
+      - name: Upload hex files
+        uses: actions/github-script@v7
         with:
-          name: firmware-${{ matrix.artifact-suffix }}
-          path: artifacts/*.hex
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const {DefaultArtifactClient} = require('@actions/artifact');
+            const client = new DefaultArtifactClient();
+            const dir = 'artifacts';
+            const files = fs.readdirSync(dir).filter(f => f.endsWith('.hex'));
+            for (const file of files) {
+              const name = file.replace('.hex', '');
+              const filePath = path.join(dir, file);
+              await client.uploadArtifact(name, [filePath], dir);
+            }
