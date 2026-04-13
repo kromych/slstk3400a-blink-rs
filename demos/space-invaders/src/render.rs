@@ -221,12 +221,8 @@ pub fn fb_flush(vcom: &mut bool) {
         // Send the entire consecutive run in one SPI transaction.
         let count = (row - start) as usize;
         let base = start as usize * display::BYTES_PER_ROW;
-        let rows_data: &[[u8; display::BYTES_PER_ROW]] = unsafe {
-            core::slice::from_raw_parts(
-                (*fb()).as_ptr().add(base).cast(),
-                count,
-            )
-        };
+        let rows_data: &[[u8; display::BYTES_PER_ROW]] =
+            unsafe { core::slice::from_raw_parts((*fb()).as_ptr().add(base).cast(), count) };
         #[cfg(feature = "dma")]
         display::write_rows_dma(start, rows_data, vcom);
         #[cfg(not(feature = "dma"))]

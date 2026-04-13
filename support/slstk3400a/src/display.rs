@@ -170,9 +170,7 @@ fn dma() -> &'static pac::dma::RegisterBlock {
 const fn dma_ctrl_word(n_minus_1: u32) -> u32 {
     // dst_inc=no_increment(11), dst_size=byte, src_inc=byte, src_size=byte,
     // R_power=0 (re-arb every xfer), cycle_ctrl=basic(1)
-    (0b11 << 30)
-    | (n_minus_1 << 4)
-    | 1
+    (0b11 << 30) | (n_minus_1 << 4) | 1
 }
 
 #[cfg(feature = "dma")]
