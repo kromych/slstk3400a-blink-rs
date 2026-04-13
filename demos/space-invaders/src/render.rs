@@ -1,16 +1,37 @@
 //! Framebuffer management and sprite rendering for the 128x128 monochrome LCD.
 //!
-//! LCD convention: bit=1 → white, bit=0 → black.  LSB = leftmost pixel in byte.
+//! LCD convention: bit=1 = white, bit=0 = black.  LSB = leftmost pixel in byte.
 //! Sprites use MSB = leftmost pixel convention and are converted during blit.
 //!
 //! Safety: all framebuffer access is single-threaded (main loop only, never from ISRs).
 
 use slstk3400a::display;
-use slstk3400a::font8x8::{reverse_bits, FONT};
+use slstk3400a::font8x8::FONT;
 
 const FB_SIZE: usize = 128 * display::BYTES_PER_ROW;
 
-/// The framebuffer: 128 rows × 16 bytes = 2048 bytes.
+/// 256-byte lookup table for bit reversal (MSB<->LSB).
+/// Single indexed load replaces 6 shifts + 6 masks + 3 ORs per byte.
+static REVERSE_LUT: [u8; 256] = {
+    let mut lut = [0u8; 256];
+    let mut i = 0u16;
+    while i < 256 {
+        let b = i as u8;
+        let b = (b & 0xF0) >> 4 | (b & 0x0F) << 4;
+        let b = (b & 0xCC) >> 2 | (b & 0x33) << 2;
+        let b = (b & 0xAA) >> 1 | (b & 0x55) << 1;
+        lut[i as usize] = b;
+        i += 1;
+    }
+    lut
+};
+
+#[inline(always)]
+fn reverse_bits(b: u8) -> u8 {
+    REVERSE_LUT[b as usize]
+}
+
+/// The framebuffer: 128 rows x 16 bytes = 2048 bytes.
 /// 1 = white, 0 = black (matches LCD).
 static mut FB: [u8; FB_SIZE] = [0xFF; FB_SIZE];
 
@@ -48,13 +69,26 @@ fn mark_dirty(row: u8) {
     unsafe { (*dirty())[byte] |= 1 << bit }
 }
 
-/// Clear entire framebuffer to white and mark all rows dirty.
+/// Clear the framebuffer to white, only touching rows that have non-white pixels.
+///
+/// Rows that are already all-white are skipped entirely (no write, no dirty mark),
+/// which dramatically reduces the number of rows flushed to the LCD each frame.
 pub fn fb_clear() {
-    for i in 0..FB_SIZE {
-        set_fb_byte(i, 0xFF);
-    }
-    for i in 0..16 {
-        unsafe { (*dirty())[i] = 0xFF }
+    for row in 0..128usize {
+        let base = row * display::BYTES_PER_ROW;
+        let mut needs_clear = false;
+        for i in 0..display::BYTES_PER_ROW {
+            if fb_byte(base + i) != 0xFF {
+                needs_clear = true;
+                break;
+            }
+        }
+        if needs_clear {
+            for i in 0..display::BYTES_PER_ROW {
+                set_fb_byte(base + i, 0xFF);
+            }
+            mark_dirty(row as u8);
+        }
     }
 }
 
@@ -160,28 +194,45 @@ pub fn fb_draw_text(text_row: u8, text_col: u8, text: &str) {
     }
 }
 
-/// Flush all dirty rows to the LCD.
+/// Flush dirty rows to the LCD, batching consecutive dirty rows into single
+/// SPI transactions via `write_rows()` to reduce CS toggle overhead.
 pub fn fb_flush(vcom: &mut bool) {
-    for byte_idx in 0..16usize {
-        let dirty_byte = unsafe { (*dirty())[byte_idx] };
-        if dirty_byte == 0 {
+    let mut row: u8 = 0;
+    while row < 128 {
+        let byte_idx = (row / 8) as usize;
+        let bit = row % 8;
+        if unsafe { (*dirty())[byte_idx] } & (1 << bit) == 0 {
+            row += 1;
             continue;
         }
-        for bit in 0..8u8 {
-            if dirty_byte & (1 << bit) != 0 {
-                let row = byte_idx as u8 * 8 + bit;
-                if row < 128 {
-                    let base = row as usize * display::BYTES_PER_ROW;
-                    let row_data: &[u8; display::BYTES_PER_ROW] = unsafe {
-                        &*((&(*fb()))[base..base + display::BYTES_PER_ROW]
-                            .as_ptr()
-                            .cast())
-                    };
-                    display::write_row(row, row_data, vcom);
-                }
+
+        // Start of a dirty run.
+        let start = row;
+        row += 1;
+        while row < 128 {
+            let byte_idx = (row / 8) as usize;
+            let bit = row % 8;
+            if unsafe { (*dirty())[byte_idx] } & (1 << bit) == 0 {
+                break;
             }
+            row += 1;
         }
+
+        // Send the entire consecutive run in one SPI transaction.
+        let count = (row - start) as usize;
+        let base = start as usize * display::BYTES_PER_ROW;
+        let rows_data: &[[u8; display::BYTES_PER_ROW]] = unsafe {
+            core::slice::from_raw_parts(
+                (*fb()).as_ptr().add(base).cast(),
+                count,
+            )
+        };
+        #[cfg(feature = "dma")]
+        display::write_rows_dma(start, rows_data, vcom);
+        #[cfg(not(feature = "dma"))]
+        display::write_rows(start, rows_data, vcom);
     }
+
     // Clear all dirty flags.
     for i in 0..16 {
         unsafe { (*dirty())[i] = 0 }

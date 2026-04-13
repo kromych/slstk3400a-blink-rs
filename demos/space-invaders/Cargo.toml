@@ -20,4 +20,9 @@ defmt-rtt.workspace = true
 
 efm32hg322-hal.workspace = true
 efm32hg322-pac.workspace = true
-slstk3400a.workspace = true
+slstk3400a = { workspace = true, optional = false }
+
+[features]
+default = ["dma"]
+## Use DMA for SPI display transfers (faster, uses ~2.6 KiB extra RAM).
+dma = ["slstk3400a/dma"]

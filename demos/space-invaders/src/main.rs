@@ -47,6 +47,8 @@ fn main() -> ! {
 
     // --- Display init ---
     display::init();
+    #[cfg(feature = "dma")]
+    display::dma_init();
     let mut vcom = false;
     display::clear(&mut vcom);
 
