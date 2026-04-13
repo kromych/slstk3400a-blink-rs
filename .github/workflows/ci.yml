@@ -27,15 +27,15 @@ jobs:
       - run: cargo clippy --workspace --features efm32hg322-usb/dma -- -D warnings
 
   build:
-    name: Build
+    name: Build (${{ matrix.mode }})
     runs-on: ubuntu-latest
     strategy:
       matrix:
         include:
-          - features: ""
-            artifact-suffix: "fifo"
-          - features: "--features efm32hg322-usb/dma"
-            artifact-suffix: "dma"
+          - mode: fifo
+            features: ""
+          - mode: dma
+            features: "--features efm32hg322-usb/dma"
     steps:
       - uses: actions/checkout@v4
       - run: cargo install flip-link
@@ -46,27 +46,18 @@ jobs:
       - name: Convert ELF to Intel HEX
         run: |
           OBJCOPY=$(find ~/.rustup -name llvm-objcopy -type f | head -1)
-          mkdir -p artifacts
+          mkdir -p hex
           for elf in target/thumbv6m-none-eabi/release/*; do
             if [ -f "$elf" ] && file "$elf" | grep -q "ELF"; then
-              name="$(basename "$elf")-${{ matrix.artifact-suffix }}"
-              "$OBJCOPY" -O ihex "$elf" "artifacts/${name}.hex"
+              "$OBJCOPY" -O ihex "$elf" "hex/$(basename "$elf").hex"
             fi
           done
+          echo "### Firmware (${{ matrix.mode }})" >> "$GITHUB_STEP_SUMMARY"
+          ls -lh hex/*.hex | awk '{print "- `" $NF "` — " $5}' >> "$GITHUB_STEP_SUMMARY"
 
-      # Upload each .hex as its own artifact for individual download.
       - name: Upload hex files
-        uses: actions/github-script@v7
+        uses: actions/upload-artifact@v4
         with:
-          script: |
-            const fs = require('fs');
-            const path = require('path');
-            const {DefaultArtifactClient} = require('@actions/artifact');
-            const client = new DefaultArtifactClient();
-            const dir = 'artifacts';
-            const files = fs.readdirSync(dir).filter(f => f.endsWith('.hex'));
-            for (const file of files) {
-              const name = file.replace('.hex', '');
-              const filePath = path.join(dir, file);
-              await client.uploadArtifact(name, [filePath], dir);
-            }
+          name: firmware-${{ matrix.mode }}
+          path: hex/*.hex
+          compression-level: 0
