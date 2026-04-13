@@ -27,7 +27,4 @@ rustflags = [
 ]
 
 [env]
-DEFMT_LOG = "debug"
-
-[profile.release]
-debug = 2
+DEFMT_LOG = "info"
