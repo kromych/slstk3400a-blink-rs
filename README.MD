@@ -3,7 +3,9 @@
 # Example applications for SLSTK3400A
 
 This repo has a number of demo projects for the
-[SLSTK3400A starter kit board](https://www.silabs.com/development-tools/mcu/32-bit/efm32hg-starter-kit):
+[SLSTK3400A starter kit board](https://www.silabs.com/development-tools/mcu/32-bit/efm32hg-starter-kit).
+The [releases page](https://github.com/kromych/slstk3400a-blink-rs/releases/) have the ready-to-upload
+firmware images in the Intel HEX format.
 
 Demo | Description
 --- | ---
