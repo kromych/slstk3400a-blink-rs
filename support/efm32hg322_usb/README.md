@@ -90,6 +90,12 @@ sequenceDiagram
 
 ## SETUP Packet Flow — DMA Mode
 
+EP0 OUT is always armed with **SNAK** so that only SETUP packets (which
+bypass NAK on the DWC2) can arrive.  DATA OUT is gated by an explicit
+`ep0_clear_out_nak()` call after the SETUP has been read and processed,
+preventing a host DATA OUT from overwriting the SETUP data in the shared
+DMA buffer before the ISR can parse it.
+
 ```mermaid
 sequenceDiagram
     participant Host
@@ -97,6 +103,7 @@ sequenceDiagram
     participant ISR as poll()
     participant Class as UsbClass
 
+    Note over DWC2: EP0 OUT armed with SNAK<br/>(SETUP bypasses NAK)
     Host->>DWC2: SETUP token + 8 data bytes
     Note over DWC2: DMA writes 8 bytes to EP0 OUT buffer
 
@@ -112,8 +119,10 @@ sequenceDiagram
     else DataIn
         Class->>DWC2: ep0_write_packet_dma(data)
     else DataOut
-        Note over ISR: setup bit is set → skip xfercompl
-        ISR->>DWC2: ep0_prepare_out_dma()
+        Note over ISR: setup bit set → skip xfercompl
+        ISR->>DWC2: ep0_prepare_out_dma() [SNAK]
+        ISR->>DWC2: ep0_clear_out_nak() [CNAK]
+        Note over DWC2: NAK cleared — DATA OUT can arrive
         Host->>DWC2: DATA OUT payload
         Note over DWC2: DMA writes payload to EP0 OUT buffer
         DWC2->>ISR: OEPINT.XFERCOMPL (setup NOT set)
@@ -149,10 +158,23 @@ sequenceDiagram
     Bus-->>Host: Final packet (may be short / ZLP)
     Host-->>Bus: ACK
     Bus->>FW: IEPINT.XFERCOMPL
-    FW->>Bus: ep0_prepare_out() (ready for next SETUP)
+
+    alt FIFO mode
+        FW->>Bus: ep0_prepare_out() [CNAK]
+    else DMA mode
+        FW->>Bus: ep0_prepare_out() [SNAK]
+        FW->>Bus: ep0_clear_out_nak() [CNAK]
+        Note over FW: CNAK after prepare so status<br/>ZLP / next SETUP can arrive
+    end
 ```
 
 ## IN Transfer Flow (EPn)
+
+Isochronous IN endpoints are activated with `usbactep` deferred: the bit
+is **not** set in `activate_endpoints()` so the DWC2 NAKs host IN tokens
+until the first `ep_write()` supplies real data.  This prevents the
+controller from transmitting stale/zero data (which appears as a green
+flash in YUY2 video).
 
 ```mermaid
 sequenceDiagram
@@ -161,10 +183,19 @@ sequenceDiagram
     participant DWC2
     participant Host
 
-    Class->>Bus: ep_write(ep, data)
-    Note over Bus: FIFO: write to TX FIFO<br/>DMA: copy to DMA buffer
+    Note over Bus: Iso IN: usbactep deferred<br/>until first ep_write
 
-    Bus->>DWC2: DIEPnTSIZ + DIEPnCTL (EPENA, CNAK)
+    Class->>Bus: ep_write(ep, data)
+
+    alt DMA mode
+        Note over Bus: Copy data to DMA buffer
+        Note over Bus: DSB (flush write buffer)
+        Bus->>DWC2: DIEPnDMAADDR
+    else FIFO mode
+        Note over Bus: (data written to TX FIFO after EPENA)
+    end
+
+    Bus->>DWC2: DIEPnTSIZ + DIEPnCTL (USBACTEP, EPENA, CNAK)
     Host->>DWC2: IN token
     DWC2-->>Host: Data packet
     DWC2->>Class: IEPINT.XFERCOMPL → in_complete(ep)

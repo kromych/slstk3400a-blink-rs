@@ -210,7 +210,7 @@ impl UsbBus {
                     .write(|w| unsafe { w.xfersize().bits(len as u32).pktcnt().bits(1) });
                 let is_iso = self.usb.diep0_ctl().read().eptype().is_iso();
                 self.usb.diep0_ctl().modify(|_, w| {
-                    let w = w.cnak().set_bit().epena().set_bit();
+                    let w = w.usbactep().set_bit().cnak().set_bit().epena().set_bit();
                     if is_iso {
                         // Schedule for the next frame (opposite parity).
                         let even_now = self.usb.dsts().read().soffn().bits() & 1 == 0;
@@ -232,7 +232,7 @@ impl UsbBus {
                     .write(|w| unsafe { w.xfersize().bits(len as u32).pktcnt().bits(1) });
                 let is_iso = self.usb.diep1_ctl().read().eptype().is_iso();
                 self.usb.diep1_ctl().modify(|_, w| {
-                    let w = w.cnak().set_bit().epena().set_bit();
+                    let w = w.usbactep().set_bit().cnak().set_bit().epena().set_bit();
                     if is_iso {
                         let even_now = self.usb.dsts().read().soffn().bits() & 1 == 0;
                         if even_now {
@@ -312,6 +312,7 @@ impl UsbBus {
         let len = data.len();
         let buf = unsafe { &mut (*ep0_in_dma()).data };
         buf[..len].copy_from_slice(&data[..len]);
+        cortex_m::asm::dsb();
 
         self.usb
             .diep0tsiz()
@@ -325,6 +326,12 @@ impl UsbBus {
     }
 
     /// Prepare EP0 OUT for DMA reception (SETUP or data).
+    ///
+    /// Arms the endpoint with NAK set so that only SETUP packets (which
+    /// bypass NAK) can be received.  This prevents a DATA OUT from racing
+    /// ahead and overwriting the SETUP data in the shared DMA buffer
+    /// before the ISR can read it.  Call [`ep0_clear_out_nak`] when the
+    /// firmware is ready to accept a DATA OUT or status-stage ZLP.
     #[cfg(feature = "dma")]
     pub fn ep0_prepare_out_dma(&self) {
         let buf = unsafe { &(*ep0_out_dma()).data };
@@ -336,7 +343,15 @@ impl UsbBus {
             .write(|w| unsafe { w.doep0dmaaddr().bits(buf.as_ptr() as u32) });
         self.usb
             .doep0ctl()
-            .modify(|_, w| w.epena().set_bit().cnak().set_bit());
+            .modify(|_, w| w.epena().set_bit().snak().set_bit());
+    }
+
+    /// Clear NAK on EP0 OUT so the next DATA OUT or status ZLP can be
+    /// received.  Only meaningful in DMA mode where [`ep0_prepare_out_dma`]
+    /// arms with SNAK.
+    #[cfg(feature = "dma")]
+    pub fn ep0_clear_out_nak(&self) {
+        self.usb.doep0ctl().modify(|_, w| w.cnak().set_bit());
     }
 
     /// Read the SETUP packet (8 bytes) from the EP0 OUT DMA buffer.
@@ -367,6 +382,7 @@ impl UsbBus {
                 let len = data.len().min(512);
                 let buf = unsafe { &mut (*ep1_in_dma()).data };
                 buf[..len].copy_from_slice(&data[..len]);
+                cortex_m::asm::dsb();
 
                 self.usb
                     .diep0_tsiz()
@@ -376,7 +392,7 @@ impl UsbBus {
                     .write(|w| unsafe { w.dmaaddr().bits(buf.as_ptr() as u32) });
                 let is_iso = self.usb.diep0_ctl().read().eptype().is_iso();
                 self.usb.diep0_ctl().modify(|_, w| {
-                    let w = w.cnak().set_bit().epena().set_bit();
+                    let w = w.usbactep().set_bit().cnak().set_bit().epena().set_bit();
                     if is_iso {
                         let even_now = self.usb.dsts().read().soffn().bits() & 1 == 0;
                         if even_now {
@@ -393,6 +409,7 @@ impl UsbBus {
                 let len = data.len().min(512);
                 let buf = unsafe { &mut (*ep2_in_dma()).data };
                 buf[..len].copy_from_slice(&data[..len]);
+                cortex_m::asm::dsb();
 
                 self.usb
                     .diep1_tsiz()
@@ -402,7 +419,7 @@ impl UsbBus {
                     .write(|w| unsafe { w.dmaaddr().bits(buf.as_ptr() as u32) });
                 let is_iso = self.usb.diep1_ctl().read().eptype().is_iso();
                 self.usb.diep1_ctl().modify(|_, w| {
-                    let w = w.cnak().set_bit().epena().set_bit();
+                    let w = w.usbactep().set_bit().cnak().set_bit().epena().set_bit();
                     if is_iso {
                         let even_now = self.usb.dsts().read().soffn().bits() & 1 == 0;
                         if even_now {

@@ -141,7 +141,7 @@ pub enum SetupResult {
 }
 
 /// Endpoint transfer type.
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq)]
 pub enum EpType {
     Bulk,
     Interrupt,
@@ -502,15 +502,16 @@ impl<C: UsbClass> UsbDevice<C> {
             if ep.has_in {
                 daintmsk |= 1 << 1;
                 usb.diep0_ctl().write(|w| unsafe {
-                    let w = w
-                        .mps()
-                        .bits(ep.mps)
-                        .usbactep()
-                        .set_bit()
-                        .txfnum()
-                        .bits(1)
-                        .snak()
-                        .set_bit();
+                    let w = w.mps().bits(ep.mps).txfnum().bits(1).snak().set_bit();
+                    // Defer usbactep for isochronous IN endpoints until
+                    // the first ep_write.  Setting it here lets the DWC2
+                    // respond to IN tokens with stale data from the
+                    // uninitialised TX FIFO / DMA buffer.
+                    let w = if ep.ep_type != EpType::Isochronous {
+                        w.usbactep().set_bit()
+                    } else {
+                        w
+                    };
                     match ep.ep_type {
                         EpType::Bulk => w.eptype().bulk(),
                         EpType::Interrupt => w.eptype().int(),
@@ -535,15 +536,12 @@ impl<C: UsbClass> UsbDevice<C> {
             if ep.has_in {
                 daintmsk |= 1 << 2;
                 usb.diep1_ctl().write(|w| unsafe {
-                    let w = w
-                        .mps()
-                        .bits(ep.mps)
-                        .usbactep()
-                        .set_bit()
-                        .txfnum()
-                        .bits(2)
-                        .snak()
-                        .set_bit();
+                    let w = w.mps().bits(ep.mps).txfnum().bits(2).snak().set_bit();
+                    let w = if ep.ep_type != EpType::Isochronous {
+                        w.usbactep().set_bit()
+                    } else {
+                        w
+                    };
                     match ep.ep_type {
                         EpType::Bulk => w.eptype().bulk(),
                         EpType::Interrupt => w.eptype().int(),
@@ -650,6 +648,8 @@ impl<C: UsbClass> UsbDevice<C> {
                 self.ep0_continue_in();
             } else {
                 self.bus.ep0_prepare_out();
+                #[cfg(feature = "dma")]
+                self.bus.ep0_clear_out_nak();
             }
         }
 
@@ -738,7 +738,12 @@ impl<C: UsbClass> UsbDevice<C> {
                 }
             } else {
                 #[cfg(feature = "dma")]
-                self.bus.ep0_prepare_out_dma();
+                {
+                    self.bus.ep0_prepare_out_dma();
+                    if self.pending_data_out {
+                        self.bus.ep0_clear_out_nak();
+                    }
+                }
                 #[cfg(not(feature = "dma"))]
                 self.bus.ep0_prepare_out();
             }
