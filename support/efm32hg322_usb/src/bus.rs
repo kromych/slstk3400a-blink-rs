@@ -349,9 +349,16 @@ impl UsbBus {
     /// Clear NAK on EP0 OUT so the next DATA OUT or status ZLP can be
     /// received.  Only meaningful in DMA mode where [`ep0_prepare_out_dma`]
     /// arms with SNAK.
+    ///
+    /// Must also re-assert EPENA because the DWC2 core clears it on SETUP
+    /// reception — if a SETUP arrived between the SNAK and CNAK writes,
+    /// a bare CNAK `modify` would read back EPENA=0 and leave the endpoint
+    /// disabled.
     #[cfg(feature = "dma")]
     pub fn ep0_clear_out_nak(&self) {
-        self.usb.doep0ctl().modify(|_, w| w.cnak().set_bit());
+        self.usb
+            .doep0ctl()
+            .modify(|_, w| w.epena().set_bit().cnak().set_bit());
     }
 
     /// Read the SETUP packet (8 bytes) from the EP0 OUT DMA buffer.
