@@ -278,12 +278,23 @@ impl UsbBus {
     }
 
     /// Flush EP0 IN TX FIFO if a transfer is pending.
+    ///
+    /// The DWC2 spec requires Global IN NAK to be set before flushing a
+    /// TX FIFO so the core does not transmit a partial packet while the
+    /// FIFO is being drained.
     pub fn flush_ep0_tx_if_pending(&self) {
         if self.usb.diep0tsiz().read().pktcnt().bits() != 0 {
+            self.usb
+                .dctl()
+                .modify(|_, w| w.sgnpinnak().set_bit());
+            while !self.usb.dctl().read().gnpinnaksts().bit_is_set() {}
             self.usb
                 .grstctl()
                 .write(|w| w.txfflsh().set_bit().txfnum().f0());
             while self.usb.grstctl().read().txfflsh().bit_is_set() {}
+            self.usb
+                .dctl()
+                .modify(|_, w| w.cgnpinnak().set_bit());
         }
     }
 
