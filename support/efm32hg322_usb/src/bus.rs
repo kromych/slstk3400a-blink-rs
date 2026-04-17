@@ -375,6 +375,7 @@ impl UsbBus {
     /// Read the SETUP packet (8 bytes) from the EP0 OUT DMA buffer.
     #[cfg(feature = "dma")]
     pub fn read_setup_dma(&self) -> [u8; 8] {
+        cortex_m::asm::dsb();
         let buf = unsafe { &(*ep0_out_dma()).data };
         let mut setup = [0u8; 8];
         setup.copy_from_slice(&buf[..8]);
@@ -384,6 +385,7 @@ impl UsbBus {
     /// Read EP0 OUT data from the DMA buffer. Returns bytes actually received.
     #[cfg(feature = "dma")]
     pub fn read_ep0_data_dma(&self, out: &mut [u8], max: usize) -> usize {
+        cortex_m::asm::dsb();
         let remaining = self.usb.doep0tsiz().read().xfersize().bits() as usize;
         let received = max.saturating_sub(remaining);
         let n = received.min(out.len()).min(64);
@@ -489,6 +491,7 @@ impl UsbBus {
     /// Read data from an EPn OUT DMA buffer.
     #[cfg(feature = "dma")]
     pub fn read_ep_data_dma(&self, ep: u8, out: &mut [u8], max: usize) -> usize {
+        cortex_m::asm::dsb();
         match ep {
             1 => {
                 let remaining = self.usb.doep0_tsiz().read().xfersize().bits() as usize;
